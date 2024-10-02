@@ -1,0 +1,762 @@
+# Copyright (C) 2024 CompressX
+# This file is distributed under the same license as the CompressX package.
+msgid ""
+msgstr ""
+"Project-Id-Version: CompressX 0.9.14\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/compressx\n"
+"POT-Creation-Date: 2024-09-05 10:10:38+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2024-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: includes/class-compressx-cloudflare-cdn.php:18
+msgid "Zone ID is required, please enter a valid Zone ID"
+msgstr ""
+
+#: includes/class-compressx-cloudflare-cdn.php:25
+msgid "Cloudflare email is required, please enter your Cloudflare email."
+msgstr ""
+
+#: includes/class-compressx-cloudflare-cdn.php:32
+msgid "Global API key is required, please enter your Cloudflare global API key."
+msgstr ""
+
+#: includes/class-compressx-cloudflare-cdn.php:58
+#: includes/class-compressx-cloudflare-cdn.php:78
+msgid "Connecting to Cloudflare failed:"
+msgstr ""
+
+#: includes/class-compressx-custom-imgoptim-task.php:32
+#: includes/class-compressx-imgoptim-task.php:47
+msgid "No unoptimized images found."
+msgstr ""
+
+#: includes/class-compressx-custom-imgoptim-task.php:197
+#: includes/class-compressx-custom-imgoptim-task.php:432
+#: includes/class-compressx-custom-imgoptim-task.php:435
+#: includes/class-compressx-imgoptim-task.php:211
+#: includes/class-compressx-imgoptim-task.php:633
+msgid "All image(s) optimized successfully."
+msgstr ""
+
+#. translators: %1$d: total images, %2$d: processed images, %3$d: total images,
+#. %4$d: Processed percent
+
+#: includes/class-compressx-custom-imgoptim-task.php:467
+#: includes/class-compressx-imgoptim-task.php:659
+msgid "%1$d images found | Processed:%2$d/%3$d (%4$d%%)"
+msgstr ""
+
+#: includes/class-compressx-custom-imgoptim-task.php:487
+msgid "Finish Optimizing images."
+msgstr ""
+
+#: includes/class-compressx-custom-imgoptim-task.php:518
+msgid "Task timed out"
+msgstr ""
+
+#: includes/class-compressx-imgoptim-task.php:630
+msgid "Finish optimizing images."
+msgstr ""
+
+#. translators: %1$d: $sub task processed images, %2$d: $sub task total images
+
+#: includes/class-compressx-imgoptim-task.php:685
+msgid "Current Subtask: %1$d/%2$d"
+msgstr ""
+
+#. translators: %1$d: total images, %2$d: Succeeded images, %3$d: failed images
+
+#: includes/class-compressx-imgoptim-task.php:707
+#: includes/class-compressx-imgoptim-task.php:745
+msgid "Total optimized images:%1$d Succeeded:%2$d Failed:%3$d"
+msgstr ""
+
+#: includes/class-compressx-log.php:157
+msgid "Data and Time"
+msgstr ""
+
+#: includes/class-compressx-log.php:158
+msgid "Log File Name"
+msgstr ""
+
+#: includes/class-compressx-log.php:159
+msgid "Log Size"
+msgstr ""
+
+#: includes/class-compressx-log.php:160
+msgid "Actions"
+msgstr ""
+
+#: includes/class-compressx-log.php:233
+msgid "Details"
+msgstr ""
+
+#: includes/class-compressx-log.php:234
+#: includes/display/class-compressx-system-info.php:87
+msgid "Download"
+msgstr ""
+
+#: includes/class-compressx-log.php:235
+#: includes/class-compressx-manual-optimization.php:562
+#: includes/display/class-compressx-custom-media-lib.php:142
+#: includes/display/class-compressx-custom-media-lib.php:355
+#: includes/display/class-compressx-custom-media-lib.php:435
+msgid "Delete"
+msgstr ""
+
+#. translators: Hidden accessibility text.
+
+#: includes/class-compressx-log.php:381
+msgid "Select All"
+msgstr ""
+
+#. translators: Hidden accessibility text.
+
+#: includes/class-compressx-log.php:450
+msgid "Sort ascending."
+msgstr ""
+
+#. translators: Hidden accessibility text.
+
+#: includes/class-compressx-log.php:452
+msgid "Sort descending."
+msgstr ""
+
+#: includes/class-compressx-manual-optimization.php:47
+#: includes/class-compressx-manual-optimization.php:450
+#: includes/display/class-compressx-custom-media-lib.php:316
+msgid "CompressX"
+msgstr ""
+
+#: includes/class-compressx-manual-optimization.php:58
+#: includes/class-compressx-manual-optimization.php:461
+#: includes/display/class-compressx-custom-media-lib.php:50
+#: includes/display/class-compressx-custom-media-lib.php:320
+#: includes/display/class-compressx-custom-media-lib.php:397
+msgid "Converting..."
+msgstr ""
+
+#: includes/class-compressx-manual-optimization.php:62
+#: includes/class-compressx-manual-optimization.php:467
+#: includes/class-compressx-manual-optimization.php:471
+#: includes/display/class-compressx-custom-media-lib.php:54
+#: includes/display/class-compressx-custom-media-lib.php:322
+#: includes/display/class-compressx-custom-media-lib.php:401
+msgid "Convert"
+msgstr ""
+
+#: includes/class-compressx-manual-optimization.php:148
+#: includes/class-compressx-manual-optimization.php:558
+#: includes/display/class-compressx-custom-media-lib.php:138
+#: includes/display/class-compressx-custom-media-lib.php:351
+#: includes/display/class-compressx-custom-media-lib.php:431
+msgid "Original"
+msgstr ""
+
+#: includes/class-compressx-manual-optimization.php:149
+#: includes/class-compressx-manual-optimization.php:559
+#: includes/display/class-compressx-custom-media-lib.php:139
+#: includes/display/class-compressx-custom-media-lib.php:352
+#: includes/display/class-compressx-custom-media-lib.php:432
+msgid "Webp"
+msgstr ""
+
+#: includes/class-compressx-manual-optimization.php:149
+#: includes/class-compressx-manual-optimization.php:150
+#: includes/class-compressx-manual-optimization.php:559
+#: includes/class-compressx-manual-optimization.php:560
+msgid "Saved"
+msgstr ""
+
+#: includes/class-compressx-manual-optimization.php:150
+#: includes/class-compressx-manual-optimization.php:560
+#: includes/display/class-compressx-custom-media-lib.php:140
+#: includes/display/class-compressx-custom-media-lib.php:353
+#: includes/display/class-compressx-custom-media-lib.php:433
+msgid "AVIF"
+msgstr ""
+
+#: includes/class-compressx-manual-optimization.php:151
+#: includes/class-compressx-manual-optimization.php:561
+#: includes/display/class-compressx-custom-media-lib.php:141
+#: includes/display/class-compressx-custom-media-lib.php:354
+#: includes/display/class-compressx-custom-media-lib.php:434
+msgid "Thumbnails generated"
+msgstr ""
+
+#: includes/class-compressx-manual-optimization.php:568
+#: includes/display/class-compressx-custom-media-lib.php:148
+#: includes/display/class-compressx-custom-media-lib.php:361
+msgid "Delete the WebP and AVIF images generated by CompressX."
+msgstr ""
+
+#. translators: %1$s: plugins name
+
+#: includes/class-compressx.php:121
+msgid "It seems that multiple image optimization plugins are installed on the website. This may cause conflicts while optimizing your images. In order to optimize your images properly and effectively, you may consider disabling other image optimization plugins: %1$s."
+msgstr ""
+
+#. translators: %1$d: Scanning images
+
+#: includes/display/class-compressx-bulk-action.php:125
+msgid "Scanning images: %1$d found"
+msgstr ""
+
+#: includes/display/class-compressx-cdn.php:67
+msgid "Cloudflare Integration"
+msgstr ""
+
+#: includes/display/class-compressx-cdn.php:73
+msgid "Cloudflare E-mail: "
+msgstr ""
+
+#: includes/display/class-compressx-cdn.php:79
+msgid "Global API Key: "
+msgstr ""
+
+#: includes/display/class-compressx-cdn.php:85
+msgid "Zone ID: "
+msgstr ""
+
+#: includes/display/class-compressx-cdn.php:91
+msgid "Purge Cache Automatically: "
+msgstr ""
+
+#: includes/display/class-compressx-cdn.php:95
+msgid "Purge all cache automatically after converting images successfully"
+msgstr ""
+
+#: includes/display/class-compressx-cdn.php:98
+msgid "Purge All Cache Manually: "
+msgstr ""
+
+#: includes/display/class-compressx-cdn.php:101
+msgid "Purge All Cloudflare CDN Cache Manually"
+msgstr ""
+
+#: includes/display/class-compressx-cdn.php:106
+msgid "Done!"
+msgstr ""
+
+#: includes/display/class-compressx-cdn.php:111
+msgid "Cloudflare Email:"
+msgstr ""
+
+#: includes/display/class-compressx-cdn.php:111
+msgid "Email address associated to your Cloudflare account"
+msgstr ""
+
+#: includes/display/class-compressx-cdn.php:112
+msgid "Global API Key:"
+msgstr ""
+
+#: includes/display/class-compressx-cdn.php:112
+msgid "A key for granting access to Cloudflare API to perform actions. You can find it in your Cloudflare dashboard > My Profile > API Tokens > Global API Key."
+msgstr ""
+
+#: includes/display/class-compressx-cdn.php:113
+msgid "Zone ID:"
+msgstr ""
+
+#: includes/display/class-compressx-cdn.php:113
+msgid "A zone ID is generated automatically when a domain is added to Cloudflare and is required for API operations. You can find it in your Cloudflare Dashboard > The website overview > API section."
+msgstr ""
+
+#: includes/display/class-compressx-cdn.php:120
+#: includes/display/class-compressx-dashboard.php:1204
+#: includes/display/class-compressx-dashboard.php:1485
+#: includes/display/class-compressx-dashboard.php:1556
+msgid "Save Changes"
+msgstr ""
+
+#: includes/display/class-compressx-cdn.php:125
+#: includes/display/class-compressx-dashboard.php:816
+#: includes/display/class-compressx-dashboard.php:846
+#: includes/display/class-compressx-dashboard.php:1209
+#: includes/display/class-compressx-dashboard.php:1490
+#: includes/display/class-compressx-dashboard.php:1561
+msgid "Saved!"
+msgstr ""
+
+#: includes/display/class-compressx-custom-bulk-action.php:43
+msgid "Custom Folders"
+msgstr ""
+
+#: includes/display/class-compressx-custom-bulk-action.php:46
+msgid "Select custom folders in the /wp-content folder and process images inside them."
+msgstr ""
+
+#: includes/display/class-compressx-custom-bulk-action.php:55
+msgid "Media Files Found: "
+msgstr ""
+
+#: includes/display/class-compressx-custom-bulk-action.php:56
+msgid "Total Savings: "
+msgstr ""
+
+#: includes/display/class-compressx-custom-bulk-action.php:57
+msgid "Processed Media Files: "
+msgstr ""
+
+#: includes/display/class-compressx-custom-bulk-action.php:61
+msgid "Bulk Process Now"
+msgstr ""
+
+#: includes/display/class-compressx-custom-bulk-action.php:62
+#: includes/display/class-compressx-dashboard.php:1049
+msgid "Cancel Processing"
+msgstr ""
+
+#: includes/display/class-compressx-custom-bulk-action.php:66
+msgid "Force all images to be re-processed"
+msgstr ""
+
+#: includes/display/class-compressx-custom-bulk-action.php:208
+msgid "Included Folders: "
+msgstr ""
+
+#: includes/display/class-compressx-custom-bulk-action.php:208
+msgid "Media files inside these folders will be processed"
+msgstr ""
+
+#. translators: %1$d: Scanning images
+
+#: includes/display/class-compressx-custom-bulk-action.php:625
+msgid "Scanning: %1$d Found | View Log"
+msgstr ""
+
+#: includes/display/class-compressx-custom-media-lib.php:40
+#: includes/display/class-compressx-custom-media-lib.php:312
+msgid "Not support"
+msgstr ""
+
+#: includes/display/class-compressx-custom-media-lib.php:176
+msgid "CompressX Filter"
+msgstr ""
+
+#: includes/display/class-compressx-custom-media-lib.php:179
+msgid "CompressX: All images"
+msgstr ""
+
+#: includes/display/class-compressx-custom-media-lib.php:180
+msgid "CompressX: Optimized"
+msgstr ""
+
+#: includes/display/class-compressx-custom-media-lib.php:181
+msgid "CompressX: Unoptimized"
+msgstr ""
+
+#: includes/display/class-compressx-custom-media-lib.php:182
+msgid "CompressX: Optimization Failed"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:63
+msgid "If the plugin has helped you, perhaps you could leave us a nice review and give us 5 stars? It would mean a lot to us and would be very motivating!"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:65
+msgid "Yes, let me give a 5-star"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:66
+msgid "Ask me later"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:67
+msgid "I already did:)"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:68
+msgid "Dismiss"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:176
+msgid "Your server does not have GD or Imagick extension installed, images cannot be converted to WebP or AVIF on the website.Please install GD or Imagick PHP extension and restart the server service to convert images to WebP and AVIF."
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:188
+msgid "We've detected a cache plugin on the site which may be causing rewrite rules of CompressX to fail. Please clear website cache to ensure the rewrite rules take effect."
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:196
+msgid ".htaccess rewrite rules - we've detected that .htaccess write rules are not executed on your Apache server, this can be because the server is not configured correctly for using .htaccess file from custom locations. For more details, please read this doc - <a href=\"https://compressx.io/docs/config-apache-htaccess-rules/\">How-to: Config Apache htaccess Rules"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:204
+msgid "We’ve detected that you use Nginx server. Nginx server does not support .htaccess rewrite rules and needs additional configurations to work. For more details, please read this doc - <a href=\"https://compressx.io/docs/config-nginx-htaccess-rules/\">How-to: Config Nginx htaccess Rules"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:212
+msgid "We've detected that the server is LiteSpeed, which requires a service restart for rewrite rules to take effect. Please restart the Litespeed service to make CompressX rewrite rules effective."
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:220
+msgid "We’ve not detected an Apache or Nginx server. You may be using a different web server that we have not tested our plugin on."
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:244
+msgid "Outputted to WEBP"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:250
+msgid "Outputted to AVIF"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:256
+msgid "Processed Images"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:257
+msgid "Failed: "
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:262
+msgid "Webp Size:"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:265
+#: includes/display/class-compressx-dashboard.php:271
+msgid "Total Savings:"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:268
+msgid "AVIF Size:"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:751
+msgid "Images Scanning"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:755
+msgid "Bulk Process"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:759
+msgid "Finished"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:764
+#: includes/display/class-compressx-dashboard.php:775
+msgid "CompressX is processing the images. Keep the page open to finish the bulk action."
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:776
+msgid "Close"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:786
+msgid "Enable it to compress &amp; convert the new uploaded images."
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:790
+msgid "Library to Process Images"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:796
+msgid "Choose the PHP extension to process images."
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:797
+msgid "GD is a PHP extension for handling image optimization.It may be slightly faster at processing large images but supports fewer image formats"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:798
+msgid "Imagick is another image optimization library that supports more image formats and produces higher quality images."
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:803
+msgid "Check Environment"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:819
+msgid "Output Formats: "
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:839
+msgid "Convert .jpg and .png images to WebP or/and AVIF format."
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:840
+msgid "If the original image is a WebP image, it will be converted to AVIF (if checked) and compressed."
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:841
+msgid "If the original image is an AVIF image, it will be compressed."
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:851
+msgid "Compression Level"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:907
+msgid "Custom Compression Level"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:915
+#: includes/display/class-compressx-dashboard.php:919
+msgid ", while maintaining better image quality."
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:925
+msgid "Customize the compression level, a value of 100 means lossless compression, less than 100 means lossy compression. The recommended value is 80."
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:932
+msgid "Save and Close"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1048
+msgid "Start Bulk Processing"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1055
+msgid "Process images only in the WordPress media library (Uploads) in bulk."
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1066
+msgid "Force all images to be re-processed."
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1140
+msgid "Choose the thumbnail sizes you want to process."
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1197
+msgid "Choose Thumbnail Sizes to Process Choose thumbnail sizes you want to process. Some themes may generate new thumbnail sizes sometimes, then you'll need to reprocess the thumbnails sizes using the Bulk Processing function."
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1225
+msgid "Delete Images Generated by CompressX"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1241
+msgid "All WebP and AVIF images and data in the database generated by CompressX will be deleted. Please proceed with caution. Original images will not be affected."
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1349
+msgid "General Settings"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1355
+msgid "Browser compatibility"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1359
+msgid "Use rewrite rule"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1365
+msgid "Load WebP and AVIF images by adding rewrite rules to the .htaccess file. So if the browser supports AVIF, AVIF images will be loaded. If AVIF is not supported, WebP images will be loaded. If both formats are not supported, the original .jpg and .png images will be loaded if any."
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1372
+#: includes/display/class-compressx-dashboard.php:1376
+msgid "Do not convert PNG images"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1382
+msgid "If ImageMagick 6.x is running on the server, PNG images may lose transparent background when being converted to AVIF. In that case, you can check this option to exclude all PNG images from conversion. A higher ImageMagick version like 7 does not have the issue."
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1389
+#: includes/display/class-compressx-dashboard.php:1393
+msgid "Remove 'Header always set Cache-Control \"private\"' from .htaccess file"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1399
+msgid "You can try to check this option if the site cannot be cached by Cloudflare."
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1406
+msgid "Remove EXIF data"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1410
+msgid "Remove EXIF data(unavailable for the GD conversion method)"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1416
+msgid "Remove metadata recorded in images (Only supported by Imagick), including geolocation,timestamps, authorship, image summary, etc. This helps to protect your privacy."
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1423
+msgid "Parameters of processing images"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1435
+msgid "images processed per ajax request."
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1441
+msgid "This value indicates how many WordPress image attachments (including original images and thumbnails) can be processed in one AJAX cycle. For example, if the value is set to 1, the plugin will process 1 attachment, which may include 1 original image and 20 thumbnails. Typically, web hosting services allow an AJAX execution time of 120 seconds, during which 3 image attachments can be processed, equating to 3 original images and 60 thumbnails. The default value is set to 5."
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1449
+#: includes/display/class-compressx-dashboard.php:1453
+msgid "Automatic removal of files in output formats larger than the original ones"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1459
+msgid "Auto-delete larger AVIF/WebP images Automatically delete AVIF/WebP images when they are larger than the original images."
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1466
+msgid "Auto-resizing large images"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1471
+msgid "Enable auto-resizing large images"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1473
+msgid "Maximum Width:"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1474
+msgid "Maximum Height:"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1479
+msgid "Auto-resize large images This option allows you to enter a width and height, so large images will be proportionately resized upon upload. For example, if you set 1280 px for the width, all large images will be resized in proportion to 1280 px in width upon upload."
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1513
+msgid "Exclude Folders"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1517
+msgid "Select folders in the Uploads folder (media library) and exclude them from the processing."
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1524
+msgid "Media library(Uploads):"
+msgstr ""
+
+#: includes/display/class-compressx-dashboard.php:1532
+msgid "Excluded Folders:"
+msgstr ""
+
+#: includes/display/class-compressx-display.php:297
+#: includes/display/class-compressx-display.php:302
+msgid "Documentation"
+msgstr ""
+
+#: includes/display/class-compressx-display.php:298
+msgid "Troubleshooting"
+msgstr ""
+
+#: includes/display/class-compressx-display.php:299
+msgid "Support"
+msgstr ""
+
+#: includes/display/class-compressx-display.php:318
+msgid "Server: "
+msgstr ""
+
+#: includes/display/class-compressx-logs.php:55
+msgid "Logs: "
+msgstr ""
+
+#: includes/display/class-compressx-logs.php:57
+msgid "Empty Logs"
+msgstr ""
+
+#: includes/display/class-compressx-logs.php:412
+#: includes/display/class-compressx-logs.php:421
+#: includes/display/class-compressx-logs.php:572
+#: includes/display/class-compressx-logs.php:595
+#: includes/display/class-compressx-logs.php:644
+msgid "The log not found "
+msgstr ""
+
+#: includes/display/class-compressx-logs.php:430
+msgid "Unable to open the log file."
+msgstr ""
+
+#: includes/display/class-compressx-system-info.php:62
+msgid "There are two ways available to send us the debug information. The first one is recommended."
+msgstr ""
+
+#: includes/display/class-compressx-system-info.php:65
+msgid "Method 1."
+msgstr ""
+
+#: includes/display/class-compressx-system-info.php:65
+msgid "If you have configured SMTP on your site, enter your email address and click the button below to send us the relevant information (website info and errors logs) when you are encountering errors. This will help us figure out what happened. Once the issue is resolved, we will inform you by your email address."
+msgstr ""
+
+#: includes/display/class-compressx-system-info.php:69
+msgid "CompressX support email:"
+msgstr ""
+
+#: includes/display/class-compressx-system-info.php:72
+msgid "Your email:"
+msgstr ""
+
+#: includes/display/class-compressx-system-info.php:77
+msgid "Please describe your problem here."
+msgstr ""
+
+#: includes/display/class-compressx-system-info.php:80
+msgid "Send Debug Information to Us"
+msgstr ""
+
+#: includes/display/class-compressx-system-info.php:84
+msgid "Method 2."
+msgstr ""
+
+#: includes/display/class-compressx-system-info.php:84
+msgid "If you didn’t configure SMTP on your site, click the button below to download the relevant information (website info and error logs) to your PC when you are encountering some errors. Sending the files to us will help us diagnose what happened."
+msgstr ""
+
+#: includes/display/class-compressx-system-info.php:110
+#: includes/display/class-compressx-system-info.php:116
+msgid "Debug Information"
+msgstr ""
+
+#: includes/display/class-compressx-system-info.php:186
+msgid "GD extension is not installed or enabled."
+msgstr ""
+
+#: includes/display/class-compressx-system-info.php:190
+msgid "The GD extension has been properly installed."
+msgstr ""
+
+#: includes/display/class-compressx-system-info.php:200
+msgid "The imagick extension has been properly installed."
+msgstr ""
+
+#: includes/display/class-compressx-system-info.php:224
+msgid "Imagick extension is not installed or enabled."
+msgstr ""
+
+#: includes/display/class-compressx-system-info.php:511
+msgid "User's email address is required."
+msgstr ""
+
+#: includes/display/class-compressx-system-info.php:519
+msgid "Please enter a valid email address."
+msgstr ""
+
+#: includes/display/class-compressx-system-info.php:598
+msgid "Unable to send email. Please check the configuration of email server."
+msgstr ""
+#. Plugin Name of the plugin/theme
+msgid "CompressX"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Convert JPG and PNG images to WebP and AVIF, compress WebP and AVIF."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "WPvivid Team"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://compressx.io"
+msgstr ""

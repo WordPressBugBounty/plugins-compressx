@@ -1,0 +1,1414 @@
+
+#compressx-root {
+    --color-background: #fff;
+    --color-bg-block:#f7f9fc;
+    --color-white:#fff;
+    --color-background-test:#000;
+    --color-title:#0B163F;
+    --color-text:#575757;
+    --color-blue:#0B163F;
+    --color-light-blue:#175cff;
+    --color-light-blue-2:#104bd4;
+    --color-tech-blue:#018fd1;
+    --color-dark-green:#198754;
+    --color-dark-yellow:orange;
+    --color-dark-orange:orange;
+    --color-text-light:#6b8fac;
+    --color-dark-red:#FF3951;
+    --color-light-grey:#F8F9FA;
+    --color-dark-grey:#f0f0f0;
+    --color-grey:#ddd;
+    --color-notification:#f7f9fc;
+    --color-grey-blue:#CEDDFF;
+    --color-grey-black:#888;
+    --container-width-lg: 1200px;
+    --container-mini-height:1000px;
+    --color-light-green:#8bc34a;
+
+    --font-family: "Poppins", Sans-serif;
+    line-height: 1.5;
+}
+#compressx-wrap {
+    background-color: var(--color-background);
+    box-sizing: border-box;
+    margin-top: 1.5rem;
+    padding-bottom: 5rem;
+    width: calc(100% - 20px) !important;
+    min-height: var(--container-mini-height);
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-radius: 6px;
+}
+.custom-shape-divider-bottom-1723692648 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    transform: rotate(180deg);
+}
+
+.custom-shape-divider-bottom-1723692648 svg {
+    position: relative;
+    display: block;
+    width: calc(100% + 1.3px);
+    height: 181px;
+}
+
+.custom-shape-divider-bottom-1723692648 .shape-fill {
+    fill: #FFFFFF;
+}
+#compressx-wrap .cx-radio-toolbar label {
+    display: inline-block;
+    background-color: var(--color-dark-grey);
+    padding: 0.3rem 0.5rem;
+    font-size: 0.8rem;
+    border: 1px solid var(--color-grey);
+    border-radius: 0.4rem;
+    cursor: pointer;
+}
+#compressx-wrap .cx-radio-toolbar input[type="radio"]:checked + label {
+    background-color: var(--color-light-blue);
+    border-color: var(--color-light-blue);
+    color:var(--color-background);
+}
+#compressx-wrap .cx-radio-toolbar input[type="radio"] {
+    opacity: 0;
+    position: fixed;
+    width: 0;
+}
+#compressx-wrap .cx-thumbnail-sizes{
+    padding:1rem 0;
+}
+#compressx-wrap a{
+    color: var(--color-light-blue);
+}
+#compressx-wrap a:hover{
+    color: var(--color-title);
+}
+.compressx-container{
+    max-width: var(--container-width-lg);
+    margin: 0 auto;
+}
+h1,h2,h3,h4,h5{
+    line-height: 1;
+    text-shadow: rgba(0,0,0,.01) 0 0 1px;
+}
+h1 {
+    font-size:2.4rem;
+    color: var(--color-title);
+
+}
+h2 {
+    font-size:2rem;
+    color: var(--color-title);
+    font-family: var(--font-family);
+}
+h3 {
+    font-size:1.6rem;
+    color: var(--color-title);
+}
+h4 {
+    font-size:1.3rem;
+    color: var(--color-title);
+}
+h5 {
+    font-size:1.2rem;
+    color: var(--color-title);
+    line-height: 0;
+}
+
+a {
+    color:var(--color-text);
+    text-decoration: none;
+}
+/*****************************Nav*****************************************/
+#compressx-wrap nav{
+    border-bottom: 1px solid var(--color-grey);
+}
+/*============================Toggle Button==============================*/
+/* The switch - the box around the slider */
+.compressx-container .cx-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.compressx-container .cx-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.compressx-container  .cx-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.compressx-container .cx-slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.compressx-container input:checked + .cx-slider {
+    background-color: var(--color-light-blue);
+}
+
+.compressx-container input:focus + .cx-slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+.compressx-container input:checked + .cx-slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+/* Rounded sliders */
+.compressx-container .cx-slider.cx-round {
+    border-radius: 34px;
+}
+
+.compressx-container .cx-slider.cx-round:before {
+    border-radius: 50%;
+}
+
+.compressx-container .cx-button {
+    background-color: var(--color-light-blue);
+    border-color: var(--color-light-blue);
+}
+.compressx-container .cx-button:hover {
+    background-color: var(--color-light-blue-2);
+    border-color: var(--color-light-blue-2);
+    color:var(--color-background)
+}
+.compressx-container .cx-button:focus{
+    background-color: var(--color-light-blue-2);
+    border-color: var(--color-light-blue-2);
+    color:var(--color-background)
+}
+.compressx-container .cx-button-light {
+    background-color: var(--color-background);
+    border-color: var(--color-light-blue);
+    color:var(--color-light-blue)
+}
+.compressx-container .cx-button-light:hover {
+    background-color: var(--color-light-blue);
+    color:var(--color-background);
+}
+.compressx-spacing{
+    padding:0.5rem 0;
+}
+/*============================Toggle Button==============================*/
+
+/* ============================ Navbar ==================================*/
+
+
+.compressx-menu{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 2rem;
+}
+.compressx-menu h2 {
+    padding:0 1rem;
+}
+.compressx-menu ul {
+    display:flex;
+    align-items: center;
+    gap:2rem;
+    padding:0 1rem;
+}
+
+.compressx-menu .cx-menu-ul-mini{
+    display: none;
+}
+/*===============================Header==================================*/
+.compressx-container .compressx-servers{
+    background-color: var(--color-bg-block);
+    padding: 1rem;
+    border-left: 1px solid var(--color-grey);
+    border-right: 1px solid var(--color-grey);
+    border-bottom: 1px solid var(--color-grey);
+    border-radius: 0px 0px 6px 6px;
+
+}
+.compressx-container .compressx-servers h5{
+    font-size: 0.8rem;
+    color: var(--color-title);
+}
+.compressx-container .compressx-servers-header{
+    padding-top: 0.1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.compressx-header{
+    padding-bottom: 2rem;
+}
+.compressx-section{
+    padding-bottom: 2rem;
+}
+
+.compressx-bulk-process article {
+    background-color: var(--color-bg-block);
+    padding:1.5rem 1rem;
+    border:1px solid var(--color-grey);
+    border-radius: 10px;
+}
+.compressx-header-block{
+    display:grid;
+    grid-template-columns: 2fr 3fr;
+    gap:1rem;
+}
+.compressx-header-custom-block{
+    display:grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap:1rem;
+}
+
+.compressx-header-custom-block article {
+    padding:1.5rem 1rem;
+    border:1px solid #fff;
+    box-shadow:1px 5px 10px 5px rgba(0, 0, 0, 0.04);
+    border-radius: 10px;
+}
+.compressx-header-block article {
+    background-color: var(--color-bg-block);
+    padding:1rem 1rem;
+    border:1px solid var(--color-grey);
+    border-radius: 6px;
+}
+
+.compressx-bulk-log article{
+    background-color: var(--color-bg-block);
+    padding:1rem 1rem;
+    border:1px solid var(--color-grey);
+    border-radius: 6px;
+}
+.compressx-header-block .cx-stopandpause{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap:1rem;
+}
+
+.compressx-header-block .cx-overview .cx-title,
+.compressx-header-custom-block .cx-overview .cx-title,
+.compressx-bulk-log .cx-title,
+.compressx-logs .cx-title{
+    color: var(--color-title);
+    font-size: 1rem;
+    font-weight: 500;
+    border-bottom: 1px solid var(--color-dark-grey);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    position: relative;
+}
+.compressx-header-block .cx-overview .cx-title .cx-processedsize,
+.compressx-bulk-log .cx-title .cx-bulk-opt-results,
+.compressx-logs .cx-title .cx-bulk-opt-results{
+    font-size: 0.7rem;
+    position: absolute;
+    top:0;
+    right: 0;
+}
+.cx-overview .cx-bulkoptimization-uploads{
+    font-size:0.7em;
+    color: var(--color-text);
+}
+.compressx-header-block .cx-overview .cx-title .cx-processedsize .cx-sizevalue{
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-title);
+}
+.compressx-header-block .cx-overview .cx-title .cx-bulkcx{
+    background-color: var(--color-light-blue);
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    font-size: 0.8rem;
+    font-weight: 400;
+}
+.compressx-header-block .cx-overview .cx-title .cx-bulkcx a{
+    color:var(--color-background) !important;
+}
+.compressx-header-block .cx-overview .cx-title .cx-bulkcx:hover{
+    color: var(--color-background);
+    background-color: var(--color-title);
+}
+.compressx-header-block .cx-overview_body{
+    display:grid;
+    grid-template-columns: repeat(5,1fr);
+    gap:1rem;
+    padding-left: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-dark-grey);
+}
+.compressx-header-block .cx-overview_body-free{
+    display:grid;
+    grid-template-columns: repeat(2,1fr);
+    gap:0.5rem;
+    border-bottom: 1px solid var(--color-dark-grey);
+    padding-bottom: 1rem;
+}
+
+.compressx-header-block .cx-overview_body-webp-free{
+    display:grid;
+    grid-template-columns: repeat(2,1fr);
+    gap:0.5rem;
+}
+.compressx-header-block .cx-process-webp{
+    width: 9rem;
+    height: 9rem;
+    border-radius: 50%;
+    border: 1px solid var(--color-grey);
+    margin: 0 auto;
+    display : flex;
+    align-items : center;
+}
+
+.compressx-header-block .cx-process-position{
+    width:80%;
+    margin:25% auto;
+}
+
+.compressx-header-block .cx-process-media-type{
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+.compressx-header-block .cx-porcess-media-files-label{
+    display: block;
+    font-size: 0.8rem;
+}
+.compressx-header-block .cx-overview_body .cx-pro{
+    font-size: 0.6rem;
+}
+.compressx-header-block .cx-overview_body .cx-subtitle{
+    display: block;
+    padding: 0.5rem 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.compressx-header-block .cx-overview_body .cx-percent,
+.compressx-header-block .cx-overview_body .cx-processed{
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--color-title);
+    padding:0.8rem 0 0.2rem 0;
+}
+.compressx-header-block .cx-overview_body-free .cx-percent,
+.compressx-header-block .cx-overview_body-free .cx-processed{
+    display: block;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--color-title);
+    padding:0.2rem 0 0.2rem 0;
+    text-align: center;
+}
+.compressx-header-block .cx-overview_body-free .cx-processed-percentage{
+    display: block;
+    color: var(--color-title);
+    padding:0.2rem 0 0.2rem 0;
+    text-align: center;
+}
+.compressx-header-block .cx-overview_body-free .cx-percent-sign,
+.compressx-header-block .cx-overview_body .cx-percent-sign{
+    font-size: 0.8rem;
+}
+.compressx-header-block .cx-overview_body .cx-savings,
+.compressx-header-block .cx-overview_body .cx-processing{
+    color: var(--color-grey-black);
+}
+.compressx-header-block .cx-overview_body-free .cx-savings,
+.compressx-header-block .cx-overview_body-free .cx-processing{
+    display: block;
+    color: var(--color-grey-black);
+    text-align: center;
+}
+.compressx-header-block .cx-overview_footer{
+    padding: 1rem 0 0;
+}
+.compressx-header-block .cx-media-selected{
+    background-color: var(--color-notification);
+    padding:1rem 1rem 0.5rem 1rem;
+    border-radius: 4px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+.compressx-header-block  .cx-medialib,
+.compressx-header-block  .cx-customlib,
+.compressx-header-block .cx-strategy,
+.compressx-header-block .cx-resizing,
+.compressx-header-block .cx-backup,
+.compressx-header-block .cx-Lazyload
+{
+    display:flex;
+    justify-content: space-between;
+    border-bottom:1px solid var(--color-dark-grey);
+    padding-bottom: 0.2rem;
+    margin-bottom: 0.8rem;
+
+}
+.compressx-header-block .cx-background{
+    padding:1rem 0;
+}
+.compressx-header-block .bulk-optimization{
+    background-color: var(--color-grey-blue);
+}
+
+.compressx-header-block .cx-servertime,
+.compressx-header-block .cx-apiserver,
+.compressx-header-block .cx-version,
+.compressx-header-block .cx-activated {
+    display: block;
+    margin-bottom: 0.3rem;
+}
+
+.compressx-header-block .cx-toactivate,
+.compressx-header-block .cx-activatedinfo{
+    margin-top: 1rem;
+    padding: 0.5rem 0.5rem 0.2rem 0.5rem;
+    border-radius: 4px;
+    background-color: var(--color-notification);
+}
+
+
+.compressx-header-block .cx-toactivate .cx-toactivate-des,
+.compressx-header-block .cx-toactivate .cx-tokeninput,
+.compressx-header-block .cx-toactivate .cx-chooseplan{
+    display: block;
+    margin-bottom: 0.5rem;
+}
+.compressx-header-block .cx-toactivate .cx-chooseplan{
+    font-size: 1rem;
+}
+
+.compressx-logs article {
+    background-color: var(--color-bg-block);
+    border: 1px solid var(--color-grey);
+    padding:1rem 1rem;
+    border-radius: 6px;
+}
+/*===============================Header Ends==================================*/
+
+
+/*=============================Compressx Notification========================================*/
+.compressx-notification{
+    background-color: var(--color-bg-block);
+    border: 1px solid var(--color-grey);
+    border-radius: 6px;
+    padding: 1rem;
+}
+.compressx-notification .cx-api{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap:1rem;
+}
+.compressx-notification .cx-rating{
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap:1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+.compressx-notification .cx-rating-btn{
+    padding:0.3rem 1rem;
+    font-size: 0.9rem;
+    color:var(--color-background);
+    background-color: var(--color-light-blue);
+    border-radius: 3px;
+    cursor: pointer;
+}
+.compressx-notification .cx-rating-btn:hover{
+    color: #fff;
+    background-color: var(--color-light-blue-2);
+}
+/*=============================Compressx Notification Ends========================================*/
+
+/*=============================Compressx General Settings========================================*/
+.compressx-general-settings{
+    background-color: var(--color-bg-block);
+    padding:0 1rem 1rem;
+    border:1px solid var(--color-grey);
+    border-radius: 6px;
+}
+
+.compressx-general-settings .compress-new-images{
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--color-light-grey);
+}
+.compressx-general-settings-header{
+    border-bottom: 1px solid var(--color-grey);
+    padding-top: 0.1rem;
+}
+.compressx-general-settings-footer{
+    padding:1rem 0 0 0;
+    margin-top:1rem;
+    border-top:1px solid var(--color-grey);
+
+}
+.compressx-general-settings-body h5,
+.compressx-general-settings-header h5{
+    font-size: 0.8rem;
+    color: var(--color-title);
+}
+.compressx-general-settings-advanced {
+    padding: 1rem 0 0 0;
+    border-top: 1px solid var(--color-grey);
+}
+.compressx-general-settings-body{
+    margin:1rem 0;
+}
+.compressx-general-settings-file-list{
+    padding:1rem 0;
+}
+.compressx-general-settings-body-grid,
+.compressx-addons-grid{
+    display:grid;
+    grid-template-columns: repeat(2,1fr);
+    gap:1rem;
+}
+.compressx-general-settings-body .cx-library-select{
+    margin: 0.5rem 0;
+    border:1px dashed #f0f0f0;
+    padding:0.5rem;
+}
+.compressx-general-settings-body .cx-library-support-yes{
+    color: var(--color-light-green);
+}
+.compressx-general-settings-body .cx-library-support-no{
+    color: var(--color-dark-red);
+}
+.compressx-general-settings-body label{
+    display:block;
+    grid-row-gap:1rem;
+}
+.compressx-general-settings-body .servers{
+    padding:1rem 0 0 1rem;
+}
+.compressx-general-settings-body .servers label{
+    float: left;
+    padding-right:1rem;
+}
+.compressx-general-settings-body .others{
+    padding:1rem 0 0 1rem;
+}
+.compressx-general-settings-body .others span{
+    display: block;
+    padding:0 0 1rem 0;
+}
+
+.compressx-general-settings-body .compressing-converting{
+    margin-top: 1rem;
+    padding: 0 1rem;
+}
+.compressx-general-settings-body .compressx-lazyload{
+    margin-top: 1rem;
+    padding: 0 1rem;
+}
+
+
+.compressx-general-settings-body .compressing-strategy{
+    padding: 1rem 0;
+    border-top: 1px solid var(--color-grey);
+    border-bottom: 1px solid var(--color-grey);
+    margin-bottom: 1rem;
+}
+.compressx-general-settings-body .compressing-strategy-custom{
+    border-left: 4px solid var(--color-grey);
+    padding-left: 1rem;
+}
+.compressx-general-settings-body .custom-jpgpng{
+    display:block;
+    padding:0 0 1rem 0;
+}
+.compressx-general-settings-body .custom-jpgpng input{
+    width:3rem;
+}
+.compressx-general-settings-body .custom-webp{
+    display:block;
+    padding:0 0 1rem 0;
+}
+.compressx-general-settings-body .custom-avif{
+    display:block;
+    padding:0 0 1rem 0;
+}
+.compressx-general-settings-body .custom-gif{
+    display:block;
+    padding:0 0 1rem 0;
+}
+.compressx-general-settings-body .custom-pdf{
+    display:block;
+    padding:0 0 1rem 0;
+}
+.compressx-general-settings-body .cx-title{
+    padding:0.3rem 0.5rem;
+    border-radius: 0.5rem 0 0 0.5rem;
+}
+.compressx-general-settings-body .cx-medialibrary-rules,
+.compressx-general-settings-body .cx-custom-rules{
+    padding-left:2rem;
+}
+
+.compressx-general-settings-body .cx-uploads-advanced{
+    display: block;
+    padding:0.5rem 0;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border-top: 1px solid var(--color-grey);
+    border-bottom: 1px solid var(--color-grey);
+}
+.compressx-general-settings-body .cx-uploads-rules,
+.compressx-general-settings-body .cx-mediafolder-rules{
+    display:grid;
+    grid-template-columns: 1fr 2fr;
+    gap:1rem;
+}
+.compressx-general-settings-body .cx-mediafolder-rules .cx-icon-color-yellow{
+    color:var(--color-dark-yellow);
+    font-size:1rem;
+    padding-top: 0.1rem;
+}
+.compressx-general-settings-body .cx-mediafolder-rules .cx-icon-color-techblue{
+    color:var(--color-tech-blue);
+    font-size:1rem;
+    padding-top: 0.1rem;
+}
+.compressx-general-settings-body .cx-mediafolder-rules .cx-mediafolders,
+.compressx-general-settings-body .cx-mediafolder-rules .cx-mediafolder-included{
+    position: relative;
+    padding: 1rem 0;
+    border-radius: 10px;
+}
+.compressx-general-settings-body .cx-mediafolder-rules .cx-mediafolders .cx-upload-treeviewer li,
+.compressx-general-settings-body .cx-mediafolder-rules .cx-mediafolder-included .cx-mediafolder-list li {
+    position: relative;
+}
+.compressx-general-settings-body .cx-mediafolder-rules .cx-mediafolders .cx-upload-treeviewer .cx-remove-rule,
+.compressx-general-settings-body .cx-mediafolder-rules .cx-mediafolder-included .cx-mediafolder-list .cx-remove-rule{
+    position: absolute;
+    right:0;
+    cursor:pointer;
+    color: var(--color-grey-black);
+    font-size: 1rem;
+    padding-top: 0.1rem;
+}
+.compressx-general-settings-body .cx-mediafolder-rules .cx-mediafolders .cx-upload-treeviewer,
+.compressx-general-settings-body .cx-mediafolder-rules .cx-mediafolder-included .cx-mediafolder-list{
+    margin-top: 1rem;
+    border: 1px solid var(--color-grey);
+    border-radius: 4px;
+    padding: 0 0.5rem;
+    height: 200px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+.compressx-general-settings-body .cx-mediafolder-rules .cx-mediafolder-included .cx-mediafolder-list ul{
+    padding: 0;
+}
+.compressx-general-settings-body .cx-mediafolder-rules .cx-mediafolder-included .cx-mediafolder-list li:nth-child(odd),
+.compressx-general-settings-body .cx-mediafolder-rules .cx-mediafolders .cx-upload-treeviewer li:nth-child(odd){
+    background-color: var(--color-light-grey);
+}
+
+.compressx-general-settings-body .different-sizes span{
+    display: block;
+    padding:1rem 0 0 1rem;
+}
+.compressx-general-settings-body .width span{
+    display: block;
+    padding:1rem 0 0 1rem;
+}
+
+.compressx-general-settings-body .rules{
+    padding: 1rem 0;
+}
+.compressx-general-settings-body .rules span{
+    display: block;
+    grid-row-gap:1rem;
+}
+.compressx-general-settings-body textarea{
+    width:100%;
+    height:100px;
+    text-align:left;
+    border:1px solid var(--color-grey);
+}
+
+.compressing-converting-information{
+    border: 1px solid var(--color-grey);
+    border-radius: 6px;
+    background-color: var(--color-notification);
+    padding: 1rem;
+}
+.compressing-converting-information .dashicons-lightbulb{
+    color:var(--color-light-blue);
+}
+
+/*=============================Compressx Bulk Optimization========================================*/
+
+.compressx-bulk-process{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+.compressx-bulk-process .cx-process-bar{
+    padding: 1rem 0 0 0;
+}
+.compressx-bulk-process .cx-process-bar-100{
+    display: block;
+    width: 100%;
+    height: .2rem;
+    background-color: var(--color-grey);
+    border-radius: 2px;
+}
+.compressx-bulk-process .cx-process-bar-percentage{
+    display: block;
+    width: 48%;
+    height: .2rem;
+    background-color: var(--color-dark-green);
+    border-radius: 2px;
+}
+/*=============================Compressx step bar starts=====================================*/
+.compressx-bulk-process .cx-stepper-wrapper {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.compressx-bulk-process  .cx-stepper-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+
+@media (max-width: 768px) {
+    font-size: 12px;
+}
+}
+
+.compressx-bulk-process  .cx-stepper-item::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #ccc;
+    width: 100%;
+    top: 20px;
+    left: -50%;
+    z-index: 2;
+}
+
+.compressx-bulk-process  .cx-stepper-item::after {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #ccc;
+    width: 100%;
+    top: 20px;
+    left: 50%;
+    z-index: 2;
+}
+
+.compressx-bulk-process .cx-stepper-item .cx-step-counter {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ccc;
+    margin-bottom: 6px;
+}
+
+.compressx-bulk-process .cx-stepper-item.cx-active {
+    font-weight: bold;
+}
+
+.compressx-bulk-process .cx-stepper-item.completed .cx-step-counter {
+    background-color: var(--color-dark-green);
+}
+
+.compressx-bulk-process .cx-stepper-item.cx-completed::after {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid var(--color-dark-green);
+    width: 100%;
+    top: 20px;
+    left: 50%;
+    z-index: 3;
+}
+
+.compressx-bulk-process  .cx-stepper-item:first-child::before {
+    content: none;
+}
+.compressx-bulk-process  .cx-stepper-item:last-child::after {
+    content: none;
+}
+/*=============================Compressx step bar ends=======================================*/
+/*=============================Compressx Addons Starts========================================*/
+.compressx-container .cx-addons {
+    border: 1px solid var(--color-grey);
+    border-radius: 6px;
+    background-color: var(--color-notification);
+    padding: 1rem;
+}
+.compressx-container .cx-addons .cx-addons-icon-block {
+    width:5rem;
+    height: 5rem;
+    padding-top:0.5rem;
+    float: left;
+}
+.compressx-container .cx-addons .cx-addons-icon-block .compressx-icon-style {
+    font-size: 3rem;
+    color: var(--color-light-blue);
+}
+.compressx-container .cx-addons h5{
+    font-size: 0.8rem;
+    color: var(--color-title);
+}
+/*=============================Compressx Addons End========================================*/
+/*=============================Compressx Lazyload========================================*/
+.compressx-general-settings-body .compressx-lazyload .compressx-lazyload-information{
+    border: 1px solid var(--color-grey);
+    border-radius: 10px;
+    background-color: var(--color-notification);
+    padding: 1rem;
+}
+.compressx-general-settings-body .compressx-lazyload .compressx-lazyload-information .dashicons-lightbulb{
+    color:var(--color-light-blue);
+}
+.compressing-converting label{
+    display:block;
+    grid-row-gap:1rem;
+}
+.compressx-general-settings-body .compressx-lazyload-settings,
+.compressx-general-settings-body .compressx-lazyload-location,
+.compressx-general-settings-body .compressx-lazyload-compat,
+.compressx-general-settings-body .compressx-lazyload-insert,
+.compressx-general-settings-body .compressx-lazyload-exclude
+{
+    border-left: 4px solid var(--color-grey);
+    padding-left: 1rem !important;
+    padding:0 0 0 0;
+    margin-bottom: 0.5rem;
+}
+.compressx-general-settings-body .compressx-lazyload-settings .media-type,
+.compressx-general-settings-body .compressx-lazyload-location .lazyload-location,
+.compressx-general-settings-body .compressx-lazyload-compat .compat,
+.compressx-general-settings-body .compressx-lazyload-insert .insert,
+.compressx-general-settings-body .compressx-lazyload-exclude .exclude
+{
+    display: block;
+    padding:0 0 0.5rem 0;
+}
+.compressx-general-settings-body .compressx-lazyload-settings .media-type span,
+.compressx-general-settings-body .compressx-lazyload-location .lazyload-location span,
+.compressx-general-settings-body .compressx-lazyload-compat .compat span,
+.compressx-general-settings-body .compressx-lazyload-insert .insert span,
+.compressx-general-settings-body .compressx-lazyload-exclude .exclude span
+{
+    padding-right: 1rem;
+}
+/*==============================Logs Table Style=================================*/
+
+.compressx-bulk-log .cx-table,
+.compressx-logs .cx-table{
+    border-radius: 4px;
+    border:1px solid var(--color-grey);
+}
+.compressx-bulk-log .cx-icon-success,
+.compressx-logs .cx-icon-success{
+    color: var(--color-light-green);
+}
+
+.compressx-bulk-log .cx-icon-warning,
+.compressx-logs .cx-icon-warning{
+    color: var(--color-dark-orange);
+}
+.compressx-bulk-log .cx-icon-error,
+.compressx-logs .cx-icon-error{
+    color:var(--color-dark-red);
+}
+.compressx-bulk-log .cx-icon-fatal-error,
+.compressx-logs .cx-icon-fatal-error{
+    color: var(--color-dark-red);
+}
+.compressx-bulk-log .cx-table-header th,
+.compressx-bulk-log .cx-table-footer th,
+.compressx-logs .cx-table-header td,
+.compressx-logs .cx-table-header th,
+.compressx-logs .cx-table-footer td,
+.compressx-logs .cx-table-footer th{
+    font-size: 0.75rem !important;
+}
+/**************************Compression Test***********************************/
+.compressx-container .cx-compression-level{
+    padding: 0.3rem 0.4rem;
+    color: var(--color-grey-black);
+    border: 1px solid var(--color-grey-black);
+
+    border-radius: 0.3rem;
+}
+.compressx-container .cx-compression-level-custom{
+    background-color: var(--color-notification);
+    border: 1px solid var(--color-grey);
+    padding:0.8rem 1rem;
+    border-radius: 0.25rem;
+}
+.compressx-container .cx-uploaded-test{
+    padding: 0.5rem 0;
+    border-top:1px solid var(--color-grey);
+    border-bottom:1px solid var(--color-grey);
+    margin-bottom: 1rem;
+}
+.compressx-container .cx-upload-block{
+    margin-bottom: 1rem;
+}
+.compressx-container .cx-display-test{
+    margin-bottom: 1rem;
+}
+.compressx-container .cx-display-result{
+    padding: 0.5rem 0 0.5rem 0.5rem;
+}
+.compressx-container .cx-display-images{
+    box-shadow: 1px 2px 2px 5px rgba(0, 0, 0, 0.01);
+}
+/*************************Tooltip*********************************************/
+/* tooltip */
+.compressx-tooltip {
+    display:inline-block;
+    position:relative;
+    text-align:left;
+}
+/* tooltip - top */
+.compressx-top {
+    min-width:300px;
+    top:-20px;
+    left:50%;
+    transform:translate(-50%, -100%);
+    padding:10px 20px;
+    color:#444444;
+    background-color:#ffffff;
+    font-weight:normal;
+    font-size:13px;
+    border-radius:8px;
+    position:absolute;
+    z-index:99999999;
+    box-sizing:border-box;
+    box-shadow:0 1px 8px rgba(0,0,0,0.2);
+    visibility:hidden; opacity:0; transition:opacity 0.8s;
+}
+
+.compressx-tooltip:hover .compressx-top {
+    visibility:visible; opacity:1;
+}
+
+.compressx-tooltip .compressx-top i {
+    position:absolute;
+    top:100%;
+    left:50%;
+    margin-left:-12px;
+    width:24px;
+    height:12px;
+    overflow:hidden;
+}
+
+.compressx-tooltip .compressx-top i::after {
+    content:'';
+    position:absolute;
+    width:12px;
+    height:12px;
+    left:50%;
+    transform:translate(-50%,-50%) rotate(45deg);
+    background-color:#ffffff;
+    box-shadow:0 1px 8px rgba(0,0,0,0.5);
+}
+
+/* tooltip - bottom */
+.compressx-bottom {
+    min-width:300px;
+    top:40px;
+    left:50%;
+    transform:translate(-50%, 0);
+    padding:10px 20px;
+    color:#444444;
+    background-color:#fff;
+    font-weight:normal;
+    font-size:13px;
+    border-radius:8px;
+    position:absolute;
+    z-index:99999999;
+    box-sizing:border-box;
+    box-shadow:0 1px 8px rgba(0,0,0,0.2);
+    visibility:hidden; opacity:0; transition:opacity 0.4s;
+}
+.compressx-dashicons-help a{
+    color: var(--color-grey-black)!important;
+}
+.compressx-dashicons-help a:hover{
+    color: var(--color-text)!important;
+}
+.compressx-dashicons-help:hover .compressx-bottom {
+    visibility:visible; opacity:1;
+}
+.compressx-dashicons-white:hover .compressx-bottom{
+    visibility:visible; opacity:1;
+}
+.compressx-tooltip .compressx-bottom i {
+    position:absolute;
+    bottom:100%;
+    left:50%;
+    margin-left:-12px;
+    width:24px;
+    height:12px;
+    overflow:hidden;
+}
+
+.compressx-tooltip .compressx-bottom i::after {
+    content:'';
+    position:absolute;
+    width:12px;
+    height:12px;
+    left:50%;
+    transform:translate(-50%,50%) rotate(45deg);
+    background-color:#fff;
+    box-shadow:0 1px 8px rgba(0,0,0,0.5);
+}
+/* tooltip - left */
+.compressx-left {
+    min-width:300px;
+    top:50%;
+    right:100%;
+    margin-right:20px;
+    transform:translate(0, -50%);
+    padding:10px 20px;
+    color:#444444;
+    background-color:#ffffff;
+    font-weight:normal;
+    font-size:13px;
+    border-radius:8px;
+    position:absolute;
+    z-index:99999999;
+    box-sizing:border-box;
+    box-shadow:0 1px 8px rgba(0,0,0,0.2);
+    visibility:hidden; opacity:0; transition:opacity 0.8s;
+}
+
+.compressx-tooltip:hover .compressx-left {
+    visibility:visible; opacity:1;
+}
+
+.compressx-tooltip .compressx-left i {
+    position:absolute;
+    top:50%;
+    left:100%;
+    margin-top:-12px;
+    width:12px;
+    height:24px;
+    overflow:hidden;
+}
+
+.compressx-tooltip .compressx-left i::after {
+    content:'';
+    position:absolute;
+    width:12px;
+    height:12px;
+    left:0;
+    top:50%;
+    transform:translate(-50%,-50%) rotate(-45deg);
+    background-color:#fff;
+    box-shadow:0 1px 8px rgba(0,0,0,0.5);
+}
+/* tooltip - right */
+.compressx-right {
+    min-width:300px;
+    top:50%;
+    left:100%;
+    margin-left:20px;
+    transform:translate(0, -50%);
+    padding:10px 20px;
+    color:#444444;
+    background-color:#ffffff;
+    font-weight:normal;
+    font-size:13px;
+    border-radius:8px;
+    position:absolute;
+    z-index:99999999;
+    box-sizing:border-box;
+    box-shadow:0 1px 8px rgba(0,0,0,0.2);
+    visibility:hidden;
+    opacity:0;
+    transition:opacity 0.8s;
+}
+
+.compressx-tooltip:hover .compressx-right {
+    visibility:visible; opacity:1;
+}
+.compressx-installer-list li{
+    padding:0.2em 0;
+}
+.compressx-tooltip .compressx-right i {
+    position:absolute;
+    top:50%;
+    right:100%;
+    margin-top:-12px;
+    width:12px;
+    height:24px;
+    overflow:hidden;
+}
+
+.compressx-tooltip .compressx-right i::after {
+    content:'';
+    position:absolute;
+    width:12px;
+    height:12px;
+    left:0;
+    top:50%;
+    transform:translate(50%,-50%) rotate(-45deg);
+    background-color:#ffffff;
+    box-shadow:0 1px 8px rgba(0,0,0,0.5);
+}
+/* The switch - the box around the slider */
+.compressx-switch {
+    position: relative;
+    display: inline-block;
+    width: 32px;
+    height: 16px;
+}
+
+/* Hide default HTML checkbox */
+.compressx-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.compressx-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0px;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.compressx-slider:before {
+    position: absolute;
+    content: "";
+    height: 12px;
+    width: 12px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .compressx-slider {
+    background-color: var(--color-light-blue);
+}
+
+input:focus + .compressx-slider {
+    box-shadow: 0 0 1px var(--color-light-blue);
+}
+
+
+input:checked + .compressx-slider:before {
+    -webkit-transform: translateX(16px);
+    -ms-transform: translateX(16px);
+    transform: translateX(16px);
+}
+
+/* Rounded sliders */
+.compressx-slider.compressx-round {
+    border-radius: 16px;
+}
+
+.compressx-slider.compressx-round:before {
+    border-radius: 50%;
+}
+/*==============================Logs Table Style=================================*/
+/* pc width > 1024px */
+
+/* ipad pro */
+@media screen and (max-width: 1024px) {
+
+    #compressx-wrap{
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    .compressx-container{
+        width: 100%;
+        margin: 0 auto;
+        box-sizing: border-box;
+    }
+    .compressx-menu{
+        padding: 0 1rem;
+    }
+    .compressx-container .compressx-servers-header{
+        padding-top: 0.1rem;
+        display: block;
+    }
+    .compressx-notification .cx-rating{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        text-align: center;
+    }
+    .tablenav .tablenav-pages {
+        float: left;
+        padding-top:1rem;
+        margin: 0 0 9px;
+        width: 100%;
+    }
+    .compressx-container .compressx-servers-header-api{
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+    .compressx-header-block{
+        display:grid;
+        grid-template-columns: 1fr;
+
+    }
+    .compressx-container .cx-table-overflow{
+        border: 0 !important;
+        overflow:auto;
+    }
+}
+/* ipad */
+@media screen and (max-width: 768px) {
+    #compressx-wrap{
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    .compressx-notification .cx-rating{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        text-align: center;
+    }
+    .compressx-container{
+        width: 100%;
+        margin: 0 auto;
+    }
+    .compressx-container .compressx-servers-header{
+        padding-top: 0.1rem;
+        display: block;
+    }
+    .compressx-container .compressx-servers-header-api{
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+    .compressx-general-settings-body-grid,
+    .compressx-addons-grid{
+        display:grid;
+        grid-template-columns: 1fr;
+        gap:1rem;
+    }
+    .compressx-general-settings-body-grid-768{
+        border: 1px solid var(--color-grey);
+        padding-bottom: 1rem;
+    }
+    .compressx-container .cx-logs-table{
+        overflow-y: auto;
+    }
+    .compressx-general-settings-body .cx-uploads-rules,
+    .compressx-general-settings-body .cx-mediafolder-rules{
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+/* iphone 12 13 14pro */
+@media screen and (max-width: 430px) {
+    body {
+
+    .compressx-container{
+        width: 100%;
+        margin: 0 auto;
+    }
+    .compressx-notification .cx-rating{
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 1rem;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        text-align: center;
+    }
+    .compressx-container .compressx-servers-header{
+        padding-top: 0.1rem;
+        display: block;
+    }
+    .compressx-container .compressx-servers-header-api{
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+    .compressx-header-block .cx-overview_body{
+        display:grid;
+        grid-template-columns: 1fr 1fr;
+        gap:1rem;
+    }
+    .compressx-header-block .cx-overview_body-free{
+        display:grid;
+        grid-template-columns: 1fr;
+        padding:0 0 1rem 0;
+    }
+    .compressx-general-settings-body .others{
+        padding:0;
+    }
+    .compressx-general-settings-body .compressx-lazyload {
+        padding: 0;
+    }
+    .compressx-header-block .cx-overview_body-webp-free{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+    }
+    .compressx-header-block .cx-processedsize{
+        display: none;
+    }
+    .compressx-menu .cx-menu-ul-large{
+        display: none;
+    }
+    .compressx-menu .cx-menu-ul-mini{
+        display: inline-block;
+    }
+    .compressx-general-settings-body .cx-uploads-rules,
+    .compressx-general-settings-body .cx-mediafolder-rules{
+        display:grid;
+        grid-template-columns: 1fr;
+        gap:1rem;
+    }
+    .compressx-bulk-log .cx-title .cx-bulk-opt-results{
+        display: none;
+    }
+
+}
+}
+
