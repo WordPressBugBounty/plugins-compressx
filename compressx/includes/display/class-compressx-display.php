@@ -57,6 +57,7 @@ class CompressX_Display
             $screen_ids[]='compressx_page_cdn-compressx';
         }
 
+        $screen_ids=apply_filters('compressx_get_screen_ids',$screen_ids);
 
         if(in_array(get_current_screen()->id,$screen_ids))
         {
@@ -76,6 +77,8 @@ class CompressX_Display
         $screen_ids[]='compressx_page_info-compressx';
         $screen_ids[]='compressx_page_logs-compressx';
         $screen_ids[]='compressx_page_cdn-compressx';
+        $screen_ids=apply_filters('compressx_get_screen_ids',$screen_ids);
+
         if(in_array(get_current_screen()->id,$screen_ids))
         {
             wp_enqueue_script(COMPRESSX_SLUG, COMPRESSX_URL . '/includes/display/js/compressx.js', array('jquery'), COMPRESSX_VERSION, false);
@@ -157,6 +160,7 @@ class CompressX_Display
         $menu['function']=array($this->dashboard, 'display');
         $menu['icon_url']='dashicons-images-alt2';
         $menu['position']=100;
+        $menu = apply_filters('compressx_get_main_admin_menus', $menu);
 
         add_menu_page( $menu['page_title'],$menu['menu_title'], $menu['capability'], $menu['menu_slug'], $menu['function'], $menu['icon_url'], $menu['position']);
 
@@ -167,101 +171,56 @@ class CompressX_Display
         $submenu['menu_slug']=COMPRESSX_SLUG;
         $submenu['function']=array($this->dashboard, 'display');
 
-        add_submenu_page
-        (
-            $submenu['parent_slug'],
-            $submenu['page_title'],
-            $submenu['menu_title'],
-            $submenu['capability'],
-            $submenu['menu_slug'],
-            $submenu['function']
-        );
+        $submenus[ $submenu['menu_slug']]=$submenu;
 
-        /*
-        $submenu['parent_slug']=COMPRESSX_SLUG;
-        $submenu['page_title']="Bulk CompressX";
-        $submenu['menu_title']="Bulk CompressX";
-        $submenu['capability']="administrator";
-        $submenu['menu_slug']="bulk-compressx";
-        $submenu['function']=array($this->bulk_action, 'display');
+        if(apply_filters('compressx_current_user_can',true,'compressx-can-use-cdn'))
+        {
+            $submenu['parent_slug']=COMPRESSX_SLUG;
+            $submenu['page_title']="CDN Integration";
+            $submenu['menu_title']="CDN Integration";
+            $submenu['capability']="administrator";
+            $submenu['menu_slug']="cdn-compressx";
+            $submenu['function']=array($this->cdn, 'display');
 
-        add_submenu_page
-        (
-            $submenu['parent_slug'],
-            $submenu['page_title'],
-            $submenu['menu_title'],
-            $submenu['capability'],
-            $submenu['menu_slug'],
-            $submenu['function']
-        );
+            $submenus[$submenu['menu_slug']]=$submenu;
+        }
 
-        $submenu['parent_slug']=COMPRESSX_SLUG;
-        $submenu['page_title']="Custom CompressX";
-        $submenu['menu_title']="Custom CompressX";
-        $submenu['capability']="administrator";
-        $submenu['menu_slug']="custom-compressx";
-        $submenu['function']=array($this->custom_bulk_action, 'display');
 
-        add_submenu_page
-        (
-            $submenu['parent_slug'],
-            $submenu['page_title'],
-            $submenu['menu_title'],
-            $submenu['capability'],
-            $submenu['menu_slug'],
-            $submenu['function']
-        );*/
+        if(apply_filters('compressx_current_user_can',true,'compressx-can-use-logs'))
+        {
+            $submenu['parent_slug']=COMPRESSX_SLUG;
+            $submenu['page_title']="Logs";
+            $submenu['menu_title']="Logs";
+            $submenu['capability']="administrator";
+            $submenu['menu_slug']="logs-compressx";
+            $submenu['function']=array($this->log, 'display');
 
-        $submenu['parent_slug']=COMPRESSX_SLUG;
-        $submenu['page_title']="CDN Integration";
-        $submenu['menu_title']="CDN Integration";
-        $submenu['capability']="administrator";
-        $submenu['menu_slug']="cdn-compressx";
-        $submenu['function']=array($this->cdn, 'display');
+            $submenus[$submenu['menu_slug']]=$submenu;
+        }
 
-        add_submenu_page
-        (
-            $submenu['parent_slug'],
-            $submenu['page_title'],
-            $submenu['menu_title'],
-            $submenu['capability'],
-            $submenu['menu_slug'],
-            $submenu['function']
-        );
+        if(apply_filters('compressx_current_user_can',true,'compressx-can-use-system-info'))
+        {
+            $submenu['parent_slug']=COMPRESSX_SLUG;
+            $submenu['page_title']="System Information";
+            $submenu['menu_title']="System Information";
+            $submenu['capability']="administrator";
+            $submenu['menu_slug']="info-compressx";
+            $submenu['function']=array($this->system_info, 'display');
 
-        $submenu['parent_slug']=COMPRESSX_SLUG;
-        $submenu['page_title']="Logs";
-        $submenu['menu_title']="Logs";
-        $submenu['capability']="administrator";
-        $submenu['menu_slug']="logs-compressx";
-        $submenu['function']=array($this->log, 'display');
+            $submenus[$submenu['menu_slug']]=$submenu;
+        }
 
-        add_submenu_page
-        (
-            $submenu['parent_slug'],
-            $submenu['page_title'],
-            $submenu['menu_title'],
-            $submenu['capability'],
-            $submenu['menu_slug'],
-            $submenu['function']
-        );
-
-        $submenu['parent_slug']=COMPRESSX_SLUG;
-        $submenu['page_title']="System Information";
-        $submenu['menu_title']="System Information";
-        $submenu['capability']="administrator";
-        $submenu['menu_slug']="info-compressx";
-        $submenu['function']=array($this->system_info, 'display');
-
-        add_submenu_page
-        (
-            $submenu['parent_slug'],
-            $submenu['page_title'],
-            $submenu['menu_title'],
-            $submenu['capability'],
-            $submenu['menu_slug'],
-            $submenu['function']
-        );
+        $submenus = apply_filters('compressx_get_admin_menus', $submenus);
+        foreach ($submenus as $submenu)
+        {
+            add_submenu_page(
+                $submenu['parent_slug'],
+                $submenu['page_title'],
+                $submenu['menu_title'],
+                $submenu['capability'],
+                $submenu['menu_slug'],
+                $submenu['function']);
+        }
     }
 
     public function mu_display()

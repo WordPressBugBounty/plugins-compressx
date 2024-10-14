@@ -37,15 +37,37 @@ class CompressX_Dashboard
                 $this->output_header();
                 $this->output_notice();
                 $this->output_review();
-                $this->output_bulk_and_settings();
-                $this->output_others_settings();
-                $this->output_thumbnail_settings();
 
-                $this->output_exclude();
+                if(apply_filters('compressx_current_user_can',true,'compressx-can-convert'))
+                {
+                    $this->output_bulk_and_settings();
+                }
 
-                do_action("cx_output_custom_bulk");
+                if(apply_filters('compressx_current_user_can',true,'compressx-can-use-general-settings'))
+                {
+                    $this->output_others_settings();
+                }
 
-                $this->output_delete_images();
+                if(apply_filters('compressx_current_user_can',true,'compressx-can-use-thumbnail-settings'))
+                {
+                    $this->output_thumbnail_settings();
+                }
+
+                if(apply_filters('compressx_current_user_can',true,'compressx-can-use-exclude'))
+                {
+                    $this->output_exclude();
+                }
+
+                if(apply_filters('compressx_current_user_can',true,'compressx-can-bulk-custom-convert'))
+                {
+                    do_action("cx_output_custom_bulk");
+                }
+
+                if(apply_filters('compressx_current_user_can',true,'compressx-can-delete'))
+                {
+                    $this->output_delete_images();
+                }
+
                 $this->output_footer();
                 ?>
             </div>
@@ -2123,19 +2145,25 @@ class CompressX_Dashboard
 
     public function get_children_count($path)
     {
-        $rii = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
-        $files = 0;
+        try {
+            $rii = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
+            $files = 0;
 
-        /** @var SplFileInfo $file */
-        foreach ($rii as $file) {
-            if ($file->isDir()){
-                continue;
+            /** @var SplFileInfo $file */
+            foreach ($rii as $file) {
+                if ($file->isDir()){
+                    continue;
+                }
+
+                $files++;
             }
 
-            $files++;
+            return $files;
         }
-
-        return $files;
+        catch (Exception $e)
+        {
+            return 0;
+        }
     }
 
     public function add_exclude_folders()

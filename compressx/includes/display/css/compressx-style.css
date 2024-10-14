@@ -271,7 +271,7 @@ a {
     background-color: var(--color-bg-block);
     padding:1.5rem 1rem;
     border:1px solid var(--color-grey);
-    border-radius: 10px;
+    border-radius: 3px;
 }
 .compressx-header-block{
     display:grid;
@@ -288,20 +288,20 @@ a {
     padding:1.5rem 1rem;
     border:1px solid #fff;
     box-shadow:1px 5px 10px 5px rgba(0, 0, 0, 0.04);
-    border-radius: 10px;
+    border-radius: 3px;
 }
 .compressx-header-block article {
     background-color: var(--color-bg-block);
     padding:1rem 1rem;
     border:1px solid var(--color-grey);
-    border-radius: 6px;
+    border-radius: 3px;
 }
 
 .compressx-bulk-log article{
     background-color: var(--color-bg-block);
     padding:1rem 1rem;
     border:1px solid var(--color-grey);
-    border-radius: 6px;
+    border-radius: 3px;
 }
 .compressx-header-block .cx-stopandpause{
     display: grid;
@@ -316,7 +316,7 @@ a {
     color: var(--color-title);
     font-size: 1rem;
     font-weight: 500;
-    border-bottom: 1px solid var(--color-dark-grey);
+    border-bottom: 1px solid var(--color-grey);
     padding-bottom: 1rem;
     margin-bottom: 1rem;
     position: relative;
@@ -506,7 +506,7 @@ a {
     background-color: var(--color-bg-block);
     border: 1px solid var(--color-grey);
     padding:1rem 1rem;
-    border-radius: 6px;
+    border-radius: 3px;
 }
 /*===============================Header Ends==================================*/
 
@@ -549,7 +549,7 @@ a {
     background-color: var(--color-bg-block);
     padding:0 1rem 1rem;
     border:1px solid var(--color-grey);
-    border-radius: 6px;
+    border-radius: 3px;
 }
 
 .compressx-general-settings .compress-new-images{
@@ -599,7 +599,7 @@ a {
     color: var(--color-dark-red);
 }
 .compressx-general-settings-body label{
-    display:block;
+
     grid-row-gap:1rem;
 }
 .compressx-general-settings-body .servers{
@@ -785,6 +785,25 @@ a {
     height: .2rem;
     background-color: var(--color-dark-green);
     border-radius: 2px;
+}
+.cx-watermark-list{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap:1rem;
+    padding: 1rem 0;
+}
+.cx-watermark-postion table{
+    border:1px solid var(--color-grey);
+    border-collapse: collapse;
+    width: 150px;
+    margin-top: 1rem;
+    text-align: center;
+}
+.cx-watermark-postion tr{
+    border:1px solid var(--color-grey);
+}
+.cx-watermark-postion td{
+    border:1px solid var(--color-grey);
 }
 /*=============================Compressx step bar starts=====================================*/
 .compressx-bulk-process .cx-stepper-wrapper {
@@ -990,6 +1009,9 @@ a {
 }
 .compressx-container .cx-display-images{
     box-shadow: 1px 2px 2px 5px rgba(0, 0, 0, 0.01);
+}
+.cx-switch-user-cap{
+    padding-bottom: 1rem;
 }
 /*************************Tooltip*********************************************/
 /* tooltip */
@@ -1295,8 +1317,8 @@ input:checked + .compressx-slider:before {
 
     }
     .compressx-container .cx-table-overflow{
+        overflow: auto;
         border: 0 !important;
-        overflow:auto;
     }
 }
 /* ipad */

@@ -50,6 +50,39 @@ class CompressX_Rewrite_Checker
         }
         else
         {
+            if($this->is_cf_cached())
+            {
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public function is_cf_cached()
+    {
+        $upload_dir   = wp_upload_dir();
+        $url=$upload_dir['baseurl'].'/'. $this->test_file;
+        $headers['Accept']='image/webp,image/*';
+        foreach ( wp_get_nocache_headers() as $header_key => $header_value )
+        {
+            $headers[$header_key] =$header_value;
+        }
+        $args['headers']= $headers;
+        $response=wp_remote_request($url,$args);
+        if(!is_wp_error($response))
+        {
+            if(isset($response['headers']['cf-cache-status']))
+            {
+                if($response['headers']['cf-cache-status']=='HIT')
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        else
+        {
             return false;
         }
     }
@@ -82,9 +115,18 @@ class CompressX_Rewrite_Checker
             }
             else
             {
-                $ret['result']='failed';
-                $ret['error']='htaccess rewrite not work';
-                return $ret;
+                if($this->is_cf_cached())
+                {
+                    $ret['result']='failed';
+                    $ret['error']='image cached by cloudflare';
+                    return $ret;
+                }
+                else
+                {
+                    $ret['result']='failed';
+                    $ret['error']='htaccess rewrite not work';
+                    return $ret;
+                }
             }
         }
         else

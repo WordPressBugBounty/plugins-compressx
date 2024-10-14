@@ -119,50 +119,57 @@ class CompressX_Custom_Bulk_Action
 
     public function get_folder_stats($path,&$stats,$convert_to_webp,$convert_to_avif)
     {
-        $count=0;
-        $rii = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
+        try {
+            $count=0;
+            $rii = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
 
-        foreach ($rii as $file)
-        {
-            if ($file->isDir())
+            foreach ($rii as $file)
             {
-                continue;
-            }
-
-            if($this->is_support_extension($file->getExtension()))
-            {
-                $filename=$path.'/'.$file->getFilename();
-                $filename=$this->transfer_path($filename);
-
-                $type=pathinfo($filename, PATHINFO_EXTENSION);
-
-                if($convert_to_webp&&$type!="webp")
+                if ($file->isDir())
                 {
-                    if(CompressX_Custom_Image_Meta::is_convert_webp($filename))
-                    {
-                        $stats['processed_files']++;
-                        $stats['processed']+=CompressX_Custom_Image_Meta::get_convert_webp_size($filename);
-                    }
-
-                    $count++;
-                    $stats['files']++;
-                    $stats['total']+=$file->getSize();
+                    continue;
                 }
-                else if($convert_to_avif&&$type!="avif")
-                {
-                    if(CompressX_Custom_Image_Meta::is_convert_avif($filename))
-                    {
-                        $stats['processed_files']++;
-                        $stats['processed']+=CompressX_Custom_Image_Meta::get_convert_avif_size($filename);
-                    }
 
-                    $count++;
-                    $stats['files']++;
-                    $stats['total']+=$file->getSize();
+                if($this->is_support_extension($file->getExtension()))
+                {
+                    $filename=$path.'/'.$file->getFilename();
+                    $filename=$this->transfer_path($filename);
+
+                    $type=pathinfo($filename, PATHINFO_EXTENSION);
+
+                    if($convert_to_webp&&$type!="webp")
+                    {
+                        if(CompressX_Custom_Image_Meta::is_convert_webp($filename))
+                        {
+                            $stats['processed_files']++;
+                            $stats['processed']+=CompressX_Custom_Image_Meta::get_convert_webp_size($filename);
+                        }
+
+                        $count++;
+                        $stats['files']++;
+                        $stats['total']+=$file->getSize();
+                    }
+                    else if($convert_to_avif&&$type!="avif")
+                    {
+                        if(CompressX_Custom_Image_Meta::is_convert_avif($filename))
+                        {
+                            $stats['processed_files']++;
+                            $stats['processed']+=CompressX_Custom_Image_Meta::get_convert_avif_size($filename);
+                        }
+
+                        $count++;
+                        $stats['files']++;
+                        $stats['total']+=$file->getSize();
+                    }
                 }
             }
+            return $count;
         }
-        return $count;
+        catch (Exception $exception)
+        {
+            return 0;
+        }
+
     }
 
     public function is_support_extension($extension)
@@ -364,36 +371,42 @@ class CompressX_Custom_Bulk_Action
 
     public function get_children_count($path,$convert_to_avif)
     {
-        $rii = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
-        $files = 0;
+        try {
+            $rii = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
+            $files = 0;
 
-        /** @var SplFileInfo $file */
-        foreach ($rii as $file)
-        {
-            if ($file->isDir())
+            /** @var SplFileInfo $file */
+            foreach ($rii as $file)
             {
-                continue;
-            }
-
-            if($this->is_support_extension($file->getExtension()))
-            {
-                $filename=$path.'/'.$file->getFilename();
-                $type=pathinfo($filename, PATHINFO_EXTENSION);
-
-                if($type=='webp'&&$convert_to_avif)
+                if ($file->isDir())
                 {
-                    $files++;
-                }
-                else
-                {
-                    $files++;
+                    continue;
                 }
 
+                if($this->is_support_extension($file->getExtension()))
+                {
+                    $filename=$path.'/'.$file->getFilename();
+                    $type=pathinfo($filename, PATHINFO_EXTENSION);
+
+                    if($type=='webp'&&$convert_to_avif)
+                    {
+                        $files++;
+                    }
+                    else
+                    {
+                        $files++;
+                    }
+
+                }
+
             }
 
+            return $files;
         }
-
-        return $files;
+        catch (Exception $e)
+        {
+            return 0;
+        }
     }
 
     public function add_include_folders()

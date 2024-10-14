@@ -705,7 +705,7 @@ class CompressX_ImgOptim_Task
                 $ret['message']=sprintf(
                 /* translators: %1$d: total images, %2$d: Succeeded images, %3$d: failed images*/
                     __('Total optimized images:%1$d Succeeded:%2$d Failed:%3$d' ,'compressx'),
-                    $ret['total_images'],$this->task['opt_images'],$ret['failed_images']);
+                    $ret['total_images'],$this->task['opt_images'],$this->task['failed_images']);
 
                 //$ret['message']='Total optimized images:'.$ret['total_images'].' Succeeded:'.$this->task['opt_images'].' Failed:'.$this->task['failed_images'];
 
@@ -743,7 +743,7 @@ class CompressX_ImgOptim_Task
                 $ret['message']=sprintf(
                 /* translators: %1$d: total images, %2$d: Succeeded images, %3$d: failed images*/
                     __('Total optimized images:%1$d Succeeded:%2$d Failed:%3$d' ,'compressx'),
-                    $ret['total_images'],$this->task['opt_images'],$ret['failed_images']);
+                    $ret['total_images'],$this->task['opt_images'],$this->task['failed_images']);
             }
             else
             {
@@ -816,14 +816,20 @@ class CompressX_ImgOptim_Task
 
     public function get_opt_folder_size()
     {
-        $compressx_path=WP_CONTENT_DIR."/compressx-nextgen/uploads";
-        $bytestotal = 0;
-        $path = realpath($compressx_path);
-        if($path!==false && $path!='' && file_exists($path)){
-            foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)) as $object){
-                $bytestotal += $object->getSize();
+        try {
+            $compressx_path=WP_CONTENT_DIR."/compressx-nextgen/uploads";
+            $bytestotal = 0;
+            $path = realpath($compressx_path);
+            if($path!==false && $path!='' && file_exists($path)){
+                foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)) as $object){
+                    $bytestotal += $object->getSize();
+                }
             }
+            return $bytestotal;
         }
-        return $bytestotal;
+        catch (Exception $e)
+        {
+            return 0;
+        }
     }
 }
