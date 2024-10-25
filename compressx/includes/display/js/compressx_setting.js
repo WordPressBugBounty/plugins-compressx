@@ -246,6 +246,7 @@ function compressx_init_progress()
     jQuery('#compressx_bulk_progress_step2').removeClass("cx-completed");
     jQuery('#compressx_bulk_progress_step3').removeClass("cx-completed");
     jQuery('#compressx_bulk_progress_step1').addClass("cx-active");
+    jQuery('#compressx_bulk_progress_step3').removeClass("cx-active");
     jQuery('#compressx_bulk_progress_sub_text').html("");
     jQuery('#compressx_bulk_progress_2_text').html("Processing...");
 }
@@ -428,7 +429,7 @@ function compressx_get_optimize_task_status()
                 jQuery('#compressx_bulk_progress_sub_text').html(jsonarray.sub_log);
                 jQuery('#compressx_bulk_progress_2_text').html(jsonarray.log);
                 jQuery('#compressx_bulk_progress_2_bar').width(jsonarray.percent+"%");
-
+                jQuery('#cx_overview').html(jsonarray.overview_html);
                 if(jsonarray.continue)
                 {
                     setTimeout(function ()
@@ -441,6 +442,7 @@ function compressx_get_optimize_task_status()
                     jQuery('#compressx_bulk_progress_step2').addClass("cx-completed");
                     jQuery('#compressx_bulk_progress_step3').addClass("cx-completed");
                     jQuery('#compressx_bulk_progress_step2').removeClass("cx-active");
+                    jQuery('#compressx_bulk_progress_step3').addClass("cx-active");
 
                     jQuery('#compressx_start_bulk_optimization').css({'pointer-events': 'auto', 'opacity': '1'});
                     jQuery('#compressx_cancel_bulk_optimization').hide();

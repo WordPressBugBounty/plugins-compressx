@@ -4,7 +4,7 @@ Tags: convert WebP, convert AVIF, WebP, AVIF
 Requires at least: 5.8
 Tested up to: 6.6.2
 Requires PHP: 7.0
-Stable tag: 0.9.16
+Stable tag: 0.9.17
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
@@ -65,6 +65,10 @@ Yes, absolutely. Whenever you need help, start a thread on the support forum or 
 Yes, we do. Here is a [tutorial](https://compressx.io/docs/compressx-overview/) for you to quickly get started with CompressX.
 
 == Changelog ==
+= 0.9.17 =
+- Added an option of 'picture tag' to load WebP and AVIF images.
+- Optimized the plugin UI.
+- Optimized the plugin code.
 = 0.9.16 =
 - Fixed a UI bug that would appear when folders that do not exist were added to exclusion rules.
 - Optimized the plugin code.
@@ -131,7 +135,8 @@ Yes, we do. Here is a [tutorial](https://compressx.io/docs/compressx-overview/) 
 - Initial release. Hello world!
 
 == Upgrade Notice ==
-Latest version 0.9.16:
-= 0.9.16 =
-- Fixed a UI bug that would appear when folders that do not exist were added to exclusion rules.
+Latest version 0.9.17:
+= 0.9.17 =
+- Added an option of 'picture tag' to load WebP and AVIF images.
+- Optimized the plugin UI.
 - Optimized the plugin code.

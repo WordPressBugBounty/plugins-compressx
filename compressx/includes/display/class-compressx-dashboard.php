@@ -179,9 +179,21 @@ class CompressX_Dashboard
         {
             $has_notice=false;
         }
-        include_once COMPRESSX_DIR . '/includes/class-compressx-rewrite-checker.php';
-        $test=new CompressX_Rewrite_Checker();
-        $result=$test->test();
+
+        $options=get_option('compressx_general_settings',array());
+        $image_load=isset($options['image_load'])?$options['image_load']:'htaccess';
+        if ($image_load == "htaccess")
+        {
+            include_once COMPRESSX_DIR . '/includes/class-compressx-rewrite-checker.php';
+            $test=new CompressX_Rewrite_Checker();
+            $result=$test->test();
+        }
+        else
+        {
+            $result=true;
+        }
+
+
 
         if(!$result||$has_notice)
         {
@@ -1381,10 +1393,18 @@ class CompressX_Dashboard
                                         <input type="radio" option="others_setting" name="image_load" value="htaccess" <?php echo esc_attr($htaccess); ?> ><?php esc_html_e('Use rewrite rule','compressx')?>
                                     </span>
                                 </p>
+                                <p style="padding-left: 1rem;">
+                                    <span>
+                                        <input type="radio" option="others_setting" name="image_load" value="picture" <?php echo esc_attr($picture); ?> ><?php esc_html_e('Use picture tag','compressx')?>
+                                    </span>
+                                </p>
                             </div>
                             <div class="compressing-converting" style="margin-top: 0rem;">
                                 <div class="compressing-converting-information">
-                                    <span><?php esc_html_e('Load WebP and AVIF images by adding rewrite rules to the .htaccess file. So if the browser supports AVIF, AVIF images will be loaded. If AVIF is not supported, WebP images will be loaded. If both formats are not supported, the original .jpg and .png images will be loaded if any.The \'.htaccess\' refers to \'/wp-content//.htaccess\'.','compressx')?></span>
+                                    <span><?php esc_html_e('Rewrite rule:Load WebP and AVIF images by adding rewrite rules to the .htaccess file. So if the browser supports AVIF, AVIF images will be loaded. If AVIF is not supported, WebP images will be loaded. If both formats are not supported, the original .jpg and .png images will be loaded if any.The \'.htaccess\' refers to \'/wp-content/.htaccess\'.','compressx')?></span>
+                                    <p>
+                                        <span><?php esc_html_e('Picture tag: Load WebP and AVIF images by replacing <img> tags with <picture> tags. You can use it when .htaccess can not take effect on your server. For example, if you are not able to restart an OpenLiteSpeed server which is required for .htaccess to take effect. This method works for most browsers but does not support images in CSS.','compressx')?></span>
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -1395,13 +1415,13 @@ class CompressX_Dashboard
                                 </div>
                                 <p style="padding-left: 1rem;">
                                     <span>
-                                        <input type="checkbox" option="others_setting" name="exclude_png" <?php echo esc_attr($exclude_png); ?> ><?php esc_html_e('Do not convert PNG images','compressx')?>
+                                        <input type="checkbox" option="others_setting" name="exclude_png" <?php echo esc_attr($exclude_png); ?> ><?php esc_html_e('Only convert PNG to WebP format','compressx')?>
                                     </span>
                                 </p>
                             </div>
                             <div class="compressing-converting" style="margin-top: 0rem;">
                                 <div class="compressing-converting-information">
-                                    <span><?php esc_html_e('If ImageMagick 6.x is running on the server, PNG images may lose transparent background when being converted to AVIF. In that case, you can check this option to exclude all PNG images from conversion. A higher ImageMagick version like 7 does not have the issue.','compressx')?></span>
+                                    <span><?php esc_html_e('If ImageMagick 6.x is running on the server, PNG images may lose transparent background when being converted to AVIF. In that case, checking this option will only convert PNG to WebP. A higher ImageMagick version like 7 does not have the issue.','compressx')?></span>
                                 </div>
                             </div>
                         </div>
@@ -1488,11 +1508,11 @@ class CompressX_Dashboard
                         <div class="compressx-general-settings-body-grid compressx-general-settings-body-grid-768" style="margin-bottom: 1rem;">
                             <div>
                                 <div class="cx-title">
-                                    <span><strong><?php esc_html_e('Remove \'Header always set Cache-Control "private"\' from .htaccess file,the \'.htaccess\' refers to \'/wp-content/.htaccess\'.','compressx')?></strong></span>
+                                    <span><strong><?php esc_html_e('Remove \'Header always set Cache-Control "private"\' from .htaccess file.','compressx')?></strong></span>
                                 </div>
                                 <p style="padding-left: 1rem;">
                                     <span>
-                                        <input type="checkbox" option="others_setting" name="disable_cache_control" <?php echo esc_attr($disable_cache_control); ?> ><?php esc_html_e('Remove \'Header always set Cache-Control "private"\' from .htaccess file','compressx')?>
+                                        <input type="checkbox" option="others_setting" name="disable_cache_control" <?php echo esc_attr($disable_cache_control); ?> ><?php esc_html_e('Remove \'Header always set Cache-Control "private"\' from .htaccess file,the \'.htaccess\' refers to \'/wp-content/.htaccess\'','compressx')?>
                                     </span>
                                 </p>
                             </div>
@@ -1848,14 +1868,24 @@ class CompressX_Dashboard
                 update_option('compressx_converter_method',$converter_method,false);
             }
 
-            if( $reset_rewrite)
+            if($options['image_load']=='htaccess')
+            {
+                if( $reset_rewrite)
+                {
+                    include_once COMPRESSX_DIR . '/includes/class-compressx-webp-rewrite.php';
+
+                    $rewrite=new CompressX_Webp_Rewrite();
+                    $rewrite->create_rewrite_rules();
+                    $ret['test']='1';
+                }
+            }
+            else
             {
                 include_once COMPRESSX_DIR . '/includes/class-compressx-webp-rewrite.php';
-
                 $rewrite=new CompressX_Webp_Rewrite();
-                $rewrite->create_rewrite_rules();
-                $ret['test']='1';
+                $rewrite->remove_rewrite_rule();
             }
+
 
             $ret['result']='success';
             echo wp_json_encode($ret);

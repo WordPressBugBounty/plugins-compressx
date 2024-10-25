@@ -63,25 +63,12 @@ class CompressX_Auto_Optimization
         {
             if(isset($this->auto_opt_ids[$attachment_id])&&$this->auto_opt_ids[$attachment_id])
             {
-                $options=get_option('compressx_general_settings',array());
-                $exclude_png=isset($options['exclude_png'])?$options['exclude_png']:false;
-                if($exclude_png)
-                {
-                    $supported_mime_types = array(
-                        "image/jpg",
-                        "image/jpeg",
-                        "image/webp",
-                        "image/avif");
-                }
-                else
-                {
-                    $supported_mime_types = array(
-                        "image/jpg",
-                        "image/jpeg",
-                        "image/png",
-                        "image/webp",
-                        "image/avif");
-                }
+                $supported_mime_types = array(
+                    "image/jpg",
+                    "image/jpeg",
+                    "image/png",
+                    "image/webp",
+                    "image/avif");
 
                 $mime_type=get_post_mime_type($attachment_id);
                 if(in_array($mime_type,$supported_mime_types))
@@ -289,10 +276,14 @@ class CompressX_Auto_Optimization
             $has_error=true;
         }
 
-        if(CompressX_Image_Opt_Method::convert_to_avif($attachment_id,$options, $this->log)===false)
+        if(!$this->is_exclude_png($attachment_id,$options))
         {
-            $has_error=true;
+            if(CompressX_Image_Opt_Method::convert_to_avif($attachment_id,$options, $this->log)===false)
+            {
+                $has_error=true;
+            }
         }
+
 
         CompressX_Image_Meta::delete_image_progressing($attachment_id);
         if($has_error)
@@ -317,5 +308,28 @@ class CompressX_Auto_Optimization
         }
 
         return $image_optimize_meta;
+    }
+
+    public function is_exclude_png($image_id,$options)
+    {
+        $options['exclude_png']=isset($options['exclude_png'])?$options['exclude_png']:false;
+        if($options['exclude_png'])
+        {
+            $file_path = get_attached_file( $image_id );
+
+            $type=pathinfo($file_path, PATHINFO_EXTENSION);
+            if ($type== 'png')
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
     }
 }

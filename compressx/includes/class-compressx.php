@@ -37,6 +37,8 @@ class CompressX
 
         add_action( 'wp_ajax_compressx_dissmiss_conflict_notice', array( $this, 'dissmiss_conflict_notice' ), 20 );
         //
+        include_once COMPRESSX_DIR . '/includes/class-compressx-picture-load.php';
+        new CompressX_Picture_Load();
     }
 
     private function set_locale()

@@ -231,7 +231,7 @@ class CompressX_Image_Opt_Method
         if(!CompressX_Image_Opt_Method::is_support_imagick())
         {
             $ret['result']='failed';
-            $ret['error']='not support gd';
+            $ret['error']='not support imagick';
             return $ret;
         }
 
@@ -374,6 +374,9 @@ class CompressX_Image_Opt_Method
             }
             else
             {
+                $image->clear();
+                $image->destroy();
+
                 $ret['result']='failed';
                 $ret['error']='type not support';
                 return $ret;
@@ -541,7 +544,7 @@ class CompressX_Image_Opt_Method
         if(!CompressX_Image_Opt_Method::is_support_imagick())
         {
             $ret['result']='failed';
-            $ret['error']='not support gd';
+            $ret['error']='not support imagick';
             return $ret;
         }
 
@@ -810,7 +813,7 @@ class CompressX_Image_Opt_Method
         if(!CompressX_Image_Opt_Method::is_support_imagick())
         {
             $ret['result']='failed';
-            $ret['error']='not support gd';
+            $ret['error']='not support imagick';
             return $ret;
         }
 
@@ -929,34 +932,16 @@ class CompressX_Image_Opt_Method
     {
         global $wpdb;
 
-        $options=get_option('compressx_general_settings',array());
-        $exclude_png=isset($options['exclude_png'])?$options['exclude_png']:false;
-        if($exclude_png)
-        {
-            $supported_mime_types = array(
-                "image/jpg",
-                "image/jpeg",
-                "image/webp",
-                "image/avif");
+        $supported_mime_types = array(
+            "image/jpg",
+            "image/jpeg",
+            "image/png",
+            "image/webp",
+            "image/avif");
 
-            $args  = $supported_mime_types;
+        $args  = $supported_mime_types;
 
-            $query="SELECT ID FROM $wpdb->posts WHERE post_type = 'attachment' AND post_mime_type IN (%s,%s,%s,%s) ";
-        }
-        else
-        {
-            $supported_mime_types = array(
-                "image/jpg",
-                "image/jpeg",
-                "image/png",
-                "image/webp",
-                "image/avif");
-
-            $args  = $supported_mime_types;
-
-            $query="SELECT ID FROM $wpdb->posts WHERE post_type = 'attachment' AND post_mime_type IN (%s,%s,%s,%s,%s) ";
-        }
-
+        $query="SELECT ID FROM $wpdb->posts WHERE post_type = 'attachment' AND post_mime_type IN (%s,%s,%s,%s,%s) ";
 
         if($limit>0)
         {

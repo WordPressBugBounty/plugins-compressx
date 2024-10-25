@@ -15,10 +15,6 @@ class CompressX_ImgOptim_Task
     {
         $this->task=array();
 
-        if($force)
-        {
-            delete_transient('compressx_set_global_stats');
-        }
         $this->task['options']['force']=$force;
 
         $this->task['log']=uniqid('cx-');
@@ -57,6 +53,9 @@ class CompressX_ImgOptim_Task
         $this->task['optimized_images']=0;
         $this->task['opt_images']=0;
         $this->task['failed_images']=0;
+
+        $this->task['current_image']=0;
+        $this->task['current_file']='';
 
         $this->task['error']='';
         $this->task['error_list']=array();
@@ -180,6 +179,8 @@ class CompressX_ImgOptim_Task
         }
 
         $this->task['options']['skip_size']=isset($options['skip_size'])?$options['skip_size']:array();
+
+        $this->task['options']['exclude_png']=isset($options['exclude_png'])?$options['exclude_png']:false;
     }
 
     public function WriteLog($log,$type)
@@ -248,32 +249,16 @@ class CompressX_ImgOptim_Task
     public function get_max_image_count()
     {
         global $wpdb;
-        $options=get_option('compressx_general_settings',array());
-        $exclude_png=isset($options['exclude_png'])?$options['exclude_png']:false;
-        if($exclude_png)
-        {
-            $supported_mime_types = array(
-                "image/jpg",
-                "image/jpeg",
-                "image/webp",
-                "image/avif");
 
-            $args  = $supported_mime_types;
-            $result=$wpdb->get_results($wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_mime_type IN (%s,%s,%s,%s)", $args ),ARRAY_N);
-        }
-        else
-        {
-            $supported_mime_types = array(
-                "image/jpg",
-                "image/jpeg",
-                "image/png",
-                "image/webp",
-                "image/avif");
+        $supported_mime_types = array(
+            "image/jpg",
+            "image/jpeg",
+            "image/png",
+            "image/webp",
+            "image/avif");
 
-            $args  = $supported_mime_types;
-            $result=$wpdb->get_results($wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_mime_type IN (%s,%s,%s,%s,%s)", $args ),ARRAY_N);
-        }
-
+        $args  = $supported_mime_types;
+        $result=$wpdb->get_results($wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_mime_type IN (%s,%s,%s,%s,%s)", $args ),ARRAY_N);
 
         if($result && sizeof($result)>0)
         {
@@ -475,6 +460,8 @@ class CompressX_ImgOptim_Task
             }
         }
 
+        delete_transient('compressx_set_global_stats');
+
         $this->task=get_option('compressx_image_opt_task',array());
         $time_spend=time()-$time_start;
         $this->WriteLog('End request cost time:'.$time_spend.'.','notice');
@@ -527,6 +514,15 @@ class CompressX_ImgOptim_Task
         CompressX_Image_Meta::update_image_progressing($image_id);
 
         $file_path = get_attached_file( $image_id );
+
+        $this->task['current_image']=$image_id;
+
+        $abs_root=CompressX_Image_Opt_Method::transfer_path(ABSPATH);
+        $attachment_dir=CompressX_Image_Opt_Method::transfer_path($file_path);
+        $this->task['current_file']=str_replace($abs_root,'',$attachment_dir);
+
+        update_option('compressx_image_opt_task',$this->task,false);
+
         if(empty($file_path))
         {
             CompressX_Image_Opt_Method::WriteLog($this->log,'Image:'.$image_id.' failed. Error: failed to get get_attached_file','notice');
@@ -576,10 +572,14 @@ class CompressX_ImgOptim_Task
             $has_error=true;
         }
 
-        if(CompressX_Image_Opt_Method::convert_to_avif($image_id,$this->task['options'],$this->log)===false)
+        if(!$this->is_exclude_png($image_id))
         {
-            $has_error=true;
+            if(CompressX_Image_Opt_Method::convert_to_avif($image_id,$this->task['options'],$this->log)===false)
+            {
+                $has_error=true;
+            }
         }
+
 
         CompressX_Image_Meta::delete_image_progressing($image_id);
         if($has_error)
@@ -600,6 +600,28 @@ class CompressX_ImgOptim_Task
 
         $ret['result']='success';
         return $ret;
+    }
+
+    public function is_exclude_png($image_id)
+    {
+        if($this->task['options']['exclude_png'])
+        {
+            $file_path = get_attached_file( $image_id );
+
+            $type=pathinfo($file_path, PATHINFO_EXTENSION);
+            if ($type== 'png')
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public function get_image_meta($image_id)
@@ -678,12 +700,24 @@ class CompressX_ImgOptim_Task
             $sub_percent=0;
         }
 
+        if(!empty($this->task['current_file']))
+        {
+            $ret['sub_log']=sprintf(
+            /* translators: %1$d: $sub task processed images, %2$d: $sub task total images*/
+                __('Current Subtask: %1$d/%2$d | Processing:%3$s' ,'compressx'),
+                $sub_optimized_images,$sub_total,$this->task['current_file']);
+        }
+        else
+        {
+            $ret['sub_log']=sprintf(
+            /* translators: %1$d: $sub task processed images, %2$d: $sub task total images*/
+                __('Current Subtask: %1$d/%2$d ' ,'compressx'),
+                $sub_optimized_images,$sub_total);
+        }
+
         $ret['percent']= $sub_percent;
         //$ret['sub_log']='Current Subtask: '.$sub_optimized_images.'/'.$sub_total;
-        $ret['sub_log']=sprintf(
-        /* translators: %1$d: $sub task processed images, %2$d: $sub task total images*/
-            __('Current Subtask: %1$d/%2$d' ,'compressx'),
-            $sub_optimized_images,$sub_total);
+
 
         if(isset($this->task['status']))
         {

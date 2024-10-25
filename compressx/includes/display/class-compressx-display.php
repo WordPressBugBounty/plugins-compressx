@@ -258,7 +258,7 @@ class CompressX_Display
                     <li><a href="https://wordpress.org/support/plugin/compressx/"><strong><?php esc_html_e('Support','compressx')?></strong></a></li>
                 </ul>
                 <ul class="cx-menu-ul-mini">
-                    <li><a href=""><?php esc_html_e('Documentation','compressx')?></a></li>
+                    <li><a href="">Documentation</a></li>
                 </ul>
             </div>
         </nav>
@@ -270,35 +270,7 @@ class CompressX_Display
         ?>
         <header>
             <div class="compressx-container compressx-header">
-                <div class="compressx-servers">
-                    <div class="compressx-servers-header">
-                        <div class="compressx-servers-header-api">
-                            <span id="cx_apiserver" class="cx-apiserver">
-                                <span><strong><?php esc_html_e('Server: ','compressx')?></strong></span>
-                                <span>
-                                    <span id="cx_apiserver_text">Localhost</span>
-                                    <!--span id="cx_edit_apiserver"><a style="cursor: pointer">Edit</a></span-->
-                                </span>
-                            </span>
-                        </div>
-                        <!--div>
-                            <span>
-                                <span class="cx-tokeninput">
-                                    <span>
-                                        <input type="password" style="width:300px;" placeholder="Provide a valid token to access the PRO API...">
-                                    </span>
-                                    <input class="button-primary cx-button" id="" type="submit" value="Activate">
-                                    <span style="display: none">
-                                        <img src="../wp-admin/images/loading.gif" alt="">
-                                    </span>
-                                </span>
-                            </span>
-                            <span style="display: none;">
-                                <span>The token is not available, please <a href="#">try it again</a></span>
-                            </span>
-                        </div-->
-                    </div>
-                </div>
+
             </div>
         </header>
         <?php

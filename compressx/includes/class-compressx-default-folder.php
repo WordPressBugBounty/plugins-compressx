@@ -40,7 +40,7 @@ class CompressX_default_folder
         $line[]='ExpiresByType image/avif "access plus 1 year"';
         $line[]='ExpiresByType image/webp "access plus 1 year"';
         $line[]='</IfModule>';
-
+        $line[]='Options -Indexes';
         insert_with_markers($htaccess_file,'CompressX Webp',$line);
     }
 }
