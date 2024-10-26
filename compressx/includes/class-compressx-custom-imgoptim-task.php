@@ -74,7 +74,7 @@ class CompressX_Custom_ImgOptim_Task
 
         $quality_options=get_option('compressx_quality',array());
 
-        $this->task['options']['quality']=isset($quality_options['quality'])?$quality_options['quality']:'lossless';
+        $this->task['options']['quality']=isset($quality_options['quality'])?$quality_options['quality']:'lossy';
         if($this->task['options']['quality']=="custom")
         {
             $this->task['options']['quality_webp']=isset($quality_options['quality_webp'])?$quality_options['quality_webp']: 80;
