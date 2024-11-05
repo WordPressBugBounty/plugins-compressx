@@ -311,6 +311,10 @@ function compressx_start_bulk_optimization()
                 jQuery('#compressx_bulk_progress_2_text').html(jsonarray.progress);
                 compressx_init_bulk_optimization_task();
             }
+            else
+            {
+                compressx_scanning_images(jsonarray.offset);
+            }
         }
         else
         {
@@ -326,7 +330,70 @@ function compressx_start_bulk_optimization()
         jQuery('#compressx_cancel_bulk_optimization').hide();
         jQuery('#compressx_start_bulk_optimization').show();
         jQuery('#compressx_start_bulk_optimization').css({'pointer-events': 'auto', 'opacity': '1'});
-        var error_message = compressx_output_ajaxerror('scan images', textStatus, errorThrown);
+        var error_message = compressx_output_ajaxerror('scanning images', textStatus, errorThrown);
+        compressx_progress_finish(error_message);
+    });
+}
+
+function compressx_scanning_images(offset)
+{
+    var force="0";
+
+    if(jQuery('#cx_force_optimization').prop('checked'))
+    {
+        force = '1';
+    }
+    else {
+        force = '0';
+    }
+
+    var ajax_data = {
+        'action': 'compressx_start_scan_unoptimized_image',
+        'force':force,
+        'offset':offset
+    };
+
+    cx_cancel_bulk_optimization=false;
+
+    compressx_post_request(ajax_data, function (data)
+    {
+        if(cx_cancel_bulk_optimization)
+        {
+            compressx_bulk_optimization_canceled("The process has been canceled");
+            return;
+        }
+
+        var jsonarray = jQuery.parseJSON(data);
+
+        if (jsonarray.result === 'success')
+        {
+            if(jsonarray.finished==true)
+            {
+                jQuery('#compressx_bulk_progress_step1').addClass("cx-completed");
+                jQuery('#compressx_bulk_progress_step1').removeClass("cx-active");
+                jQuery('#compressx_bulk_progress_2_text').html(jsonarray.progress);
+                compressx_init_bulk_optimization_task();
+            }
+            else
+            {
+                compressx_scanning_images(jsonarray.offset);
+            }
+        }
+        else
+        {
+            compressx_progress_finish(jsonarray.error);
+
+            jQuery('#compressx_cancel_bulk_optimization').hide();
+            jQuery('#compressx_start_bulk_optimization').show();
+
+            jQuery('#compressx_start_bulk_optimization').css({'pointer-events': 'auto', 'opacity': '1'});
+        }
+    }, function (XMLHttpRequest, textStatus, errorThrown)
+    {
+        jQuery('#compressx_cancel_bulk_optimization').hide();
+        jQuery('#compressx_start_bulk_optimization').show();
+        jQuery('#compressx_start_bulk_optimization').css({'pointer-events': 'auto', 'opacity': '1'});
+        var error_message = compressx_output_ajaxerror('scanning images', textStatus, errorThrown);
         compressx_progress_finish(error_message);
     });
 }

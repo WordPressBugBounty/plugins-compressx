@@ -19,7 +19,7 @@ class CompressX_Bulk_Action
         {
             die();
         }
-        update_option("compressx_need_optimized_images",0,false);
+
         delete_transient('compressx_set_global_stats');
         $max_image_count=$this->get_max_image_count();
 
@@ -32,9 +32,6 @@ class CompressX_Bulk_Action
         {
             $force=false;
         }
-        $page=300;
-        $offset=0;
-        $need_optimize_images=array();
 
         $convert_to_webp=get_option('compressx_output_format_webp',true);
         $convert_to_avif=get_option('compressx_output_format_avif',true);
@@ -106,25 +103,60 @@ class CompressX_Bulk_Action
             }
         }
 
-        for ($offset=0; $offset <= $max_image_count; $offset += $page)
+        $time_start=time();
+        $max_timeout_limit=21;
+        $finished=true;
+        $page=300;
+        $start_row=isset($_POST['offset'])?sanitize_key($_POST['offset']):'0';
+        $max_count=5000;
+        if($start_row==0)
+        {
+            $need_optimize_images=0;
+            delete_option('compressx_need_optimized_images');
+        }
+        else
+        {
+            $need_optimize_images=get_option("compressx_need_optimized_images",0);
+        }
+
+        $count=0;
+        for ($offset=$start_row; $offset <= $max_image_count; $offset += $page)
         {
             $images=CompressX_Image_Opt_Method::scan_unoptimized_image($page,$offset,$convert_to_webp,$convert_to_avif,$exclude_regex_folder,$force);
-            $need_optimize_images=array_merge($images,$need_optimize_images);
+
+            $count=$count+$page;
+            $need_optimize_images=$need_optimize_images+sizeof($images);
+            $time_spend=time()-$time_start;
+            if($time_spend>$max_timeout_limit)
+            {
+                $offset+=$page;
+                $finished=false;
+                break;
+            }
+            else if($count>$max_count)
+            {
+                $offset+=$page;
+                $finished=false;
+                break;
+            }
         }
-        update_option("compressx_need_optimized_images",sizeof($need_optimize_images),false);
 
-        $log=new CompressX_Log();
-        $log->CreateLogFile();
-        $log->WriteLog("Scanning images: ".sizeof($need_optimize_images)." found ","notice");
+        update_option("compressx_need_optimized_images",$need_optimize_images,false);
 
-        //$ret['result']='failed';
-        //$ret['error']="Scanning images: ".sizeof($need_optimize_images)." found ";
+        if($finished)
+        {
+            $log=new CompressX_Log();
+            $log->CreateLogFile();
+            $log->WriteLog("Scanning images: ".$need_optimize_images." found ","notice");
+        }
+
         $ret['result']='success';
         $ret['progress']=sprintf(
         /* translators: %1$d: Scanning images*/
             __('Scanning images: %1$d found' ,'compressx'),
-            sizeof($need_optimize_images));
-        $ret['finished']=true;
+            $need_optimize_images);
+        $ret['finished']=$finished;
+        $ret['offset']=$offset;
         $ret['test']=$max_image_count;
 
         echo wp_json_encode($ret);

@@ -20,8 +20,7 @@ function compressx_post_request(ajax_data, callback, error_callback, time_out)
 function compressx_output_ajaxerror(action, textStatus, errorThrown){
     //action = 'trying to establish communication with your server';
     var error_msg = "compressx_request: "+ textStatus + "(" + errorThrown + "): an error occurred when " + action + ". " +
-        "This error may be request not reaching or server not responding. Please try again later.";
-        //"This error could be caused by an unstable internet connection. Please try again later.";
+        "It could be because the request did not reach or the server did not respond. Please try again later.";
     return error_msg;
 }
 
