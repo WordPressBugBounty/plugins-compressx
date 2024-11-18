@@ -36,8 +36,7 @@ class CompressX_ImgOptim_Task
         */
         $this->task['offset']=0;
 
-        $this->get_need_optimize_images();
-        if(empty($this->task['images']))
+        if(!$this->get_need_optimize_images())
         {
             $ret['result']='failed';
             $ret['error']=__('No unoptimized images found.','compressx');
@@ -199,7 +198,15 @@ class CompressX_ImgOptim_Task
 
     public function get_need_optimize_images()
     {
-        $this->init_optimize_images();
+        $ret=$this->init_optimize_images();
+        if($ret['finished']&&empty($this->task['images']))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 
     public function get_task_status()
@@ -276,6 +283,8 @@ class CompressX_ImgOptim_Task
         $max_image_count=$this->get_max_image_count();
 
         $page=100;
+        $max_count=5000;
+
         $force=$this->task['options']['force'];
 
         $start_row=$this->task['offset'];
@@ -295,58 +304,110 @@ class CompressX_ImgOptim_Task
             }
         }
 
-        $this->task['memory_peak_1']=size_format(memory_get_peak_usage(),2);
+        $time_start=time();
+        $max_timeout_limit=21;
+        $count=0;
+        $finished=true;
+
         for ($current_row=$start_row; $current_row <= $max_image_count; $current_row += $page)
         {
             $images=CompressX_Image_Opt_Method::scan_unoptimized_image($page,$current_row,$convert_to_webp,$convert_to_avif,$exclude_regex_folder,$force);
             $need_optimized_images=array_merge($images,$need_optimized_images);
 
+            $count=$count+$page;
+            $time_spend=time()-$time_start;
+
             if(sizeof($need_optimized_images)>=100)
             {
                 $current_row+= $page;
+                $finished=false;
+                break;
+            }
+
+            if($time_spend>$max_timeout_limit)
+            {
+                $current_row+=$page;
+                $finished=false;
+                break;
+            }
+            else if($count>$max_count)
+            {
+                $current_row+=$page;
+                $finished=false;
                 break;
             }
         }
 
-        foreach ($need_optimized_images as $image)
+        if(!empty($need_optimized_images))
         {
-            $this->task['images'][$image['id']]=$image;
+            foreach ($need_optimized_images as $image)
+            {
+                $this->task['images'][$image['id']]=$image;
+            }
         }
 
         $this->task['offset']=$current_row;
-        $this->task['memory_peak_2']=size_format(memory_get_peak_usage(),2);
 
         update_option('compressx_image_opt_task',$this->task,false);
+
+        $ret['result']='success';
+        $ret['finished']=$finished;
+        return $ret;
     }
 
     public function get_need_optimize_image()
     {
-        foreach ($this->task['images'] as $image)
-        {
-            if($image['finished']==0)
-            {
-                return $image['id'];
-            }
-        }
-
-        $this->task['images']=array();
-        $this->init_optimize_images();
-
-        if(empty($this->task['images']))
-        {
-            return false;
-        }
-        else
+        if(!empty($this->task['images']))
         {
             foreach ($this->task['images'] as $image)
             {
                 if($image['finished']==0)
                 {
-                    return $image['id'];
+                    $ret['result']='success';
+                    $ret['finished']=false;
+                    $ret['image_id']=$image['id'];
+                    return $ret;
                 }
             }
+        }
 
-            return false;
+        $this->task['images']=array();
+        $ret=$this->init_optimize_images();
+
+        if($ret['finished']&&empty($this->task['images']))
+        {
+            $ret['result']='success';
+            $ret['finished']=true;
+            $ret['image_id']=false;
+            return $ret;
+        }
+        else
+        {
+            if(empty($this->task['images']))
+            {
+                $ret['result']='success';
+                $ret['finished']=false;
+                $ret['image_id']=false;
+                return $ret;
+            }
+            else
+            {
+                foreach ($this->task['images'] as $image)
+                {
+                    if($image['finished']==0)
+                    {
+                        $ret['result']='success';
+                        $ret['finished']=false;
+                        $ret['image_id']=$image['id'];
+                        return $ret;
+                    }
+                }
+
+                $ret['result']='success';
+                $ret['finished']=false;
+                $ret['image_id']=false;
+                return $ret;
+            }
         }
     }
 
@@ -387,9 +448,8 @@ class CompressX_ImgOptim_Task
         $max_timeout_limit=90;
         for ($i=0;$i<$converter_images_pre_request;$i++)
         {
-            $image_id=$this->get_need_optimize_image();
-
-            if($image_id===false)
+            $ret=$this->get_need_optimize_image();
+            if($ret['finished']&&$ret['image_id']===false)
             {
                 $ret['result']='success';
 
@@ -412,8 +472,15 @@ class CompressX_ImgOptim_Task
                     }
                 }
 
-
                 return $ret;
+            }
+            else if($ret['image_id']===false)
+            {
+                break;
+            }
+            else
+            {
+                $image_id=$ret['image_id'];
             }
 
             $this->task['status']='running';

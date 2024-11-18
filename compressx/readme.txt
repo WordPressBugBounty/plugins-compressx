@@ -2,9 +2,9 @@
 Contributors: compressxio
 Tags: convert WebP, convert AVIF, WebP, AVIF
 Requires at least: 5.8
-Tested up to: 6.6.2
+Tested up to: 6.7
 Requires PHP: 7.0
-Stable tag: 0.9.19
+Stable tag: 0.9.20
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
@@ -65,6 +65,9 @@ Yes, absolutely. Whenever you need help, start a thread on the support forum or 
 Yes, we do. Here is a [tutorial](https://compressx.io/docs/compressx-overview/) for you to quickly get started with CompressX.
 
 == Changelog ==
+= 0.9.20 =
+- Optimized process of scanning a large number of images.
+- Successfully tested with WordPress 6.7.
 = 0.9.19 =
 - Optimized image scanning method in the bulk processing workflow.
 = 0.9.18 =
@@ -139,6 +142,7 @@ Yes, we do. Here is a [tutorial](https://compressx.io/docs/compressx-overview/) 
 - Initial release. Hello world!
 
 == Upgrade Notice ==
-Latest version 0.9.19:
-= 0.9.19 =
-- Optimized image scanning method in the bulk processing workflow.
+Latest version 0.9.20:
+= 0.9.20 =
+- Optimized process of scanning a large number of images.
+- Successfully tested with WordPress 6.7.

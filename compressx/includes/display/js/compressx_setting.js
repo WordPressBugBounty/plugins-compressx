@@ -456,23 +456,33 @@ function compressx_run_optimize()
 
     compressx_post_request(ajax_data, function (data)
     {
-        var jsonarray = jQuery.parseJSON(data);
+        try
+        {
+            var jsonarray = jQuery.parseJSON(data);
 
-        if (jsonarray.result === 'success')
+            if (jsonarray.result === 'success')
+            {
+                setTimeout(function ()
+                {
+                    compressx_get_optimize_task_status();
+                }, 1000);
+            }
+            else
+            {
+                compressx_progress_finish(jsonarray.error);
+
+                jQuery('#compressx_cancel_bulk_optimization').hide();
+                jQuery('#compressx_start_bulk_optimization').show();
+                jQuery('#compressx_start_bulk_optimization').css({'pointer-events': 'auto', 'opacity': '1'});
+                alert(jsonarray.error);
+            }
+        }
+        catch(err)
         {
             setTimeout(function ()
             {
                 compressx_get_optimize_task_status();
             }, 1000);
-        }
-        else
-        {
-            compressx_progress_finish(jsonarray.error);
-
-            jQuery('#compressx_cancel_bulk_optimization').hide();
-            jQuery('#compressx_start_bulk_optimization').show();
-            jQuery('#compressx_start_bulk_optimization').css({'pointer-events': 'auto', 'opacity': '1'});
-            alert(jsonarray.error);
         }
     }, function (XMLHttpRequest, textStatus, errorThrown)
     {

@@ -148,6 +148,13 @@ class CompressX_Bulk_Action
             $log=new CompressX_Log();
             $log->CreateLogFile();
             $log->WriteLog("Scanning images: ".$need_optimize_images." found ","notice");
+
+            if($need_optimize_images==0)
+            {
+                $ret['result']='failed';
+                $ret['error']=__('No unoptimized images found.','compressx');
+                return $ret;
+            }
         }
 
         $ret['result']='success';

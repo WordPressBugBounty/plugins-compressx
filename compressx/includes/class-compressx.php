@@ -45,7 +45,7 @@ class CompressX
     {
         require_once COMPRESSX_DIR . '/includes/class-compressx-i18n.php';
         $plugin_i18n = new CompressX_i18n();
-        add_action('plugins_loaded',array( $plugin_i18n,'load_plugin_textdomain'));
+        add_action('init',array( $plugin_i18n,'load_plugin_textdomain'));
     }
 
     public function dissmiss_conflict_notice()
@@ -104,7 +104,7 @@ class CompressX
         $plugins_names=array();
         foreach ( $plugins as $plugin )
         {
-            $plugin_data = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin );
+            $plugin_data = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin,false,false );
             $plugins_names[]     = $plugin_data['Name'];
         }
 
