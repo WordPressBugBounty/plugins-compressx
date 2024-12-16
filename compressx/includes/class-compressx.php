@@ -23,6 +23,7 @@ class CompressX
             new CompressX_Manual_Optimization();
 
             add_action( 'admin_notices', array( $this, 'optimizer_conflicts' ) );
+            add_action('in_admin_header',array( $this,'hide_notices'), 99);
 
             $this->set_locale();
         }
@@ -39,6 +40,31 @@ class CompressX
         //
         include_once COMPRESSX_DIR . '/includes/class-compressx-picture-load.php';
         new CompressX_Picture_Load();
+
+        add_action('compressx_purge_cache_event',array( $this,'purge_cache_event'));
+    }
+
+    public function hide_notices()
+    {
+        if(is_multisite())
+        {
+            $screen_ids[]='toplevel_page_CompressX-network';
+        }
+        else
+        {
+            $screen_ids[]='toplevel_page_'.COMPRESSX_SLUG;
+            $screen_ids[]='compressx_page_info-compressx';
+            $screen_ids[]='compressx_page_logs-compressx';
+            $screen_ids[]='compressx_page_cdn-compressx';
+        }
+
+        $screen_ids=apply_filters('compressx_get_screen_ids',$screen_ids);
+
+        if(in_array(get_current_screen()->id,$screen_ids))
+        {
+            remove_all_actions('admin_notices');
+            add_action( 'admin_notices', array( $this, 'optimizer_conflicts' ) );
+        }
     }
 
     private function set_locale()
@@ -252,5 +278,20 @@ class CompressX
         $path = str_replace('\\','/',$path);
         $values = explode('/',$path);
         return implode(DIRECTORY_SEPARATOR,$values);
+    }
+
+    public function purge_cache_event()
+    {
+        include_once COMPRESSX_DIR . '/includes/class-compressx-cloudflare-cdn.php';
+
+        $options=get_option('compressx_general_settings',array());
+
+        $setting=$options['cf_cdn'];
+
+        $cdn=new CompressX_CloudFlare_CDN($setting);
+
+        $cdn->purge_cache();
+
+        die();
     }
 }

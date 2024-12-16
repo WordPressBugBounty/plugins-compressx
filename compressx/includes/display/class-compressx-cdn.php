@@ -59,6 +59,17 @@ class CompressX_CDN
             $auto_purge_cache='';
         }
 
+        $auto_purge_cache_after_manual=isset($options['cf_cdn']['auto_purge_cache_after_manual'])?$options['cf_cdn']['auto_purge_cache_after_manual']:true;
+
+        if($auto_purge_cache_after_manual)
+        {
+            $auto_purge_cache_after_manual='checked';
+        }
+        else
+        {
+            $auto_purge_cache_after_manual='';
+        }
+
         ?>
         <section>
             <div class="compressx-container compressx-section ">
@@ -92,7 +103,11 @@ class CompressX_CDN
                                 </span>
                                 <p>
                                     <input id="compressx_auto_purge_cache" type="checkbox" option="cf_cdn" name="auto_purge_cache" <?php echo esc_attr($auto_purge_cache); ?>>
-                                    <?php esc_html_e('Purge all cache automatically after converting images successfully','compressx')?>
+                                    <?php esc_html_e('Purge all cache automatically after successfully converting images in bulk.','compressx')?>
+                                </p>
+                                <p>
+                                    <input id="compressx_auto_purge_cache_after_manual" type="checkbox" option="cf_cdn" name="auto_purge_cache_after_manual" <?php echo esc_attr($auto_purge_cache_after_manual); ?>>
+                                    <?php esc_html_e('Purge all cache automatically after 5 minutes of manually converting images on media library.','compressx')?>
                                 </p>
                             </div>
                             <div class="compressing-converting">
@@ -289,6 +304,15 @@ class CompressX_CDN
             else
             {
                 $options['cf_cdn']['auto_purge_cache']=false;
+            }
+
+            if(isset($setting['auto_purge_cache_after_manual']))
+            {
+                $options['cf_cdn']['auto_purge_cache_after_manual']=$setting['auto_purge_cache_after_manual'];
+            }
+            else
+            {
+                $options['cf_cdn']['auto_purge_cache_after_manual']=false;
             }
 
             update_option('compressx_general_settings',$options,false);

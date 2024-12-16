@@ -6,7 +6,7 @@
  * @wordpress-plugin
  * Plugin Name: CompressX
  * Description: Convert JPG and PNG images to WebP and AVIF, compress WebP and AVIF.
- * Version: 0.9.20
+ * Version: 0.9.21
  * Author: WPvivid Team
  * Author URI: https://compressx.io
  * License:           GPL-3.0+
@@ -21,7 +21,7 @@ if ( ! defined( 'WPINC' ) )
     die;
 }
 
-define( 'COMPRESSX_VERSION', '0.9.20' );
+define( 'COMPRESSX_VERSION', '0.9.21' );
 
 define( 'COMPRESSX_SLUG', 'CompressX' );
 define( 'COMPRESSX_NAME', plugin_basename( __FILE__ ) );

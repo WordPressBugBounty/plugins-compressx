@@ -10,8 +10,8 @@ class CompressX_Custom_Media_Lib
 
         add_filter( 'manage_media_columns', array($this,'optimize_columns'));
         add_action( 'manage_media_custom_column', array($this, 'optimize_column_display'),10,2);
-        add_action( 'attachment_submitbox_misc_actions',  array( $this,'submitbox') );
-        add_filter( 'attachment_fields_to_edit', array($this,'attachment_fields_to_edit'), 9999, 2 );
+        //add_action( 'attachment_submitbox_misc_actions',  array( $this,'submitbox') );
+        //add_filter( 'attachment_fields_to_edit', array($this,'attachment_fields_to_edit'), 9999, 2 );
 
         add_action( 'restrict_manage_posts', array($this,'add_dropdown') );
         add_action( 'pre_get_posts', array( $this, 'filter_posts' ) );
@@ -375,7 +375,7 @@ class CompressX_Custom_Media_Lib
     {
         global $pagenow;
 
-        if ( 'post.php' === $pagenow )
+        if ( 'post.php' === $pagenow)
         {
             return $form_fields;
         }

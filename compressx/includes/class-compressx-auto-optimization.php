@@ -49,7 +49,11 @@ class CompressX_Auto_Optimization
             {
                 unset($this->auto_opt_ids[$attachment_id]);
             }
-            $this->auto_opt_ids[$attachment_id]=1;
+            else
+            {
+                $this->WriteLog('Add attachment images id:'.$attachment_id,'notice');
+                $this->auto_opt_ids[$attachment_id]=1;
+            }
         }
 
         return $metadata;
@@ -74,7 +78,11 @@ class CompressX_Auto_Optimization
                 if(in_array($mime_type,$supported_mime_types))
                 {
                     if($this->is_excludes($attachment_id))
+                    {
+                        $this->WriteLog('Exclude attachment images id:'.$attachment_id,'notice');
                         return $metadata;
+                    }
+
                     set_time_limit(300);
                     delete_transient('compressx_set_global_stats');
                     $this->do_optimize_image($attachment_id);
@@ -128,7 +136,7 @@ class CompressX_Auto_Optimization
         $this->log=new CompressX_Log();
         $this->log->CreateLogFile();
 
-        $this->WriteLog('Start optimizing images id:'.$attachment_id,'notice');
+        $this->WriteLog('Start optimizing new media images id:'.$attachment_id,'notice');
 
         $output_format_webp=get_option('compressx_output_format_webp',1);
         $output_format_avif=get_option('compressx_output_format_avif',1);
@@ -271,10 +279,14 @@ class CompressX_Auto_Optimization
             $has_error=true;
         }
 
-        if(CompressX_Image_Opt_Method::convert_to_webp($attachment_id,$options, $this->log)===false)
+        if(!$this->is_exclude_png_webp($attachment_id,$options))
         {
-            $has_error=true;
+            if(CompressX_Image_Opt_Method::convert_to_webp($attachment_id,$options, $this->log)===false)
+            {
+                $has_error=true;
+            }
         }
+
 
         if(!$this->is_exclude_png($attachment_id,$options))
         {
@@ -314,6 +326,29 @@ class CompressX_Auto_Optimization
     {
         $options['exclude_png']=isset($options['exclude_png'])?$options['exclude_png']:false;
         if($options['exclude_png'])
+        {
+            $file_path = get_attached_file( $image_id );
+
+            $type=pathinfo($file_path, PATHINFO_EXTENSION);
+            if ($type== 'png')
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function is_exclude_png_webp($image_id,$options)
+    {
+        $options['exclude_png_webp']=isset($options['exclude_png_webp'])?$options['exclude_png_webp']:false;
+        if($options['exclude_png_webp'])
         {
             $file_path = get_attached_file( $image_id );
 

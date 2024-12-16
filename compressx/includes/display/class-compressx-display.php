@@ -41,6 +41,7 @@ class CompressX_Display
         {
             add_action('admin_menu',array( $this,'add_plugin_admin_menu'));
         }
+
     }
 
     public function enqueue_styles()
@@ -168,6 +169,7 @@ class CompressX_Display
         $submenu['page_title']="Settings";
         $submenu['menu_title']="Settings";
         $submenu['capability']="administrator";
+        $submenu['index']=1;
         $submenu['menu_slug']=COMPRESSX_SLUG;
         $submenu['function']=array($this->dashboard, 'display');
 
@@ -180,6 +182,7 @@ class CompressX_Display
             $submenu['menu_title']="CDN Integration";
             $submenu['capability']="administrator";
             $submenu['menu_slug']="cdn-compressx";
+            $submenu['index']=3;
             $submenu['function']=array($this->cdn, 'display');
 
             $submenus[$submenu['menu_slug']]=$submenu;
@@ -193,6 +196,7 @@ class CompressX_Display
             $submenu['menu_title']="Logs";
             $submenu['capability']="administrator";
             $submenu['menu_slug']="logs-compressx";
+            $submenu['index']=19;
             $submenu['function']=array($this->log, 'display');
 
             $submenus[$submenu['menu_slug']]=$submenu;
@@ -205,12 +209,24 @@ class CompressX_Display
             $submenu['menu_title']="System Information";
             $submenu['capability']="administrator";
             $submenu['menu_slug']="info-compressx";
+            $submenu['index']=20;
             $submenu['function']=array($this->system_info, 'display');
 
             $submenus[$submenu['menu_slug']]=$submenu;
         }
 
         $submenus = apply_filters('compressx_get_admin_menus', $submenus);
+        usort($submenus, function ($a, $b)
+        {
+            if ($a['index'] == $b['index'])
+                return 0;
+
+            if ($a['index'] > $b['index'])
+                return 1;
+            else
+                return -1;
+        });
+
         foreach ($submenus as $submenu)
         {
             add_submenu_page(

@@ -322,7 +322,6 @@ class CompressX_Dashboard
         ob_start();
         $this->output_overview();
         $ret['html'] = ob_get_clean();
-
         echo wp_json_encode($ret);
 
         die();
@@ -1227,7 +1226,7 @@ class CompressX_Dashboard
                                 ?>
                             </div>
                             <div class="compressx-lazyload">
-                                <div class="compressx-lazyload-information">
+                                <div class="compressing-converting-information">
                                     <span><?php esc_html_e('Choose Thumbnail Sizes to Process Choose thumbnail sizes you want to process. Some themes may generate new thumbnail sizes sometimes, then you\'ll need to reprocess the thumbnails sizes using the Bulk Processing function.','compressx')?></span><br>
                                     <span></span>
                                 </div>
@@ -1333,6 +1332,17 @@ class CompressX_Dashboard
             $exclude_png='';
         }
 
+        $exclude_png_webp=isset($options['exclude_png_webp'])?$options['exclude_png_webp']:false;
+
+        if($exclude_png_webp)
+        {
+            $exclude_png_webp='checked';
+        }
+        else
+        {
+            $exclude_png_webp='';
+        }
+
         $auto_remove_larger_format=isset($options['auto_remove_larger_format'])?$options['auto_remove_larger_format']:true;
 
         if($auto_remove_larger_format)
@@ -1415,13 +1425,20 @@ class CompressX_Dashboard
                                 </div>
                                 <p style="padding-left: 1rem;">
                                     <span>
-                                        <input type="checkbox" option="others_setting" name="exclude_png" <?php echo esc_attr($exclude_png); ?> ><?php esc_html_e('Only convert PNG to WebP format','compressx')?>
+                                        <input type="checkbox" option="others_setting" name="exclude_png_webp" <?php echo esc_attr($exclude_png_webp); ?> ><?php esc_html_e('Do not convert PNG to WebP format','compressx')?>
+                                    </span>
+                                </p>
+                                <p style="padding-left: 1rem;">
+                                    <span>
+                                        <input type="checkbox" option="others_setting" name="exclude_png" <?php echo esc_attr($exclude_png); ?> ><?php esc_html_e('Do not convert PNG to AVIF format','compressx')?>
                                     </span>
                                 </p>
                             </div>
                             <div class="compressing-converting" style="margin-top: 0rem;">
                                 <div class="compressing-converting-information">
-                                    <span><?php esc_html_e('If ImageMagick 6.x is running on the server, PNG images may lose transparent background when being converted to AVIF. In that case, checking this option will only convert PNG to WebP. A higher ImageMagick version like 7 does not have the issue.','compressx')?></span>
+                                    <span>You may use the options when:</span><br>
+                                    <span>1. Your image library is ImageMagick 6.x. PNG images may lose transparent background when being converted to AVIF with ImageMagick 6.x. Then you can choose not to convert PNG to AVIF. A higher ImageMagick version like 7 does not have the issue.</span><br>
+                                    <span>2. You don't want to convert PNG to WebP or AVIF because you want to keep the transparent background.</span>
                                 </div>
                             </div>
                         </div>
@@ -1837,6 +1854,9 @@ class CompressX_Dashboard
                 $options['remove_exif']=$setting['remove_exif'];
             if(isset($setting['exclude_png']))
                 $options['exclude_png']=$setting['exclude_png'];
+            if(isset($setting['exclude_png_webp']))
+                $options['exclude_png_webp']=$setting['exclude_png_webp'];
+            //
             if(isset($setting['auto_remove_larger_format']))
                 $options['auto_remove_larger_format']=$setting['auto_remove_larger_format'];
 

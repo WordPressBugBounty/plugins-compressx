@@ -860,7 +860,6 @@ class CompressX_Image_Opt_Method
                 $ret['error']="not support webp";
                 return $ret;
             }
-
             $image->setImageFormat( "AVIF" );
 
             if(isset($options['remove_exif'])&&$options['remove_exif'])
@@ -875,14 +874,12 @@ class CompressX_Image_Opt_Method
                     $image->profileImage("icc", $profiles['icc']);
                 }
             }
-
             $image->setCompressionQuality($quality);
-
             $blob = $image->getImageBlob();
             if ( ! file_put_contents( $out, $blob ) )
             {
                 $ret['result']='failed';
-                $ret['error']="convert webp failed";
+                $ret['error']="convert avif failed";
                 return $ret;
             }
 

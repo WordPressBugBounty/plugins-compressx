@@ -14,7 +14,6 @@ class CompressX_ImgOptim_Task
     public function init_task($force=false)
     {
         $this->task=array();
-
         $this->task['options']['force']=$force;
 
         $this->task['log']=uniqid('cx-');
@@ -180,6 +179,8 @@ class CompressX_ImgOptim_Task
         $this->task['options']['skip_size']=isset($options['skip_size'])?$options['skip_size']:array();
 
         $this->task['options']['exclude_png']=isset($options['exclude_png'])?$options['exclude_png']:false;
+
+        $this->task['options']['exclude_png_webp']=isset($options['exclude_png_webp'])?$options['exclude_png_webp']:false;
     }
 
     public function WriteLog($log,$type)
@@ -507,6 +508,7 @@ class CompressX_ImgOptim_Task
                 $this->task['retry']=0;
                 $this->task['optimized_images']++;
                 update_option('compressx_image_opt_task',$this->task,false);
+                do_action('compressx_after_optimize_image',$image_id);
             }
             else
             {
@@ -538,6 +540,20 @@ class CompressX_ImgOptim_Task
         $ret['result']='success';
         $ret['test']=$this->task;
         return $ret;
+    }
+
+    public function skip_current_image()
+    {
+        $image_id=$this->task['current_image'];
+        $this->task=get_option('compressx_image_opt_task',array());
+        $this->task['images'][$image_id]['finished']=1;
+        $this->task['status']='completed';
+        $this->task['last_update_time']=time();
+        $this->task['failed_images']++;
+
+        CompressX_Image_Meta::update_image_meta_status($image_id,'failed');
+
+        update_option('compressx_image_opt_task',$this->task,false);
     }
 
     public function get_file_path($path)
@@ -634,10 +650,15 @@ class CompressX_ImgOptim_Task
             $has_error=true;
         }
 
-        if(CompressX_Image_Opt_Method::convert_to_webp($image_id,$this->task['options'],$this->log)===false)
+        //is_exclude_png_webp
+        if(!$this->is_exclude_png_webp($image_id))
         {
-            $has_error=true;
+            if(CompressX_Image_Opt_Method::convert_to_webp($image_id,$this->task['options'],$this->log)===false)
+            {
+                $has_error=true;
+            }
         }
+
 
         if(!$this->is_exclude_png($image_id))
         {
@@ -672,6 +693,28 @@ class CompressX_ImgOptim_Task
     public function is_exclude_png($image_id)
     {
         if($this->task['options']['exclude_png'])
+        {
+            $file_path = get_attached_file( $image_id );
+
+            $type=pathinfo($file_path, PATHINFO_EXTENSION);
+            if ($type== 'png')
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function is_exclude_png_webp($image_id)
+    {
+        if($this->task['options']['exclude_png_webp'])
         {
             $file_path = get_attached_file( $image_id );
 

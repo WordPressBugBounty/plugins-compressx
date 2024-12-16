@@ -3,6 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 class CompressX_Bulk_Action
 {
+    public $end_shutdown_function;
     public function __construct()
     {
         add_action('wp_ajax_compressx_start_scan_unoptimized_image', array($this, 'start_scan_unoptimized_image'));
@@ -301,10 +302,14 @@ class CompressX_Bulk_Action
 
     public function run_optimize()
     {
+        register_shutdown_function(array($this,'deal_shutdown_error'));
+        $this->end_shutdown_function=false;
+
         check_ajax_referer( 'compressx_ajax', 'nonce');
         $check=current_user_can('manage_options');
         if(!$check)
         {
+            $this->end_shutdown_function=true;
             die();
         }
 
@@ -323,6 +328,8 @@ class CompressX_Bulk_Action
         {
             echo wp_json_encode($ret);
         }
+
+        $this->end_shutdown_function=true;
         die();
     }
 
@@ -544,5 +551,24 @@ class CompressX_Bulk_Action
         {
             return 0;
         }
+    }
+
+    public function deal_shutdown_error()
+    {
+        if($this->end_shutdown_function===false)
+        {
+            $task=new CompressX_ImgOptim_Task();
+            $error = error_get_last();
+
+            if (!is_null($error))
+            {
+                if (empty($error) || !in_array($error['type'], array(E_ERROR,E_RECOVERABLE_ERROR,E_CORE_ERROR,E_COMPILE_ERROR), true))
+                {
+                    $task->WriteLog('In shutdown function last message type:'.$error['type'].' str:'.$error['message'],'notice');
+                }
+            }
+        }
+
+        die();
     }
 }

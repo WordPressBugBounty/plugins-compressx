@@ -29,7 +29,6 @@
     line-height: 1.5;
 }
 #compressx-wrap {
-    background-color: var(--color-background);
     box-sizing: border-box;
     margin-top: 1.5rem;
     padding-bottom: 5rem;
@@ -262,10 +261,10 @@ a {
     align-items: center;
 }
 .compressx-header{
-    padding-bottom: 2rem;
+    padding-bottom: 1rem;
 }
 .compressx-section{
-    padding-bottom: 2rem;
+    padding-bottom: 1rem;
 }
 
 .compressx-bulk-process article {
@@ -292,14 +291,14 @@ a {
     border-radius: 3px;
 }
 .compressx-header-block article {
-    background-color: var(--color-bg-block);
-    padding:1rem 1rem;
-    border:1px solid var(--color-grey);
+    background-color: var(--color-background);
+    padding: 1rem 1rem;
+    border: 1px solid var(--color-grey);
     border-radius: 3px;
 }
 
 .compressx-bulk-log article{
-    background-color: var(--color-bg-block);
+    background-color: var(--color-background);
     padding:1rem 1rem;
     border:1px solid var(--color-grey);
     border-radius: 3px;
@@ -504,7 +503,7 @@ a {
 }
 
 .compressx-logs article {
-    background-color: var(--color-bg-block);
+    background-color: var(--color-background);
     border: 1px solid var(--color-grey);
     padding:1rem 1rem;
     border-radius: 3px;
@@ -547,7 +546,7 @@ a {
 
 /*=============================Compressx General Settings========================================*/
 .compressx-general-settings{
-    background-color: var(--color-bg-block);
+    background-color: var(--color-background);
     padding:0 1rem 1rem;
     border:1px solid var(--color-grey);
     border-radius: 3px;
@@ -756,7 +755,7 @@ a {
 
 .compressing-converting-information{
     border: 1px solid var(--color-grey);
-    border-radius: 6px;
+    border-radius: 3px;
     background-color: var(--color-notification);
     padding: 1rem;
 }
