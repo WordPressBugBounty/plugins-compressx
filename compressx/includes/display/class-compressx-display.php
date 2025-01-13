@@ -188,7 +188,6 @@ class CompressX_Display
             $submenus[$submenu['menu_slug']]=$submenu;
         }
 
-
         if(apply_filters('compressx_current_user_can',true,'compressx-can-use-logs'))
         {
             $submenu['parent_slug']=COMPRESSX_SLUG;

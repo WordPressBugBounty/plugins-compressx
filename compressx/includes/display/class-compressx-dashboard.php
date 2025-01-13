@@ -785,7 +785,7 @@ class CompressX_Dashboard
                                 </div>
                                 <div id="compressx_bulk_progress_step2" class="cx-stepper-item">
                                     <div class="cx-step-counter">2</div>
-                                    <div class="cx-step-name"><?php esc_html_e('Bulk Process','compressx')?></div>
+                                    <div class="cx-step-name"><?php esc_html_e('Bulk Processing','compressx')?></div>
                                 </div>
                                 <div id="compressx_bulk_progress_step3" class="cx-stepper-item ">
                                     <div class="cx-step-counter">3</div>

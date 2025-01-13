@@ -179,8 +179,10 @@ class CompressX_ImgOptim_Task
         $this->task['options']['skip_size']=isset($options['skip_size'])?$options['skip_size']:array();
 
         $this->task['options']['exclude_png']=isset($options['exclude_png'])?$options['exclude_png']:false;
-
         $this->task['options']['exclude_png_webp']=isset($options['exclude_png_webp'])?$options['exclude_png_webp']:false;
+
+        $this->task['options']['exclude_jpg_avif']=isset($options['exclude_jpg_avif'])?$options['exclude_jpg_avif']:false;
+        $this->task['options']['exclude_jpg_webp']=isset($options['exclude_jpg_webp'])?$options['exclude_jpg_webp']:false;
     }
 
     public function WriteLog($log,$type)
@@ -508,6 +510,7 @@ class CompressX_ImgOptim_Task
                 $this->task['retry']=0;
                 $this->task['optimized_images']++;
                 update_option('compressx_image_opt_task',$this->task,false);
+                do_action('compressx_bulking_add_watermark',$image_id);
                 do_action('compressx_after_optimize_image',$image_id);
             }
             else
@@ -617,6 +620,24 @@ class CompressX_ImgOptim_Task
             $this->task['failed_images']++;
             update_option('compressx_image_opt_task',$this->task,false);
             CompressX_Image_Meta::update_image_meta_status($image_id,'failed');
+            CompressX_Image_Meta::update_images_meta($image_id,$image_optimize_meta);
+
+            $ret['result']='success';
+            return $ret;
+        }
+
+        if(!$this->check_file_mime_content_type($file_path))
+        {
+            CompressX_Image_Opt_Method::WriteLog($this->log,'Image:'.$image_id.' failed. Error: mime content type not support','notice');
+
+            $image_optimize_meta['size']['og']['status']='failed';
+            $image_optimize_meta['size']['og']['error']='Image:'.$image_id.' failed. Error: mime content type not support';
+
+            $this->task=get_option('compressx_image_opt_task',array());
+            $this->task['failed_images']++;
+            update_option('compressx_image_opt_task',$this->task,false);
+            CompressX_Image_Meta::update_image_meta_status($image_id,'failed');
+            CompressX_Image_Meta::update_images_meta($image_id,$image_optimize_meta);
 
             $ret['result']='success';
             return $ret;
@@ -650,8 +671,7 @@ class CompressX_ImgOptim_Task
             $has_error=true;
         }
 
-        //is_exclude_png_webp
-        if(!$this->is_exclude_png_webp($image_id))
+        if(!$this->is_exclude_webp($image_id))
         {
             if(CompressX_Image_Opt_Method::convert_to_webp($image_id,$this->task['options'],$this->log)===false)
             {
@@ -660,7 +680,7 @@ class CompressX_ImgOptim_Task
         }
 
 
-        if(!$this->is_exclude_png($image_id))
+        if(!$this->is_exclude_avif($image_id))
         {
             if(CompressX_Image_Opt_Method::convert_to_avif($image_id,$this->task['options'],$this->log)===false)
             {
@@ -690,21 +710,31 @@ class CompressX_ImgOptim_Task
         return $ret;
     }
 
-    public function is_exclude_png($image_id)
+    public function check_file_mime_content_type($file_path)
     {
-        if($this->task['options']['exclude_png'])
+        $type=mime_content_type($file_path);
+        if($type=="text/html")
         {
-            $file_path = get_attached_file( $image_id );
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
 
-            $type=pathinfo($file_path, PATHINFO_EXTENSION);
-            if ($type== 'png')
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+    public function is_exclude_avif($image_id)
+    {
+        $file_path = get_attached_file( $image_id );
+        $type=pathinfo($file_path, PATHINFO_EXTENSION);
+
+        if($this->task['options']['exclude_png']&&$type== 'png')
+        {
+            return true;
+        }
+        else if($this->task['options']['exclude_jpg_avif']&&$type== 'jpg')
+        {
+            return true;
         }
         else
         {
@@ -712,21 +742,18 @@ class CompressX_ImgOptim_Task
         }
     }
 
-    public function is_exclude_png_webp($image_id)
+    public function is_exclude_webp($image_id)
     {
-        if($this->task['options']['exclude_png_webp'])
-        {
-            $file_path = get_attached_file( $image_id );
+        $file_path = get_attached_file( $image_id );
+        $type=pathinfo($file_path, PATHINFO_EXTENSION);
 
-            $type=pathinfo($file_path, PATHINFO_EXTENSION);
-            if ($type== 'png')
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+        if($this->task['options']['exclude_png_webp']&&$type== 'png')
+        {
+            return true;
+        }
+        else if($this->task['options']['exclude_jpg_webp']&&$type== 'jpg')
+        {
+            return true;
         }
         else
         {
@@ -784,7 +811,14 @@ class CompressX_ImgOptim_Task
             $ret['optimized_images']=$this->task['optimized_images'];
         }
 
-        $percent= intval(($ret['optimized_images']/$ret['total_images'])*100);
+        if($ret['total_images']>0)
+        {
+            $percent= intval(($ret['optimized_images']/$ret['total_images'])*100);
+        }
+        else
+        {
+            $percent=0;
+        }
 
         $ret['log']=sprintf(
         /* translators: %1$d: total images, %2$d: processed images, %3$d: total images, %4$d: Processed percent */

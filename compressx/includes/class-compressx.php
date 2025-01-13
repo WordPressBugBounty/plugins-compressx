@@ -291,7 +291,6 @@ class CompressX
         $cdn=new CompressX_CloudFlare_CDN($setting);
 
         $cdn->purge_cache();
-
         die();
     }
 }

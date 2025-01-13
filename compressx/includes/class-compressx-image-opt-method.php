@@ -1835,6 +1835,21 @@ class CompressX_Image_Opt_Method
         return $real_path.'/'.basename($og_path);
     }
 
+    public static function get_nextgen_folder()
+    {
+        //compressx-nextgen
+        $options=get_option('compressx_general_settings',array());
+        $custom_folder=isset($options['custom_folder'])?$options['custom_folder']:'';
+        if(empty($custom_folder))
+        {
+            return "compressx-nextgen";
+        }
+        else
+        {
+            return $custom_folder;
+        }
+    }
+
     public static function delete_image($image_id)
     {
         $files=array();
@@ -1886,5 +1901,7 @@ class CompressX_Image_Opt_Method
         delete_post_meta($image_id,'compressx_image_meta_compressed_size');
         delete_post_meta($image_id,'compressx_image_meta');
         delete_post_meta($image_id,'compressx_image_progressing');
+
+        do_action('compressx_delete_image',$image_id);
     }
 }

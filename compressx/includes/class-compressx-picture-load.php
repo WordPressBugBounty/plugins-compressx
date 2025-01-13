@@ -222,6 +222,7 @@ class CompressX_Picture_Load
             $srcset_source => array(),
         ];
 
+        /*
         if ( ! empty( $image['srcset'] ) )
         {
             foreach ( $image['srcset'] as $srcset )
@@ -233,7 +234,32 @@ class CompressX_Picture_Load
 
                 $attributes[ $srcset_source ][] = $srcset[ $url ] . ' ' . $srcset['descriptor'];
             }
+        }*/
+
+        if ( ! empty( $image['srcset']['srcs'] ) )
+        {
+            foreach ( $image['srcset']['srcs'] as $srcset )
+            {
+                if (! empty( $srcset[$url] ) )
+                {
+                    $attributes[ $srcset_source ][] = $srcset[$url] . ' ' . $srcset['descriptor'];
+                }
+
+            }
         }
+        else if ( ! empty( $image['srcset'] ) )
+        {
+            foreach ( $image['srcset'] as $srcset )
+            {
+                if ( empty( $srcset[ $url ] ) )
+                {
+                    continue;
+                }
+
+                $attributes[ $srcset_source ][] = $srcset[ $url ] . ' ' . $srcset['descriptor'];
+            }
+        }
+
 
         if ( empty( $attributes[ $srcset_source ] ) && empty( $image['src'][ $url ] ) ) {
             return [];
@@ -611,6 +637,17 @@ class CompressX_Picture_Load
 
                     $exist_ret['url'] .= ! empty( $src['query'] ) ? $src['query'] : '';
                     $ret['webp_url']=$exist_ret['url'];
+
+                    $tmp_srcset=array(
+                        'url'         => $srcs[0],
+                        'descriptor'  => $srcs[1],
+                        'webp_exists'=>$path_exist
+                    );
+
+                    $tmp_srcset['webp_path']=$ret['webp_path'];
+                    $tmp_srcset['webp_url']=$ret['webp_url'];
+
+                    $ret['srcs'][]=$tmp_srcset;
                 }
 
                 $exist_ret=$this->avif_exist($url);
@@ -622,8 +659,20 @@ class CompressX_Picture_Load
 
                     $exist_ret['url'] .= ! empty( $src['query'] ) ? $src['query'] : '';
                     $ret['avif_url']=$exist_ret['url'];
+
+                    $tmp_srcset=array(
+                        'url'         => $srcs[0],
+                        'descriptor'  => $srcs[1],
+                        'webp_exists'=>$path_exist
+                    );
+
+                    $tmp_srcset['avif_path']=$ret['avif_path'];
+                    $tmp_srcset['avif_url']=$ret['avif_url'];
+
+                    $ret['srcs'][]=$tmp_srcset;
                 }
 
+                /*
                 if($path_exist)
                 {
                     $tmp_srcset=array(
@@ -641,7 +690,7 @@ class CompressX_Picture_Load
                 {
                     //$path_exist=false;
                     continue;
-                }
+                }*/
             }
         }
         else

@@ -175,6 +175,8 @@ class CompressX_System_Info
         global $wp_version;
         $debug_info=array();
 
+        $debug_info['home']=$this->get_domain();
+        $debug_info['Server name']=$_SERVER['SERVER_NAME'];
         $debug_info['Web Server'] = sanitize_text_field($_SERVER["SERVER_SOFTWARE"]);
         $debug_info['CompressX version'] = COMPRESSX_VERSION;
         $debug_info['Wordpress version'] = $wp_version;
@@ -256,6 +258,29 @@ class CompressX_System_Info
         $debug_info['setting']['converter_method']=$converter_method;
         $debug_info['setting']=json_encode($debug_info['setting']);
         return $debug_info;
+    }
+
+    public function get_domain()
+    {
+        global $wpdb;
+        $home_url = home_url();
+        $db_home_url = home_url();
+        $home_url_sql = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->options WHERE option_name = %s", 'home' ) );
+        foreach ( $home_url_sql as $home )
+        {
+            $db_home_url = untrailingslashit($home->option_value);
+        }
+
+        if($home_url === $db_home_url)
+        {
+            $domain = $home_url;
+        }
+        else
+        {
+            $domain = $db_home_url;
+        }
+
+        return strtolower($domain);
     }
 
     public function output_footer()

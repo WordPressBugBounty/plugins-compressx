@@ -135,10 +135,10 @@ class CompressX_Logs
                 $log_file['path']=$file;
                 $log_file['size']=filesize($file);
                 $log_file['name']=basename($file);
-                $log_file['time']=preg_replace('/[^0-9]/', '', basename($file));
+                $log_file['time']=filemtime($file);
 
                 $offset=get_option('gmt_offset');
-                $localtime = strtotime($log_file['time']) + $offset * 60 * 60;
+                $localtime = $log_file['time'] + $offset * 60 * 60;
                 $log_file['date']=gmdate('M-d-y H:i',$localtime);
 
                 $line = fgets($handle);

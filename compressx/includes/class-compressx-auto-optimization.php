@@ -254,7 +254,20 @@ class CompressX_Auto_Optimization
             $image_optimize_meta['size']['og']['status']='failed';
             $image_optimize_meta['size']['og']['error']='Image:'.$attachment_id.' failed. Error: failed to get get_attached_file';
             CompressX_Image_Meta::update_image_meta_status($attachment_id,'failed');
+            CompressX_Image_Meta::update_images_meta($attachment_id,$image_optimize_meta);
+            $ret['result']='success';
+            return $ret;
+        }
 
+        if(!$this->check_file_mime_content_type($file_path))
+        {
+            CompressX_Image_Opt_Method::WriteLog($this->log,'Image:'.$attachment_id.' failed. Error: mime content type not support','notice');
+
+            $image_optimize_meta['size']['og']['status']='failed';
+            $image_optimize_meta['size']['og']['error']='Image:'.$attachment_id.' failed. Error: mime content type not support';
+
+            CompressX_Image_Meta::update_image_meta_status($attachment_id,'failed');
+            CompressX_Image_Meta::update_images_meta($attachment_id,$image_optimize_meta);
             $ret['result']='success';
             return $ret;
         }
@@ -279,7 +292,7 @@ class CompressX_Auto_Optimization
             $has_error=true;
         }
 
-        if(!$this->is_exclude_png_webp($attachment_id,$options))
+        if(!$this->is_exclude_webp($attachment_id,$options))
         {
             if(CompressX_Image_Opt_Method::convert_to_webp($attachment_id,$options, $this->log)===false)
             {
@@ -288,7 +301,7 @@ class CompressX_Auto_Optimization
         }
 
 
-        if(!$this->is_exclude_png($attachment_id,$options))
+        if(!$this->is_exclude_avif($attachment_id,$options))
         {
             if(CompressX_Image_Opt_Method::convert_to_avif($attachment_id,$options, $this->log)===false)
             {
@@ -305,10 +318,25 @@ class CompressX_Auto_Optimization
         else
         {
             CompressX_Image_Meta::update_image_meta_status($attachment_id,'optimized');
+            do_action('compressx_uploading_add_watermark',$attachment_id);
+            do_action('compressx_after_optimize_image',$attachment_id);
         }
 
         $ret['result']='success';
         return $ret;
+    }
+
+    public function check_file_mime_content_type($file_path)
+    {
+        $type=mime_content_type($file_path);
+        if($type=="text/html")
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 
     public function get_images_meta($image_id,$options)
@@ -322,22 +350,21 @@ class CompressX_Auto_Optimization
         return $image_optimize_meta;
     }
 
-    public function is_exclude_png($image_id,$options)
+    public function is_exclude_avif($image_id,$options)
     {
         $options['exclude_png']=isset($options['exclude_png'])?$options['exclude_png']:false;
-        if($options['exclude_png'])
-        {
-            $file_path = get_attached_file( $image_id );
+        $options['exclude_jpg_avif']=isset($options['exclude_jpg_avif'])?$options['exclude_jpg_avif']:false;
 
-            $type=pathinfo($file_path, PATHINFO_EXTENSION);
-            if ($type== 'png')
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+        $file_path = get_attached_file( $image_id );
+        $type=pathinfo($file_path, PATHINFO_EXTENSION);
+
+        if( $options['exclude_png']&&$type== 'png')
+        {
+            return true;
+        }
+        else if($options['exclude_jpg_avif']&&$type== 'jpg')
+        {
+            return true;
         }
         else
         {
@@ -345,22 +372,21 @@ class CompressX_Auto_Optimization
         }
     }
 
-    public function is_exclude_png_webp($image_id,$options)
+    public function is_exclude_webp($image_id,$options)
     {
         $options['exclude_png_webp']=isset($options['exclude_png_webp'])?$options['exclude_png_webp']:false;
-        if($options['exclude_png_webp'])
-        {
-            $file_path = get_attached_file( $image_id );
+        $options['exclude_jpg_webp']=isset($options['exclude_jpg_webp'])?$options['exclude_jpg_webp']:false;
 
-            $type=pathinfo($file_path, PATHINFO_EXTENSION);
-            if ($type== 'png')
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+        $file_path = get_attached_file( $image_id );
+        $type=pathinfo($file_path, PATHINFO_EXTENSION);
+
+        if($options['exclude_png_webp']&&$type== 'png')
+        {
+            return true;
+        }
+        else if($options['exclude_jpg_webp']&&$type== 'jpg')
+        {
+            return true;
         }
         else
         {
