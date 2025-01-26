@@ -4,7 +4,7 @@ Tags: convert WebP, convert AVIF, WebP, AVIF
 Requires at least: 5.8
 Tested up to: 6.7.1
 Requires PHP: 7.0
-Stable tag: 0.9.22
+Stable tag: 0.9.23
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
@@ -65,6 +65,9 @@ Yes, absolutely. Whenever you need help, start a thread on the support forum or 
 Yes, we do. Here is a [tutorial](https://compressx.io/docs/compressx-overview/) for you to quickly get started with CompressX.
 
 == Changelog ==
+= 0.9.23 =
+- Added support for conversion of Elementor custom thumbnails size.
+- Added support for conversion in media library grid view and image edit page.
 = 0.9.22 =
 - Fixed: Picture tag did not take all sizes in srcset.
 - Fixed: Conversion would fail if image's MIME type did not match the MIME type saved in posts.
@@ -151,8 +154,7 @@ Yes, we do. Here is a [tutorial](https://compressx.io/docs/compressx-overview/) 
 - Initial release. Hello world!
 
 == Upgrade Notice ==
-Latest version 0.9.22:
-= 0.9.22 =
-- Fixed: Picture tag did not take all sizes in srcset.
-- Fixed: Conversion would fail if image's MIME type did not match the MIME type saved in posts.
-- Optimized the plugin UI.
+Latest version 0.9.23:
+= 0.9.23 =
+- Added support for conversion of Elementor custom thumbnails size.
+- Added support for conversion in media library grid view and image edit page.

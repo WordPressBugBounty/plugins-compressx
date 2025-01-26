@@ -318,12 +318,9 @@ class CompressX_Logs
 
     public function get_logs_list()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce' );
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-use-logs');
+
         if(isset($_POST['start_date']))
         {
             $start_date=sanitize_key($_POST['start_date']);
@@ -384,12 +381,8 @@ class CompressX_Logs
 
     public function open_log()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce' );
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-use-logs');
 
         try
         {
@@ -464,12 +457,8 @@ class CompressX_Logs
 
     public function download_log()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce' );
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-use-logs');
 
         $admin_url = admin_url();
 
@@ -544,12 +533,8 @@ class CompressX_Logs
 
     public function delete_log()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce' );
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-use-logs');
 
         try
         {
@@ -608,12 +593,8 @@ class CompressX_Logs
 
     public function delete_all_log()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce' );
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-use-logs');
 
         try
         {

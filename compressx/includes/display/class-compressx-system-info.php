@@ -434,12 +434,9 @@ class CompressX_System_Info
 
     public function create_debug_package()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce' );
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-use-system-info');
+
         try
         {
             if (!class_exists('PclZip'))
@@ -521,12 +518,8 @@ class CompressX_System_Info
 
     public function send_debug_info()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce' );
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-use-system-info');
 
         try
         {

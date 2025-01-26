@@ -1148,7 +1148,7 @@ class CompressX_Image_Opt_Method
         $success=true;
         $has_compress=true;
         $image_optimize_meta =CompressX_Image_Meta::get_image_meta($image_id);
-
+        $uploads=wp_get_upload_dir();
         if(CompressX_Image_Opt_Method::need_compress($image_id,$options))
         {
             if(CompressX_Image_Meta::get_image_meta_compressed($image_id)==0)
@@ -1168,6 +1168,10 @@ class CompressX_Image_Opt_Method
                         {
                             $filename = $file_path;
                         }
+                        else if(CompressX_Image_Opt_Method::is_elementor_thumbs($size_key))
+                        {
+                            $filename = $uploads['basedir'].'/'.$size_meta['file'];
+                        }
                         else
                         {
                             $filename = path_join(dirname($file_path), $size_meta['file']);
@@ -1177,6 +1181,14 @@ class CompressX_Image_Opt_Method
                         $output_path=CompressX_Image_Opt_Method::get_output_path($filename);
 
                         CompressX_Image_Opt_Method::WriteLog($log,'Start Compression '.basename($filename),'notice');
+
+                        if(!file_exists($filename))
+                        {
+                            CompressX_Image_Opt_Method::WriteLog($log,'File '.basename($filename).' not exist,so skip compress.','notice');
+                            $image_optimize_meta['size'][$size_key]['compress_status']=1;
+                            $image_optimize_meta['size'][$size_key]['status']='optimized';
+                            continue;
+                        }
 
                         if($options['converter_method']=='gd')
                         {
@@ -1255,7 +1267,7 @@ class CompressX_Image_Opt_Method
         $success=true;
         $has_convert=true;
         $image_optimize_meta =CompressX_Image_Meta::get_image_meta($image_id);
-
+        $uploads=wp_get_upload_dir();
         if(CompressX_Image_Opt_Method::need_convert_to_webp_ex($image_id,$options))
         {
             if(CompressX_Image_Meta::get_image_meta_webp_converted($image_id)==0)
@@ -1275,6 +1287,10 @@ class CompressX_Image_Opt_Method
                         {
                             $filename= $file_path;
                         }
+                        else if(CompressX_Image_Opt_Method::is_elementor_thumbs($size_key))
+                        {
+                            $filename = $uploads['basedir'].'/'.$size_meta['file'];
+                        }
                         else
                         {
                             $filename= path_join( dirname( $file_path ), $size_meta['file'] );
@@ -1285,6 +1301,14 @@ class CompressX_Image_Opt_Method
                         $image_optimize_meta['size'][$size_key]['convert_webp_status']=0;
 
                         CompressX_Image_Opt_Method::WriteLog($log,'Start WebP conversion '.basename($filename),'notice');
+
+                        if(!file_exists($filename))
+                        {
+                            CompressX_Image_Opt_Method::WriteLog($log,'File '.basename($filename).' not exist,so skip convert.','notice');
+                            $image_optimize_meta['size'][$size_key]['convert_webp_status']=1;
+                            $image_optimize_meta['size'][$size_key]['status']='optimized';
+                            continue;
+                        }
 
                         if($options['converter_method']=='gd')
                         {
@@ -1362,7 +1386,7 @@ class CompressX_Image_Opt_Method
         $success=true;
         $has_convert=true;
         $image_optimize_meta =CompressX_Image_Meta::get_image_meta($image_id);
-
+        $uploads=wp_get_upload_dir();
         if(CompressX_Image_Opt_Method::need_convert_to_avif_ex($image_id,$options))
         {
             if(CompressX_Image_Meta::get_image_meta_avif_converted($image_id)==0)
@@ -1382,6 +1406,10 @@ class CompressX_Image_Opt_Method
                         {
                             $filename= $file_path;
                         }
+                        else if(CompressX_Image_Opt_Method::is_elementor_thumbs($size_key))
+                        {
+                            $filename = $uploads['basedir'].'/'.$size_meta['file'];
+                        }
                         else
                         {
                             $filename= path_join( dirname( $file_path ), $size_meta['file'] );
@@ -1392,6 +1420,14 @@ class CompressX_Image_Opt_Method
                         $image_optimize_meta['size'][$size_key]['convert_avif_status']=0;
 
                         CompressX_Image_Opt_Method::WriteLog($log,'Start AVIF conversion:'.basename($filename),'notice');
+
+                        if(!file_exists($filename))
+                        {
+                            CompressX_Image_Opt_Method::WriteLog($log,'File '.basename($filename).' not exist,so skip convert.','notice');
+                            $image_optimize_meta['size'][$size_key]['convert_avif_status']=1;
+                            $image_optimize_meta['size'][$size_key]['status']='optimized';
+                            continue;
+                        }
 
                         if($options['converter_method']=='gd')
                         {
@@ -1794,6 +1830,18 @@ class CompressX_Image_Opt_Method
         }
 
         return false;
+    }
+
+    public static function is_elementor_thumbs($size_key)
+    {
+        if(substr($size_key, 0,strlen('elementor_custom'))=='elementor_custom')
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public static function get_output_path($og_path)

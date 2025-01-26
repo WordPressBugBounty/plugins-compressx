@@ -9,8 +9,6 @@ class CompressX_Dashboard
         add_action('wp_ajax_compressx_save_others_setting', array($this, 'save_others_setting'));
         add_action('wp_ajax_compressx_save_size_setting', array($this, 'save_size_setting'));
 
-        add_action('wp_ajax_compressx_set_api_server', array($this, 'set_api_server'));
-
         add_action('wp_ajax_compressx_get_custom_tree_dir', array($this, 'get_custom_tree_dir'));
         add_action('wp_ajax_compressx_add_exclude_folders', array($this, 'add_exclude_folders'));
         add_action('wp_ajax_compressx_add_exclude_folder', array($this, 'add_exclude_folder'));
@@ -312,12 +310,9 @@ class CompressX_Dashboard
 
     public function update_overview()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce');
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-convert');
+
         $ret['result']='success';
         ob_start();
         $this->output_overview();
@@ -329,12 +324,9 @@ class CompressX_Dashboard
 
     public function compressx_hide_notice()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce');
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-convert');
+
         update_option('compressx_hide_notice',true,false);
 
         die();
@@ -342,12 +334,8 @@ class CompressX_Dashboard
 
     public function compressx_rating_dismiss()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce');
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-convert');
 
         if(isset($_POST['value']))
         {
@@ -374,12 +362,8 @@ class CompressX_Dashboard
 
     public function delete_files()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce');
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-delete');
 
         global $wpdb;
 
@@ -1655,12 +1639,9 @@ class CompressX_Dashboard
 
     public function set_general_setting()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce' );
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-use-general-settings');
+
         if(isset($_POST['setting'])&&!empty($_POST['setting']))
         {
             $json_setting = sanitize_text_field($_POST['setting']);
@@ -1829,12 +1810,9 @@ class CompressX_Dashboard
 
     public function save_others_setting()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce' );
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-use-general-settings');
+
         if(isset($_POST['setting'])&&!empty($_POST['setting']))
         {
             $json_setting = sanitize_text_field($_POST['setting']);
@@ -1919,12 +1897,9 @@ class CompressX_Dashboard
 
     public function save_size_setting()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce' );
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-use-thumbnail-settings');
+
         if(isset($_POST['setting'])&&!empty($_POST['setting']))
         {
             $json_setting = sanitize_text_field($_POST['setting']);
@@ -1975,57 +1950,11 @@ class CompressX_Dashboard
         }
     }
 
-    public function set_api_server()
-    {
-        check_ajax_referer( 'compressx_ajax', 'nonce' );
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
-        if(isset($_POST['api_server'])&&!empty($_POST['api_server']))
-        {
-            $api_server = sanitize_text_field($_POST['api_server']);
-
-            $options=get_option('compressx_general_settings',array());
-
-            $options['compress_server']=$api_server;
-
-            update_option('compressx_general_settings',$options,false);
-
-            $ret['result']='success';
-
-            if($api_server=="auto")
-            {
-                $ret['html']="Auto";
-
-            }
-            else if($api_server=="server_us")
-            {
-                $ret['html']="US";
-            }
-            else
-            {
-                $ret['html']="localhost";
-            }
-
-            echo wp_json_encode($ret);
-            die();
-        }
-        else
-        {
-            die();
-        }
-    }
-
     public function get_custom_tree_dir()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce' );
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-use-exclude');
+
         try{
             $node_array = array();
 
@@ -2218,12 +2147,8 @@ class CompressX_Dashboard
 
     public function add_exclude_folders()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce' );
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-use-exclude');
 
         $json_excludes = sanitize_text_field($_POST['excludes']);
         $json_excludes = stripslashes($json_excludes);
@@ -2249,12 +2174,8 @@ class CompressX_Dashboard
 
     public function add_exclude_folder()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce' );
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-use-exclude');
 
         $exclude = sanitize_text_field($_POST['id']);
         $abs_path = trailingslashit(str_replace('\\', '/', realpath(ABSPATH)));
@@ -2271,12 +2192,9 @@ class CompressX_Dashboard
 
     public function remove_exclude_folders()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce' );
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-use-exclude');
+
         $excludes=get_option('compressx_media_excludes',array());
 
         $id = sanitize_text_field($_POST['id']);

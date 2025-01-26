@@ -261,12 +261,9 @@ class CompressX_CDN
 
     public function save_cdn()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce' );
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-use-cdn');
+
         if(isset($_POST['setting'])&&!empty($_POST['setting']))
         {
             $json_setting = sanitize_text_field($_POST['setting']);
@@ -329,12 +326,9 @@ class CompressX_CDN
 
     public function purge_cache()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce' );
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-use-cdn');
+
         if(isset($_POST['setting'])&&!empty($_POST['setting']))
         {
             $json_setting = sanitize_text_field($_POST['setting']);

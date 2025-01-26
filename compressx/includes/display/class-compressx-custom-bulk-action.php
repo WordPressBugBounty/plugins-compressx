@@ -240,12 +240,9 @@ class CompressX_Custom_Bulk_Action
 
     public function get_custom_tree_dir_ex()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce' );
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-bulk-custom-convert');
+
         try{
             $node_array = array();
 
@@ -411,12 +408,9 @@ class CompressX_Custom_Bulk_Action
 
     public function add_include_folders()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce' );
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-bulk-custom-convert');
+
         $includes=get_option('compressx_custom_includes',array());
 
         $new_include = sanitize_text_field($_POST['id']);
@@ -485,12 +479,9 @@ class CompressX_Custom_Bulk_Action
 
     public function get_dir_info()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce' );
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-bulk-custom-convert');
+
         $includes=get_option('compressx_custom_includes',array());
 
         $stats=array();
@@ -543,12 +534,9 @@ class CompressX_Custom_Bulk_Action
 
     public function remove_include_folders()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce' );
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-bulk-custom-convert');
+
         $includes=get_option('compressx_custom_includes',array());
 
         $id = sanitize_text_field($_POST['id']);
@@ -606,12 +594,9 @@ class CompressX_Custom_Bulk_Action
 
     public function start_scan_custom_images()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce' );
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-bulk-custom-convert');
+
         $includes=get_option('compressx_custom_includes',array());
         if(empty($includes))
         {
@@ -695,12 +680,9 @@ class CompressX_Custom_Bulk_Action
 
     public function init_custom_bulk_optimization_task()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce');
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-bulk-custom-convert');
+
         $force=isset($_POST['force'])?sanitize_key($_POST['force']):'0';
         if($force=='1')
         {
@@ -719,12 +701,8 @@ class CompressX_Custom_Bulk_Action
 
     public function run_custom_optimize()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce');
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-bulk-custom-convert');
 
         set_time_limit(180);
 
@@ -746,12 +724,9 @@ class CompressX_Custom_Bulk_Action
 
     public function get_custom_opt_progress()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce');
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-bulk-custom-convert');
+
         $task=new CompressX_Custom_ImgOptim_Task();
 
         $result=$task->get_task_progress();

@@ -193,7 +193,14 @@ class CompressX_Display
             $submenu['parent_slug']=COMPRESSX_SLUG;
             $submenu['page_title']="Logs";
             $submenu['menu_title']="Logs";
-            $submenu['capability']="administrator";
+            if(apply_filters('compressx_current_user_has',false,'compressx-can-use-logs'))
+            {
+                $submenu['capability']="compressx-can-use-logs";
+            }
+            else
+            {
+                $submenu['capability']="administrator";
+            }
             $submenu['menu_slug']="logs-compressx";
             $submenu['index']=19;
             $submenu['function']=array($this->log, 'display');
@@ -206,7 +213,14 @@ class CompressX_Display
             $submenu['parent_slug']=COMPRESSX_SLUG;
             $submenu['page_title']="System Information";
             $submenu['menu_title']="System Information";
-            $submenu['capability']="administrator";
+            if(apply_filters('compressx_current_user_has',false,'compressx-can-use-system-info'))
+            {
+                $submenu['capability']="compressx-can-use-system-info";
+            }
+            else
+            {
+                $submenu['capability']="administrator";
+            }
             $submenu['menu_slug']="info-compressx";
             $submenu['index']=20;
             $submenu['function']=array($this->system_info, 'display');

@@ -14,12 +14,8 @@ class CompressX_Bulk_Action
 
     public function start_scan_unoptimized_image()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce' );
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-convert');
 
         delete_transient('compressx_set_global_stats');
         $max_image_count=$this->get_max_image_count();
@@ -154,7 +150,8 @@ class CompressX_Bulk_Action
             {
                 $ret['result']='failed';
                 $ret['error']=__('No unoptimized images found.','compressx');
-                return $ret;
+                echo wp_json_encode($ret);
+                die();
             }
         }
 
@@ -278,12 +275,9 @@ class CompressX_Bulk_Action
 
     public function init_bulk_optimization_task()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce');
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-convert');
+
         $force=isset($_POST['force'])?sanitize_key($_POST['force']):'0';
         if($force=='1')
         {
@@ -302,16 +296,8 @@ class CompressX_Bulk_Action
 
     public function run_optimize()
     {
-        register_shutdown_function(array($this,'deal_shutdown_error'));
-        $this->end_shutdown_function=false;
-
-        check_ajax_referer( 'compressx_ajax', 'nonce');
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            $this->end_shutdown_function=true;
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-convert');
 
         set_time_limit(180);
         $task=new CompressX_ImgOptim_Task();
@@ -329,7 +315,6 @@ class CompressX_Bulk_Action
             echo wp_json_encode($ret);
         }
 
-        $this->end_shutdown_function=true;
         die();
     }
 
@@ -361,12 +346,9 @@ class CompressX_Bulk_Action
 
     public function get_opt_progress()
     {
-        check_ajax_referer( 'compressx_ajax', 'nonce');
-        $check=current_user_can('manage_options');
-        if(!$check)
-        {
-            die();
-        }
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-convert');
+
         $task=new CompressX_ImgOptim_Task();
 
         $result=$task->get_task_progress();

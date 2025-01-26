@@ -44,6 +44,17 @@ class CompressX
         add_action('compressx_purge_cache_event',array( $this,'purge_cache_event'));
     }
 
+    public function ajax_check_security($role='manage_options')
+    {
+        check_ajax_referer( 'compressx_ajax', 'nonce' );
+        $check=is_admin()&&current_user_can('manage_options');
+        $check=apply_filters('compressx_ajax_check_security',$check,$role);
+        if(!$check)
+        {
+            die();
+        }
+    }
+
     public function hide_notices()
     {
         if(is_multisite())
