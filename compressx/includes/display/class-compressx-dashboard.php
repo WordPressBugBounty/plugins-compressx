@@ -76,17 +76,26 @@ class CompressX_Dashboard
     public function output_review()
     {
         ?>
-        <section id="cx_rating_box" style="display:none;">
+        <section id="cx_rating_box" style="display: none">
             <div class="compressx-container compressx-section">
-                <div class="compressx-notification">
-                    <p style="font-size:1rem;">Compressx.io has successfully processed <span  style="color:#071c4d;"><strong><span id="cx_size_of_opt_images"></span></strong></span> of images, and it's <span style="color:#071c4d;"><strong>completely free</strong></span>. </p>
-                    <p style="font-size:1rem;"><?php esc_html_e('If the plugin has helped you, perhaps you could leave us a nice review and give us 5 stars? It would mean a lot to us and would be very motivating!','compressx')?></p>
-                    <div class="cx-rating">
-                        <div><span id="cx_rating_btn" class="cx-rating-btn"><?php esc_html_e('Yes, let me give a 5-star','compressx')?></span></div>
-                        <div><span id="cx_rating_ask_me_later"><a href=""><?php esc_html_e('Ask me later','compressx')?></a></span></div>
-                        <div><span id="cx_rating_already"><a href=""><?php esc_html_e('I already did:)','compressx')?></a></span></div>
-                        <div><span id="cx_rating_dismiss"><a href=""><?php esc_html_e('Dismiss','compressx')?></a></span></div>
+                <div class="compressx-notification" style="position: relative">
+                    <div class="compressx-notification-5-star">
+                        <span class="dashicons dashicons-thumbs-up" style="font-size: 3rem; text-shadow: 2px 2px #7CDA24;"></span>
                     </div>
+                    <div style="padding:0 1rem 0 6rem;">
+                        <h5 style="font-size: 0.9rem;">Compressx.io has successfully processed <span  style="color:#071c4d;"><strong><span id="cx_size_of_opt_images"></span></strong></span> of images, and it's <span style="color:#071c4d;"><strong>completely free</strong></span>.</h5>
+                        <p><?php esc_html_e('If the plugin has helped you, perhaps you could leave us a nice review and give us 5 stars? It would mean a lot to us and would be very motivating!','compressx')?></p>
+                        <div class="cx-rating">
+                            <div><span id="cx_rating_btn" class="cx-rating-btn"><?php esc_html_e('Yes, let me give a nice review','compressx')?></span></div>
+                            <div><span id="cx_rating_ask_me_later"><a href=""><?php esc_html_e('Ask me later','compressx')?></a></span></div>
+                            <div><span id="cx_rating_already"><a href=""><?php esc_html_e('I already did:)','compressx')?></a></span></div>
+                            <div><span id="cx_rating_dismiss"><a href=""><?php esc_html_e('Dismiss','compressx')?></a></span></div>
+                        </div>
+                    </div>
+                    <div style="clear: both;"></div>
+                    <button id="cx_rating_close" type="button" class="notice-dismiss">
+                        <span class="screen-reader-text">Dismiss this notice.</span>
+                    </button>
                 </div>
             </div>
         </section>
@@ -148,6 +157,20 @@ class CompressX_Dashboard
                 {
                 });
             });
+
+            jQuery('#cx_rating_close').click(function()
+            {
+                jQuery('#cx_rating_box').hide();
+                var ajax_data = {
+                    'action': 'compressx_rating_dismiss',
+                    'value':'close'
+                };
+                compressx_post_request(ajax_data, function (data)
+                {
+                }, function (XMLHttpRequest, textStatus, errorThrown)
+                {
+                });
+            });
         </script>
         <?php
     }
@@ -190,8 +213,6 @@ class CompressX_Dashboard
         {
             $result=true;
         }
-
-
 
         if(!$result||$has_notice)
         {
@@ -260,6 +281,8 @@ class CompressX_Dashboard
             </section>
             <?php
         }
+
+        do_action('compressx_notices');
     }
 
     public function output_overview()
@@ -280,27 +303,6 @@ class CompressX_Dashboard
                     <div class="cx-process-position">
                         <span class="cx-processed"><?php echo esc_html($webp_data['avif_converted_percent']);?>%<span class="cx-percent-sign"> images</span></span>
                         <span class="cx-processing"><?php esc_html_e('Outputted to AVIF','compressx')?></span>
-                    </div>
-                </div>
-            </div>
-            <div class="compressing-converting-information" style="position:relative;">
-
-                <div style="padding-bottom: 0.5rem;"><span><strong><?php esc_html_e('Processed Images','compressx')?></strong></a></span>
-                    <span> (</span><a href="<?php echo esc_url($url);?>"><span><?php esc_html_e('Failed: ','compressx')?></span><span id="cx_failed_images_count"><?php echo esc_html($failed_images_count);?></span></a><span>)</span></div>
-                <div class="cx-overview_body-webp-free">
-
-                    <div class="cx-process-media-files">
-
-                        <span class="cx-process-media-type"><?php esc_html_e('Webp Size:','compressx')?></span><span class="cx-porcess-media-files-label"><?php echo esc_html(size_format($webp_data['webp_saved'],2));?></span>
-                    </div>
-                    <div class="cx-process-media-files">
-                        <span class="cx-process-media-type"><?php esc_html_e('Total Savings:','compressx')?></span><span class="cx-porcess-media-files-label"><?php echo esc_html($webp_data['webp_saved_percent']);?>%</span>
-                    </div>
-                    <div class="cx-process-media-files">
-                        <span class="cx-process-media-type"><?php esc_html_e('AVIF Size:','compressx')?></span><span class="cx-porcess-media-files-label"><?php echo esc_html(size_format($webp_data['avif_saved'],2));?></span>
-                    </div>
-                    <div class="cx-process-media-files">
-                        <span class="cx-process-media-type"><?php esc_html_e('Total Savings:','compressx')?></span><span class="cx-porcess-media-files-label"><?php echo esc_html($webp_data['avif_saved_percent']);?>%</span>
                     </div>
                 </div>
             </div>
@@ -342,6 +344,11 @@ class CompressX_Dashboard
             $value=sanitize_text_field($_POST['value']);
             if($value=='ask_me_later')
             {
+                $time=time()+259200;
+                update_option('compressx_rating_dismiss',$time,false);
+            }
+            if($value=='close')
+            {
                 $time=time()+604800;
                 update_option('compressx_rating_dismiss',$time,false);
             }
@@ -351,8 +358,7 @@ class CompressX_Dashboard
             }
             else if($value=='dismiss')
             {
-                $time=time()+(604800*4);
-                update_option('compressx_rating_dismiss',$time,false);
+                update_option('compressx_rating_dismiss',0,false);
             }
         }
 
@@ -552,6 +558,157 @@ class CompressX_Dashboard
     }
 
     public function output_bulk_and_settings()
+    {
+        ?>
+        <header style="display: block;">
+            <div class="compressx-container compressx-header">
+                <div id="compressx_bulk_progress_2" class="compressx-bulk-process" style="display: none">
+                    <article style="display: block;">
+                        <p style="text-align: center;">
+                            <strong>Do Not</strong> close or refresh the page when processing.
+                        </p>
+                        <div>
+                            <div class="cx-stepper-wrapper">
+                                <div id="compressx_bulk_progress_step1" class="cx-stepper-item">
+                                    <div class="cx-step-counter">1</div>
+                                    <div class="cx-step-name"><?php esc_html_e('Images Scanning','compressx')?></div>
+                                </div>
+                                <div id="compressx_bulk_progress_step2" class="cx-stepper-item">
+                                    <div class="cx-step-counter">2</div>
+                                    <div class="cx-step-name"><?php esc_html_e('Bulk Processing','compressx')?></div>
+                                </div>
+                                <div id="compressx_bulk_progress_step3" class="cx-stepper-item ">
+                                    <div class="cx-step-counter">3</div>
+                                    <div class="cx-step-name"><?php esc_html_e('Finished','compressx')?></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="compressx_bulk_progress_part1" style="">
+                            <span><?php esc_html_e('CompressX is processing the images. Keep the page open to finish the bulk action.','compressx')?> </span><br>
+                            <div class="cx-process-bar">
+                                <span id="compressx_bulk_progress_sub_text"></span>
+                                <span class="cx-process-bar-100">
+                                    <span class="cx-process-bar-percentage" id="compressx_bulk_progress_2_bar" style="width: 0%"></span>
+                                </span>
+                                <br>
+                                <span id="compressx_bulk_progress_2_text">Processing...</span><br>
+                            </div>
+                        </div>
+                        <div id="compressx_bulk_progress_part2" style="display: none;position: relative;border-top: 1px solid var(--color-grey);padding-top: 1rem;">
+                            <span id="compressx_bulk_progress_2_notice"><?php esc_html_e('CompressX is processing the images. Keep the page open to finish the bulk action.','compressx')?> </span>
+                            <input class="button-primary cx-button" id="compressx_close_progress" type="submit" value="<?php esc_attr_e('Close','compressx');?>" style="position: absolute;right:0; cursor:pointer">
+                        </div>
+                    </article>
+                </div>
+                <div class="compressx-header-block">
+                    <?php $this->output_convert_setting();?>
+                    <?php $this->output_bulk();?>
+                </div>
+            </div>
+        </header>
+        <script>
+            jQuery('#cx_converter_method_gd').click(function()
+            {
+                var json = {};
+                json['converter_method']='gd';
+                var setting_data=JSON.stringify(json);
+
+                var ajax_data = {
+                    'action': 'compressx_set_general_settings',
+                    'setting': setting_data,
+                };
+                compressx_post_request(ajax_data, function (data)
+                {
+                    var jsonarray = jQuery.parseJSON(data);
+
+                    if (jsonarray.result === 'success')
+                    {
+                        if(jsonarray.disable_avif)
+                        {
+                            jQuery("#cx_convert_to_avif").prop("disabled", true);
+                            jQuery("#cx_convert_to_avif").prop("checked", false);
+                        }
+                        else
+                        {
+                            jQuery("#cx_convert_to_avif").prop("disabled", false);
+                            jQuery("#cx_convert_to_avif").prop("checked", jsonarray.check_avif);
+                        }
+
+                        if(jsonarray.disable_webp)
+                        {
+                            jQuery("#cx_convert_to_webp").prop("disabled", true);
+                            jQuery("#cx_convert_to_webp").prop("checked", false);
+                        }
+                        else
+                        {
+                            jQuery("#cx_convert_to_webp").prop("disabled", false);
+                            jQuery("#cx_convert_to_webp").prop("checked", jsonarray.check_webp);
+                        }
+                    }
+                    jQuery('#cx_converter_method_text').removeClass("hidden");
+                    setTimeout(function ()
+                    {
+                        jQuery('#cx_converter_method_text').addClass( 'hidden' );
+                    }, 3000);
+                }, function (XMLHttpRequest, textStatus, errorThrown)
+                {
+                });
+            });
+
+            jQuery('#cx_converter_method_imagick').click(function()
+            {
+                var json = {};
+                json['converter_method']='imagick';
+                var setting_data=JSON.stringify(json);
+
+                var ajax_data = {
+                    'action': 'compressx_set_general_settings',
+                    'setting': setting_data,
+                };
+                compressx_post_request(ajax_data, function (data)
+                {
+                    var jsonarray = jQuery.parseJSON(data);
+
+                    if (jsonarray.result === 'success')
+                    {
+                        if(jsonarray.disable_avif)
+                        {
+                            jQuery("#cx_convert_to_avif").prop("disabled", true);
+                            jQuery("#cx_convert_to_avif").prop("checked", false);
+                        }
+                        else
+                        {
+                            jQuery("#cx_convert_to_avif").prop("disabled", false);
+                            jQuery("#cx_convert_to_avif").prop("checked", jsonarray.check_avif);
+                        }
+
+                        if(jsonarray.disable_webp)
+                        {
+                            jQuery("#cx_convert_to_webp").prop("disabled", true);
+                            jQuery("#cx_convert_to_webp").prop("checked", false);
+                        }
+                        else
+                        {
+                            jQuery("#cx_convert_to_webp").prop("disabled", false);
+                            jQuery("#cx_convert_to_webp").prop("checked", jsonarray.check_webp);
+                        }
+                    }
+
+                    jQuery('#cx_converter_method_text').removeClass("hidden");
+                    setTimeout(function ()
+                    {
+                        jQuery('#cx_converter_method_text').addClass( 'hidden' );
+                    }, 3000);
+                }, function (XMLHttpRequest, textStatus, errorThrown)
+                {
+                });
+            });
+        </script>
+        <?php
+        $this->output_custom_compression_setting();
+    }
+
+    public function output_convert_setting()
     {
         $is_auto=get_option('compressx_auto_optimize',false);
 
@@ -753,167 +910,189 @@ class CompressX_Dashboard
             $convert_to_webp='';
             $convert_to_avif='';
         }
+
+        $webp_data=$this->get_optimized_data();
+        $webp_saved=$webp_data['webp_saved_percent'];
+        $avif_saved=$webp_data['avif_saved_percent'];
+
         ?>
-        <header style="display: block;">
-            <div class="compressx-container compressx-header">
-                <div id="compressx_bulk_progress_2" class="compressx-bulk-process" style="display: none">
-                    <article style="display: block;">
-                        <p style="text-align: center;">
-                            <strong>Do Not</strong> close or refresh the page when processing.
-                        </p>
-                        <div>
-                            <div class="cx-stepper-wrapper">
-                                <div id="compressx_bulk_progress_step1" class="cx-stepper-item">
-                                    <div class="cx-step-counter">1</div>
-                                    <div class="cx-step-name"><?php esc_html_e('Images Scanning','compressx')?></div>
-                                </div>
-                                <div id="compressx_bulk_progress_step2" class="cx-stepper-item">
-                                    <div class="cx-step-counter">2</div>
-                                    <div class="cx-step-name"><?php esc_html_e('Bulk Processing','compressx')?></div>
-                                </div>
-                                <div id="compressx_bulk_progress_step3" class="cx-stepper-item ">
-                                    <div class="cx-step-counter">3</div>
-                                    <div class="cx-step-name"><?php esc_html_e('Finished','compressx')?></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="compressx_bulk_progress_part1" style="">
-                            <span><?php esc_html_e('CompressX is processing the images. Keep the page open to finish the bulk action.','compressx')?> </span><br>
-                            <div class="cx-process-bar">
-                                <span id="compressx_bulk_progress_sub_text"></span>
-                                <span class="cx-process-bar-100">
-                                    <span class="cx-process-bar-percentage" id="compressx_bulk_progress_2_bar" style="width: 0%"></span>
-                                </span>
-                                <br>
-                                <span id="compressx_bulk_progress_2_text">Processing...</span><br>
-                            </div>
-                        </div>
-                        <div id="compressx_bulk_progress_part2" style="display: none;position: relative;border-top: 1px solid var(--color-grey);padding-top: 1rem;">
-                            <span id="compressx_bulk_progress_2_notice"><?php esc_html_e('CompressX is processing the images. Keep the page open to finish the bulk action.','compressx')?> </span>
-                            <input class="button-primary cx-button" id="compressx_close_progress" type="submit" value="<?php esc_attr_e('Close','compressx');?>" style="position: absolute;right:0; cursor:pointer">
-                        </div>
-                    </article>
+        <article>
+            <div class="compressx-general-settings-body-grid" style="border-bottom:1px solid #ddd;padding-bottom:0.8rem;">
+                <div class="compress-new-images" >
+                    <label class="cx-switch">
+                        <input type="checkbox" <?php echo esc_attr($is_auto); ?> id="cx_enable_auto_optimize">
+                        <span class="cx-slider cx-round"></span>
+                    </label><span style="padding-left:1rem;"><?php esc_html_e('Enable it to convert the new uploaded images.','compressx')?></span>
                 </div>
-                <div class="compressx-header-block">
-                    <article>
-                        <div class="compress-new-images" style="border-bottom:1px solid #f0f0f0;padding-bottom:0.8rem;">
-                            <label class="cx-switch">
-                                <input type="checkbox" <?php echo esc_attr($is_auto); ?> id="cx_enable_auto_optimize">
-                                <span class="cx-slider cx-round"></span>
-                            </label><span style="padding-left:1rem;"><?php esc_html_e('Enable it to compress &amp; convert the new uploaded images.','compressx')?></span>
-                        </div>
-                        <div class="compressx-general-settings-body">
-                            <div  class="cx-title">
-                                <span><strong><?php esc_html_e('Library to Process Images','compressx')?></strong></span>
-                                <span class="compressx-dashicons-help compressx-tooltip">
-                                    <a href="#"><span class="dashicons dashicons-editor-help"></span></a>
-                                    <div class="compressx-bottom">
-                                        <!-- The content you need -->
-                                        <p>
-                                            <span><?php esc_html_e('Choose the PHP extension to process images.','compressx')?></span><br>
-                                            <span><?php esc_html_e('GD is a PHP extension for handling image optimization.It may be slightly faster at processing large images but supports fewer image formats','compressx')?></span><br>
-                                            <span><?php esc_html_e('Imagick is another image optimization library that supports more image formats and produces higher quality images.','compressx')?></span>
-                                        </p>
-                                        <i></i> <!-- do not delete this line -->
-                                    </div>
-                                </span>
-                                <a href="<?php echo esc_url( admin_url("admin.php")."?page=info-compressx&check_environment" ); ?>"><?php esc_html_e('Check Environment','compressx')?></a>
-                            </div>
-                            <div class="cx-library-select">
-                                <span>
-                                    <input id="cx_converter_method_gd" name="converter_method" type="radio" value="gd" <?php echo esc_attr($gd_checked); ?> <?php echo esc_attr($is_support_gd); ?>>
-                                </span>
-                                <span style="padding-right: 0.5rem;"><strong>GD</strong></span>
-                                <span>
-                                    <span>
-                                        <input id="cx_converter_method_imagick" name="converter_method" type="radio" value="imagick" <?php echo esc_attr($imagick_checked); ?> <?php echo esc_attr($is_support_imagick); ?>>
-                                    </span>
-                                    <span style="padding-right: 0.5rem;"><strong>Imagick</strong></span>
-                                </span>
-                                <span id="cx_converter_method_text" class="success hidden" aria-hidden="true" style="color:#007017"><?php esc_html_e('Saved!','compressx')?></span>
-                            </div>
-                            <div  class="cx-title">
-                                <span><strong><?php esc_html_e('Output Formats: ','compressx')?></strong></span><span style="padding:0 0.5rem"></span>
-                                <span>
-                                    <span>
-                                        <input id="cx_convert_to_webp" type="checkbox" <?php echo esc_attr($convert_to_webp); ?> <?php echo esc_attr($webp_support); ?> >
-                                    </span>
-                                    <span><strong>Webp</strong></span>
-                                </span>
-
-                                <span style="padding:0 0.2rem;"></span>
-                                <span>
-                                    <span>
-                                        <input id="cx_convert_to_avif" type="checkbox" <?php echo esc_attr($convert_to_avif); ?> <?php echo esc_attr($avif_support); ?> >
-                                    </span>
-                                    <span><strong>AVIF</strong></span>
-                                </span>
-                                <span class="compressx-dashicons-help compressx-tooltip">
-                                    <a href="#"><span class="dashicons dashicons-editor-help"></span></a>
-                                    <div class="compressx-bottom">
-                                        <!-- The content you need -->
-                                        <p>
-                                            <span><?php esc_html_e('Convert .jpg and .png images to WebP or/and AVIF format.','compressx')?></span><br>
-                                            <span><?php esc_html_e('If the original image is a WebP image, it will be converted to AVIF (if checked) and compressed.','compressx')?></span><br>
-                                            <span><?php esc_html_e('If the original image is an AVIF image, it will be compressed.','compressx')?></span>
-                                        </p>
-                                        <i></i> <!-- do not delete this line -->
-                                    </div>
-                                </span>
-                                <span id="cx_save_convert_format" class="success hidden" aria-hidden="true" style="color:#007017"><?php esc_html_e('Saved!','compressx')?></span>
-                            </div>
-                        </div>
-                        <div class="compressx-general-settings-body" style="margin-bottom: 0;">
-                            <div class="cx-title">
-                                <span><strong><?php esc_html_e('Compression Level','compressx')?></strong></span>
-                                <span class="compressx-dashicons-help compressx-tooltip">
-                                    <a href="#"><span class="dashicons dashicons-editor-help"></span></a>
-                                    <div class="compressx-bottom">
-                                        <!-- The content you need -->
-                                        <p>
-                                            <span>Choose the most appropriate compression level. The 5 compression levels are increasing from lossless to lossy. The <strong>default level</strong> is the Thumb, which is suitable for most situations. You can customize the compression level for WebP and AVIF formats.</span><br>
-                                            <span><strong>Lossless: </strong>A compression level of 100</span><br>
-                                            <span><span class="dashicons dashicons-arrow-left-alt"></span>: A compression level of 90</span><br>
-                                            <span><span class="dashicons dashicons-thumbs-up"></span>: The default level. A compression level of 80</span><br>
-                                            <span><span class="dashicons dashicons-arrow-right-alt"></span>: A compression level of 70</span><br>
-                                            <span><strong>Lossy: </strong>A compression level of 60</span><br>
-                                            <span><strong>Custom: </strong>Customize the compression level</span>
-                                        </p>
-                                        <i></i> <!-- do not delete this line -->
-                                    </div>
-                                </span>
-                            </div>
-                            <div class="compressx-general-settings-body" style="margin-bottom: 0;">
-                                <div class="cx-radio-toolbar" style="padding-left: 0.5rem;">
-                                    <input type="radio" id="cx_radioLossless" option="setting" name="quality" value="lossless" <?php echo esc_attr($quality_lossless); ?>>
-                                    <label for="cx_radioLossless">Lossless</label>
-
-                                    <input type="radio" id="cx_radioLossMinus" option="setting" name="quality" value="lossy_minus" <?php echo esc_attr($quality_lossy_minus); ?>>
-                                    <label for="cx_radioLossMinus"><span class="dashicons dashicons-arrow-left-alt"></span></label>
-
-                                    <input type="radio" id="cx_radioLossy" option="setting" name="quality" value="lossy" <?php echo esc_attr($quality_lossy); ?>>
-                                    <label for="cx_radioLossy"><span class="dashicons dashicons-thumbs-up"></span></label>
-
-                                    <input type="radio" id="cx_radioLossyPlus" option="setting" name="quality" value="lossy_plus" <?php echo esc_attr($quality_lossy_plus); ?>>
-                                    <label for="cx_radioLossyPlus"><span class="dashicons dashicons-arrow-right-alt"></span></label>
-
-                                    <input type="radio" id="cx_radioLossySuper" option="setting" name="quality" value="lossy_super" <?php echo esc_attr($quality_lossy_super); ?>>
-                                    <label for="cx_radioLossySuper">Lossy</label>
-
-                                    <input type="radio" id="cx_radioCustom" option="setting" name="quality" value="custom" <?php echo esc_attr($quality_custom); ?> >
-                                    <label for="cx_radioCustom">Custom</label>
-
-                                    <span id="cx_save_compression_level" class="success hidden" aria-hidden="true" style="color:#007017">Saved!</span>
-                                </div>
-                            </div>
-                        </div>
-                    </article>
-                    <?php $this->output_bulk();?>
-
+                <div style="padding:0.4rem;">
+                    <span><span>Total Savings: </span><span>AVIF: </span><span id="cx_avif_saved"><?php echo esc_html($avif_saved); ?>%</span><span style="padding: 0 0.2rem;">|</span>
+                    <span>Webp: </span><span id="cx_webp_saved"><?php echo esc_html($webp_saved); ?>%</span></span>
                 </div>
             </div>
-        </header>
+            <div class="compressx-general-settings-body-grid">
+                <div>
+                    <div class="compressx-general-settings-body">
+                        <div class="cx-title">
+                            <span><strong><?php esc_html_e('Library to Process Images','compressx')?></strong></span>
+                            <span class="compressx-dashicons-help compressx-tooltip">
+                                            <a href="#"><span class="dashicons dashicons-editor-help"></span></a>
+                                            <div class="compressx-bottom">
+                                                <!-- The content you need -->
+                                                <p>
+                                                    <span><?php esc_html_e('Choose the PHP extension to process images.','compressx')?></span><br>
+                                                    <span><?php esc_html_e('GD is a PHP extension for handling image optimization.It may be slightly faster at processing large images but supports fewer image formats','compressx')?></span><br>
+                                                    <span><?php esc_html_e('Imagick is another image optimization library that supports more image formats and produces higher quality images.','compressx')?></span>
+                                                </p>
+                                                <i></i> <!-- do not delete this line -->
+                                            </div>
+                                        </span>
+                            <a href="<?php echo esc_url( admin_url("admin.php")."?page=info-compressx&check_environment" ); ?>"><?php esc_html_e('Check Environment','compressx')?></a>
+                        </div>
+                        <div class="cx-library-select">
+                                        <span>
+                                            <input id="cx_converter_method_gd" name="converter_method" type="radio" value="gd" <?php echo esc_attr($gd_checked); ?> <?php echo esc_attr($is_support_gd); ?>>
+                                        </span>
+                            <span style="padding-right: 0.5rem;"><strong>GD</strong></span>
+                            <span>
+                                            <span>
+                                                <input id="cx_converter_method_imagick" name="converter_method" type="radio" value="imagick" <?php echo esc_attr($imagick_checked); ?> <?php echo esc_attr($is_support_imagick); ?>>
+                                            </span>
+                                            <span style="padding-right: 0.5rem;"><strong>Imagick</strong></span>
+                                        </span>
+                            <span id="cx_converter_method_text" class="success hidden" aria-hidden="true" style="color:#007017"><?php esc_html_e('Saved!','compressx')?></span>
+                        </div>
+                        <div class="cx-title">
+                            <span><strong><?php esc_html_e('Output Formats: ','compressx')?></strong></span><span style="padding:0 0.5rem"></span>
+                            <span>
+                                            <span>
+                                                <input id="cx_convert_to_webp" type="checkbox" <?php echo esc_attr($convert_to_webp); ?> <?php echo esc_attr($webp_support); ?> >
+                                            </span>
+                                            <span><strong>Webp</strong></span>
+                                        </span>
+                            <span style="padding:0 0.2rem;"></span>
+                            <span>
+                                            <span>
+                                                <input id="cx_convert_to_avif" type="checkbox" <?php echo esc_attr($convert_to_avif); ?> <?php echo esc_attr($avif_support); ?> >
+                                            </span>
+                                            <span><strong>AVIF</strong></span>
+                                        </span>
+                            <span class="compressx-dashicons-help compressx-tooltip">
+                                            <a href="#"><span class="dashicons dashicons-editor-help"></span></a>
+                                            <div class="compressx-bottom">
+                                                <!-- The content you need -->
+                                                <p>
+                                                    <span>Add watermark to images during upload or bulk processing. You can configure watermark settings to suit your needs.</span>
+                                                </p>
+                                                <i></i> <!-- do not delete this line -->
+                                            </div>
+                                        </span>
+                            <span id="cx_save_convert_format" class="success hidden" aria-hidden="true" style="color:#007017"><?php esc_html_e('Saved!','compressx')?></span>
+                        </div>
+                    </div>
+                    <div class="compressx-general-settings-body" style="margin-bottom: 0;">
+                        <div class="cx-title">
+                            <span><strong><?php esc_html_e('Compression Level','compressx')?></strong></span>
+                            <span class="compressx-dashicons-help compressx-tooltip">
+                                <a href="#"><span class="dashicons dashicons-editor-help"></span></a>
+                                <div class="compressx-bottom">
+                                    <!-- The content you need -->
+                                    <p>
+                                        <span>Choose the most appropriate compression level. The 5 compression levels are increasing from lossless to lossy. The <strong>default level</strong> is the Thumb, which is suitable for most situations. You can customize the compression level for WebP and AVIF formats.</span><br>
+                                        <span><strong>Lossless: </strong>A compression level of 100</span><br>
+                                        <span><span class="dashicons dashicons-arrow-left-alt"></span>: A compression level of 90</span><br>
+                                        <span><span class="dashicons dashicons-thumbs-up"></span>: The default level. A compression level of 80</span><br>
+                                        <span><span class="dashicons dashicons-arrow-right-alt"></span>: A compression level of 70</span><br>
+                                        <span><strong>Lossy: </strong>A compression level of 60</span><br>
+                                        <span><strong>Custom: </strong>Customize the compression level</span>
+                                    </p>
+                                    <i></i> <!-- do not delete this line -->
+                                </div>
+                            </span>
+                        </div>
+                        <div class="compressx-general-settings-body" style="margin-bottom: 0;">
+                            <div class="cx-radio-toolbar" style="padding-left: 0.5rem;">
+                                <input type="radio" id="cx_radioLossless" option="setting" name="quality" value="lossless" <?php echo esc_attr($quality_lossless); ?>>
+                                <label for="cx_radioLossless">Lossless</label>
 
+                                <input type="radio" id="cx_radioLossMinus" option="setting" name="quality" value="lossy_minus" <?php echo esc_attr($quality_lossy_minus); ?>>
+                                <label for="cx_radioLossMinus"><span class="dashicons dashicons-arrow-left-alt"></span></label>
+
+                                <input type="radio" id="cx_radioLossy" option="setting" name="quality" value="lossy" <?php echo esc_attr($quality_lossy); ?>>
+                                <label for="cx_radioLossy"><span class="dashicons dashicons-thumbs-up"></span></label>
+
+                                <input type="radio" id="cx_radioLossyPlus" option="setting" name="quality" value="lossy_plus" <?php echo esc_attr($quality_lossy_plus); ?>>
+                                <label for="cx_radioLossyPlus"><span class="dashicons dashicons-arrow-right-alt"></span></label>
+
+                                <input type="radio" id="cx_radioLossySuper" option="setting" name="quality" value="lossy_super" <?php echo esc_attr($quality_lossy_super); ?>>
+                                <label for="cx_radioLossySuper">Lossy</label>
+
+                                <input type="radio" id="cx_radioCustom" option="setting" name="quality" value="custom" <?php echo esc_attr($quality_custom); ?> >
+                                <label for="cx_radioCustom">Custom</label>
+
+                                <span id="cx_save_compression_level" class="success hidden" aria-hidden="true" style="color:#007017">Saved!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="compressx-general-settings-body">
+                        <div class="cx-title">
+                            <span>
+                                <strong>Watermark</strong>
+                            </span>
+                            <span style="padding:0 0.1rem"></span>
+                            <span>
+                                <a href="https://compressx.io">(Pro only)</a>
+                            </span>
+                            <span class="compressx-dashicons-help compressx-tooltip">
+                                <a href="#"><span class="dashicons dashicons-editor-help"></span></a>
+                                <div class="compressx-bottom">
+                                    <!-- The content you need -->
+                                    <p>
+                                        <span>Add watermark to images during upload or bulk processing. You can configure watermark settings to suit your needs.</span>
+                                    </p>
+                                    <i></i> <!-- do not delete this line -->
+                                </div>
+                            </span>
+                            <p>
+                                <span>
+                                    <label class="compressx-switch" title="">
+                                        <input type="checkbox" disabled>
+                                        <span class="compressx-slider compressx-round"></span>
+                                    </label>
+                                    <span style="padding:0 0.2rem;"></span>
+                                    <span>Apply watermark during bulk processing</span>
+                                    <span style="padding:0 0.1rem"></span>
+                                    <span><a href="https://compressx.io">(Pro only)</a></span>
+                                </span>
+                            </p>
+                            <p>
+                                <span>
+                                    <label class="compressx-switch" title="">
+                                        <input type="checkbox" disabled>
+                                        <span class="compressx-slider compressx-round"></span>
+                                    </label>
+                                    <span style="padding:0 0.2rem;"></span>
+                                    <span>Apply watermark when uploading new images</span>
+                                     <span style="padding:0 0.1rem"></span>
+                                    <span><a href="https://compressx.io">(Pro only)</a></span>
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+        <?php
+    }
+
+    public function output_custom_compression_setting()
+    {
+        $options=get_option('compressx_quality',array());
+        $quality_custom_style="display:none";
+        $quality_webp=isset($options['quality_webp'])?$options['quality_webp']: 80;
+        $quality_avif=isset($options['quality_avif'])?$options['quality_avif']: 60;
+        ?>
         <section id="cx_compressing_strategy_custom" style="<?php echo esc_attr($quality_custom_style); ?>" >
             <div class="compressx-container compressx-section ">
                 <div class="compressx-general-settings">
@@ -955,104 +1134,6 @@ class CompressX_Dashboard
                 </div>
             </div>
         </section>
-        <script>
-            jQuery('#cx_converter_method_gd').click(function()
-            {
-                var json = {};
-                json['converter_method']='gd';
-                var setting_data=JSON.stringify(json);
-
-                var ajax_data = {
-                    'action': 'compressx_set_general_settings',
-                    'setting': setting_data,
-                };
-                compressx_post_request(ajax_data, function (data)
-                {
-                    var jsonarray = jQuery.parseJSON(data);
-
-                    if (jsonarray.result === 'success')
-                    {
-                        if(jsonarray.disable_avif)
-                        {
-                            jQuery("#cx_convert_to_avif").prop("disabled", true);
-                            jQuery("#cx_convert_to_avif").prop("checked", false);
-                        }
-                        else
-                        {
-                            jQuery("#cx_convert_to_avif").prop("disabled", false);
-                            jQuery("#cx_convert_to_avif").prop("checked", jsonarray.check_avif);
-                        }
-
-                        if(jsonarray.disable_webp)
-                        {
-                            jQuery("#cx_convert_to_webp").prop("disabled", true);
-                            jQuery("#cx_convert_to_webp").prop("checked", false);
-                        }
-                        else
-                        {
-                            jQuery("#cx_convert_to_webp").prop("disabled", false);
-                            jQuery("#cx_convert_to_webp").prop("checked", jsonarray.check_webp);
-                        }
-                    }
-                    jQuery('#cx_converter_method_text').removeClass("hidden");
-                    setTimeout(function ()
-                    {
-                        jQuery('#cx_converter_method_text').addClass( 'hidden' );
-                    }, 3000);
-                }, function (XMLHttpRequest, textStatus, errorThrown)
-                {
-                });
-            });
-
-            jQuery('#cx_converter_method_imagick').click(function()
-            {
-                var json = {};
-                json['converter_method']='imagick';
-                var setting_data=JSON.stringify(json);
-
-                var ajax_data = {
-                    'action': 'compressx_set_general_settings',
-                    'setting': setting_data,
-                };
-                compressx_post_request(ajax_data, function (data)
-                {
-                    var jsonarray = jQuery.parseJSON(data);
-
-                    if (jsonarray.result === 'success')
-                    {
-                        if(jsonarray.disable_avif)
-                        {
-                            jQuery("#cx_convert_to_avif").prop("disabled", true);
-                            jQuery("#cx_convert_to_avif").prop("checked", false);
-                        }
-                        else
-                        {
-                            jQuery("#cx_convert_to_avif").prop("disabled", false);
-                            jQuery("#cx_convert_to_avif").prop("checked", jsonarray.check_avif);
-                        }
-
-                        if(jsonarray.disable_webp)
-                        {
-                            jQuery("#cx_convert_to_webp").prop("disabled", true);
-                            jQuery("#cx_convert_to_webp").prop("checked", false);
-                        }
-                        else
-                        {
-                            jQuery("#cx_convert_to_webp").prop("disabled", false);
-                            jQuery("#cx_convert_to_webp").prop("checked", jsonarray.check_webp);
-                        }
-                    }
-
-                    jQuery('#cx_converter_method_text').removeClass("hidden");
-                    setTimeout(function ()
-                    {
-                        jQuery('#cx_converter_method_text').addClass( 'hidden' );
-                    }, 3000);
-                }, function (XMLHttpRequest, textStatus, errorThrown)
-                {
-                });
-            });
-        </script>
         <?php
     }
 
@@ -1080,6 +1161,9 @@ class CompressX_Dashboard
                 <?php $this->output_overview();?>
             </div>
             <div class="cx-overview_footer">
+                <span><input type="checkbox" disabled>Process images in the background.</span>
+                <span style="padding:0 0.1rem"></span>
+                <span><a href="https://compressx.io">(Pro Only)</a></span><br>
                 <span><input id="cx_force_optimization" type="checkbox"><?php esc_html_e('Force all images to be re-processed.','compressx')?></span>
             </div>
         </article>
@@ -1211,7 +1295,7 @@ class CompressX_Dashboard
                             </div>
                             <div class="compressx-lazyload">
                                 <div class="compressing-converting-information">
-                                    <span><?php esc_html_e('Choose Thumbnail Sizes to Process Choose thumbnail sizes you want to process. Some themes may generate new thumbnail sizes sometimes, then you\'ll need to reprocess the thumbnails sizes using the Bulk Processing function.','compressx')?></span><br>
+                                    <span><?php esc_html_e('Choose thumbnail sizes you want to process. Some themes may generate new thumbnail sizes sometimes, then you\'ll need to reprocess the thumbnails sizes using the Bulk Processing function.','compressx')?></span><br>
                                     <span></span>
                                 </div>
                             </div>
@@ -1502,7 +1586,7 @@ class CompressX_Dashboard
                             </div>
                             <div class="compressing-converting" style="margin-top: 0rem;">
                                 <div class="compressing-converting-information">
-                                    <span><?php esc_html_e('Auto-resize large images This option allows you to enter a width and height, so large images will be proportionately resized upon upload. For example, if you set 1280 px for the width, all large images will be resized in proportion to 1280 px in width upon upload.','compressx')?></span>
+                                    <span><?php esc_html_e('This option allows you to enter a width and height, so large images will be proportionately resized upon upload. For example, if you set 1280 px for the width, all large images will be resized in proportion to 1280 px in width upon upload.','compressx')?></span>
                                 </div>
                             </div>
                         </div>

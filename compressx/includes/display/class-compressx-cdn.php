@@ -277,16 +277,18 @@ class CompressX_CDN
                 die();
             }
 
-            include_once COMPRESSX_DIR . '/includes/class-compressx-cloudflare-cdn.php';
-
-            $cdn=new CompressX_CloudFlare_CDN($setting);
-
-            $ret=$cdn->purge_cache();
-
-            if($ret['result']!='success')
+            if($this->need_test($setting))
             {
-                echo wp_json_encode($ret);
-                die();
+                include_once COMPRESSX_DIR . '/includes/class-compressx-cloudflare-cdn.php';
+                $cdn=new CompressX_CloudFlare_CDN($setting);
+
+                $ret=$cdn->purge_cache();
+
+                if($ret['result']!='success')
+                {
+                    echo wp_json_encode($ret);
+                    die();
+                }
             }
 
             $options=get_option('compressx_general_settings',array());
@@ -322,6 +324,21 @@ class CompressX_CDN
         {
             die();
         }
+    }
+
+    public function need_test($setting)
+    {
+        if(isset($setting['auto_purge_cache'])&&$setting['auto_purge_cache'])
+        {
+           return true;
+        }
+
+        if(isset($setting['auto_purge_cache_after_manual'])&&$setting['auto_purge_cache_after_manual'])
+        {
+            return true;
+        }
+
+        return false;
     }
 
     public function purge_cache()

@@ -67,6 +67,7 @@ class CompressX
             $screen_ids[]='compressx_page_info-compressx';
             $screen_ids[]='compressx_page_logs-compressx';
             $screen_ids[]='compressx_page_cdn-compressx';
+            $screen_ids[]='compressx_page_addons-compressx';
         }
 
         $screen_ids=apply_filters('compressx_get_screen_ids',$screen_ids);

@@ -1418,7 +1418,6 @@ class CompressX_Image_Opt_Method
                         $output_path=CompressX_Image_Opt_Method::get_output_path($filename);
                         $output_path=$output_path.'.avif';
                         $image_optimize_meta['size'][$size_key]['convert_avif_status']=0;
-
                         CompressX_Image_Opt_Method::WriteLog($log,'Start AVIF conversion:'.basename($filename),'notice');
 
                         if(!file_exists($filename))
@@ -1854,6 +1853,7 @@ class CompressX_Image_Opt_Method
         $attachment_dir=CompressX_Image_Opt_Method::transfer_path($attachment_dir);
         $sub_dir=str_replace($upload_root,'',$attachment_dir);
         $sub_dir=untrailingslashit($sub_dir);
+        $sub_dir=ltrim( $sub_dir, '/\\' );
         $real_path=$compressx_path.'/'.$sub_dir;
 
         if(!file_exists($real_path))

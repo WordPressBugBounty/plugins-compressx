@@ -23,6 +23,10 @@ class CompressX_Log
         $this->log_file=$this->GetSaveLogFolder().$file_name;
 
         $this->log_file_handle = fopen($this->log_file, 'a');
+        if($this->log_file_handle===false)
+        {
+            return false;
+        }
         $text="====================================================\n";
         $time =gmdate("Y-m-d H:i:s",time());
         $text.='open log file: '.$time."\n";

@@ -9,6 +9,7 @@ class CompressX_Display
     public $log;
     public $system_info;
     public $cdn;
+    public $addons;
 
     public function __construct()
     {
@@ -18,6 +19,7 @@ class CompressX_Display
         include_once COMPRESSX_DIR . '/includes/display/class-compressx-cdn.php';
         include_once COMPRESSX_DIR . '/includes/display/class-compressx-logs.php';
         include_once COMPRESSX_DIR . '/includes/display/class-compressx-system-info.php';
+        include_once COMPRESSX_DIR . '/includes/display/class-compressx-addons.php';
 
         $this->dashboard=new CompressX_Dashboard();
         $this->bulk_action=new CompressX_Bulk_Action();
@@ -25,6 +27,7 @@ class CompressX_Display
         $this->cdn=new CompressX_CDN();
         $this->log=new CompressX_Logs();
         $this->system_info=new CompressX_System_Info();
+        $this->addons=new CompressX_Addons();
 
         add_action('admin_enqueue_scripts',array( $this,'enqueue_styles'));
         add_action('admin_enqueue_scripts',array( $this,'enqueue_scripts'));
@@ -56,6 +59,7 @@ class CompressX_Display
             $screen_ids[]='compressx_page_info-compressx';
             $screen_ids[]='compressx_page_logs-compressx';
             $screen_ids[]='compressx_page_cdn-compressx';
+            $screen_ids[]='compressx_page_addons-compressx';
         }
 
         $screen_ids=apply_filters('compressx_get_screen_ids',$screen_ids);
@@ -228,6 +232,16 @@ class CompressX_Display
             $submenus[$submenu['menu_slug']]=$submenu;
         }
 
+        $submenu['parent_slug']=COMPRESSX_SLUG;
+        $submenu['page_title']="Addons";
+        $submenu['menu_title']="Addons";
+        $submenu['capability']="administrator";
+        $submenu['menu_slug']="addons-compressx";
+        $submenu['index']=21;
+        $submenu['function']=array($this->addons, 'display');
+
+        $submenus[$submenu['menu_slug']]=$submenu;
+
         $submenus = apply_filters('compressx_get_admin_menus', $submenus);
         usort($submenus, function ($a, $b)
         {
@@ -280,7 +294,18 @@ class CompressX_Display
         ?>
         <nav>
             <div class="compressx-container compressx-menu">
-                <h2>Compress<span style="color:#175cff;">X</span><span style="font-size:1.2rem;">.io</span></h2>
+                <h2>Compress<span style="color:#175cff;">X</span><span style="font-size:1.2rem;">.io</span>
+                <span class="compressx-pro-version" style="font-size:0.7rem;">
+                    <span><?php echo COMPRESSX_VERSION;?></span><span> FREE</span>
+                    <?php
+                    if($this->check_update())
+                    {
+                        $url=get_admin_url().'plugins.php?s=compressx&plugin_status=all';
+                        ?><span style="padding:0 0.2rem"></span><a href="<?php echo esc_url($url)?>">(Latest Version: <?php echo esc_html( $this->latest_version());?>)</a><?php
+                    }
+                    ?>
+                </span>
+                </h2>
                 <ul class="cx-menu-ul-large">
                     <li><a href="https://compressx.io/docs/compressx-overview/"><strong><?php esc_html_e('Documentation','compressx')?></strong></a></li>
                     <li><a href="https://compressx.io/docs/troubleshooting/"><strong><?php esc_html_e('Troubleshooting','compressx')?></strong></a></li>
@@ -292,6 +317,42 @@ class CompressX_Display
             </div>
         </nav>
         <?php
+    }
+
+    public function check_update()
+    {
+        $update_data = wp_get_update_data();
+        if (isset($update_data['counts']['plugins']))
+        {
+            $plugins = get_site_transient('update_plugins');
+            //var_dump($plugins);
+            if (isset($plugins->response[COMPRESSX_NAME]))
+            {
+                $plugin_data = $plugins->response[COMPRESSX_NAME];
+                $latest_version = $plugin_data->new_version;
+                if(version_compare($latest_version,COMPRESSX_VERSION,'>'))
+                {
+                    return true;
+                }
+            }
+        }
+
+
+        return false;
+    }
+
+    public function latest_version()
+    {
+        $plugins = get_site_transient('update_plugins');
+        if (isset($plugins->response[COMPRESSX_NAME]))
+        {
+            $plugin_data = $plugins->response[COMPRESSX_NAME];
+            return $plugin_data->new_version;
+        }
+        else
+        {
+            return '';
+        }
     }
 
     public function output_header()

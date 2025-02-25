@@ -26,36 +26,54 @@ jQuery('#cx_enable_auto_optimize').click(function()
 
 jQuery('#cx_convert_to_webp').click(function()
 {
-    var json = {};
     var value = '0';
     if(jQuery('#cx_convert_to_webp').prop('checked'))
     {
         value = '1';
+        var descript = 'Are you sure to enable WebP as output format? This will convert your images to WebP format.';
     }
     else {
         value = '0';
+        var descript = 'Are you sure to disable WebP as output format?';
     }
-    json['convert_to_webp']=value;
-    var setting_data=JSON.stringify(json);
 
-    compressx_set_general_settings(setting_data);
+    var ret = confirm(descript);
+    if(ret === true)
+    {
+        var json = {};
+
+
+        json['convert_to_webp']=value;
+        var setting_data=JSON.stringify(json);
+
+        compressx_set_general_settings(setting_data);
+    }
 });
 
 jQuery('#cx_convert_to_avif').click(function()
 {
-    var json = {};
     var value = '0';
     if(jQuery('#cx_convert_to_avif').prop('checked'))
     {
         value = '1';
+        var descript = 'Are you sure to enable AVIF as output format? This will convert your images to AVIF format.';
     }
     else {
         value = '0';
+        var descript = 'Are you sure to disable AVIF as output format?';
     }
-    json['convert_to_avif']=value;
-    var setting_data=JSON.stringify(json);
 
-    compressx_set_general_settings(setting_data);
+    var ret = confirm(descript);
+    if(ret === true)
+    {
+        var json = {};
+
+
+        json['convert_to_avif']=value;
+        var setting_data=JSON.stringify(json);
+
+        compressx_set_general_settings(setting_data);
+    }
 });
 
 function compressx_set_general_settings(setting_data)

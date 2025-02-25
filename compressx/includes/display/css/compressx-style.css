@@ -18,7 +18,7 @@
     --color-light-grey:#F8F9FA;
     --color-dark-grey:#f0f0f0;
     --color-grey:#ddd;
-    --color-notification:#f7f9fc;
+    --color-notification:rgba(234,241,255,.52);
     --color-grey-blue:#CEDDFF;
     --color-grey-black:#888;
     --container-width-lg: 1200px;
@@ -29,6 +29,7 @@
     line-height: 1.5;
 }
 #compressx-wrap {
+
     box-sizing: border-box;
     margin-top: 1.5rem;
     padding-bottom: 5rem;
@@ -124,9 +125,12 @@ a {
 }
 /*****************************Nav*****************************************/
 #compressx-wrap nav{
+    max-width: var(--container-width-lg);
     background-color: var(--color-bg-block);
     border-bottom: 2px solid var(--color-grey);
+    margin: 0 auto;
 }
+
 /*============================Toggle Button==============================*/
 /* The switch - the box around the slider */
 .compressx-container .cx-switch {
@@ -225,18 +229,24 @@ a {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 2rem;
 }
 .compressx-menu h2 {
-    padding:0 1rem;
+    padding:0 2rem;
 }
 .compressx-menu ul {
     display:flex;
     align-items: center;
     gap:2rem;
-    padding:0 1rem;
+    padding:0 2rem;
 }
-
+.compressx-license{
+    max-width: 500px;
+    min-width: 380px;
+    margin: auto;
+}
+.compressx-pro-version{
+    background-color: var(--color-notification);
+}
 .compressx-menu .cx-menu-ul-mini{
     display: none;
 }
@@ -275,7 +285,7 @@ a {
 }
 .compressx-header-block{
     display:grid;
-    grid-template-columns: 2fr 3fr;
+    grid-template-columns: 3fr 1fr;
     gap:1rem;
 }
 .compressx-header-custom-block{
@@ -292,8 +302,8 @@ a {
 }
 .compressx-header-block article {
     background-color: var(--color-background);
-    padding: 1rem 1rem;
-    border: 1px solid var(--color-grey);
+    padding:1rem 1rem;
+    border:1px solid var(--color-grey);
     border-radius: 3px;
 }
 
@@ -308,7 +318,10 @@ a {
     grid-template-columns: 1fr 1fr;
     gap:1rem;
 }
-
+.compressx-bg-list{
+    background-color: var(--color-bg-block);
+    padding: 1rem 0;
+}
 .compressx-header-block .cx-overview .cx-title,
 .compressx-header-custom-block .cx-overview .cx-title,
 .compressx-bulk-log .cx-title,
@@ -316,7 +329,7 @@ a {
     color: var(--color-title);
     font-size: 1rem;
     font-weight: 500;
-    border-bottom: 1px solid var(--color-grey);
+    border-bottom: 2px solid var(--color-grey);
     padding-bottom: 1rem;
     margin-bottom: 1rem;
     position: relative;
@@ -518,6 +531,18 @@ a {
     border-radius: 6px;
     padding: 1rem;
 }
+.compressx-notification-5-star{
+    float: left;
+    width:3rem;
+    height:3rem;
+    padding-top:1rem;
+    padding-right:1rem;
+    padding-bottom:1rem;
+    padding-left:1rem;
+    border:1px solid #dddddd;
+    border-radius: 50%;
+    color:#175cff
+}
 .compressx-notification .cx-api{
     display: grid;
     grid-template-columns: repeat(2,1fr);
@@ -531,7 +556,7 @@ a {
     padding-bottom: 1rem;
 }
 .compressx-notification .cx-rating-btn{
-    padding:0.3rem 1rem;
+    padding:0.4rem 1rem;
     font-size: 0.9rem;
     color:var(--color-background);
     background-color: var(--color-light-blue);
@@ -545,6 +570,15 @@ a {
 /*=============================Compressx Notification Ends========================================*/
 
 /*=============================Compressx General Settings========================================*/
+.compressx-hr{
+    display: block;
+    unicode-bidi: isolate;
+    overflow: hidden;
+    margin: 0.75rem 0 0.75rem 0;
+    border: 0;
+    border-top: 1px solid #dcdcde;
+    border-bottom: 1px solid #f6f7f7
+}
 .compressx-general-settings{
     background-color: var(--color-background);
     padding:0 1rem 1rem;
@@ -557,13 +591,13 @@ a {
     border-bottom: 1px solid var(--color-light-grey);
 }
 .compressx-general-settings-header{
-    border-bottom: 1px solid var(--color-grey);
+    border-bottom: 2px solid var(--color-grey);
     padding-top: 0.1rem;
 }
 .compressx-general-settings-footer{
     padding:1rem 0 0 0;
     margin-top:1rem;
-    border-top:1px solid var(--color-grey);
+    border-top:2px solid var(--color-grey);
 
 }
 .compressx-general-settings-body h5,
@@ -587,10 +621,57 @@ a {
     grid-template-columns: repeat(2,1fr);
     gap:1rem;
 }
+.compressx-3-cols{
+    display:grid;
+    grid-template-columns: repeat(3,1fr);
+    gap:1rem;
+}
+.compressx-margin-top{
+    margin-top: 1rem;
+}
+.compressx-margin-bottom{
+    margin-bottom: 1rem;
+}
+.compressx-padding-mini{
+    padding:0.5rem
+}
+.compressx-padding-top{
+    padding-top: 1rem;
+}
+.compressx-padding-right{
+    padding-right: 1rem;
+}
+.compressx-padding-bottom{
+    padding-bottom: 1rem;
+}
+.compressx-padding-left{
+    padding-left: 1rem;
+}
+.compressx-padding-top-mini{
+    padding-top: 0.5rem;
+}
+.compressx-padding-right-mini{
+    padding-right: 0.5rem;
+}
+.compressx-padding-bottom-mini{
+    padding-bottom: 0.5rem;
+}
+.compressx-padding-left-mini{
+    padding-left: 0.5rem;
+}
+.compressx-dot-border,
 .compressx-general-settings-body .cx-library-select{
     margin: 0.5rem 0;
-    border:1px dashed #f0f0f0;
+    border:1px dashed #cfcbcb;
     padding:0.5rem;
+}
+.compressx-border-solid{
+    border: 1px solid var(--color-grey);
+}
+.compressx-overflow{
+    overflow: auto;
+    min-height: 50px;
+    max-height:250px;
 }
 .compressx-general-settings-body .cx-library-support-yes{
     color: var(--color-light-green);
@@ -662,7 +743,6 @@ a {
 }
 .compressx-general-settings-body .cx-title{
     padding:0.3rem 0.5rem;
-    border-radius: 0.5rem 0 0 0.5rem;
 }
 .compressx-general-settings-body .cx-medialibrary-rules,
 .compressx-general-settings-body .cx-custom-rules{
@@ -779,6 +859,7 @@ a {
     background-color: var(--color-grey);
     border-radius: 2px;
 }
+
 .compressx-bulk-process .cx-process-bar-percentage{
     display: block;
     width: 48%;
@@ -788,7 +869,16 @@ a {
 }
 .cx-watermark-list{
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(1, 1fr);
+    gap:1rem;
+    padding: 1rem 0;
+    max-height: 250px;
+    overflow: auto;
+    margin-bottom: 1rem;
+}
+.cx-thumbnails-formats{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     gap:1rem;
     padding: 1rem 0;
 }
@@ -886,7 +976,7 @@ a {
 .compressx-container .cx-addons {
     border: 1px solid var(--color-grey);
     border-radius: 6px;
-    background-color: var(--color-notification);
+    background-color: var(--color-background);
     padding: 1rem;
 }
 .compressx-container .cx-addons .cx-addons-icon-block {
