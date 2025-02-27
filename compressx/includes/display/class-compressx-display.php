@@ -100,7 +100,9 @@ class CompressX_Display
             wp_localize_script(COMPRESSX_SLUG, 'compressx_ajax_object', array('ajax_url' => admin_url('admin-ajax.php'),'ajax_nonce'=>wp_create_nonce('compressx_ajax')));
         }
 
-        if(get_current_screen()->id=='toplevel_page_'.COMPRESSX_SLUG)
+        $toplevel_screen_id='toplevel_page_'.COMPRESSX_SLUG;
+        $toplevel_screen_id=apply_filters('compressx_get_screen_id',$toplevel_screen_id);
+        if(get_current_screen()->id==$toplevel_screen_id)
         {
             $arg=array();
             $arg['in_footer']=true;
@@ -119,6 +121,8 @@ class CompressX_Display
             wp_enqueue_script(COMPRESSX_SLUG.'_custom_bulk', COMPRESSX_URL . '/includes/display/js/compressx_custom_bulk.js', array('jquery'), COMPRESSX_VERSION, $arg);
         }
 
+        $cdn_screen_id='compressx_page_cdn-compressx';
+        $cdn_screen_id=apply_filters('compressx_get_screen_id',$cdn_screen_id);
         if(get_current_screen()->id=='compressx_page_cdn-compressx')
         {
             $arg=array();
@@ -127,7 +131,9 @@ class CompressX_Display
             wp_enqueue_script(COMPRESSX_SLUG.'_setting', COMPRESSX_URL . '/includes/display/js/compressx_setting.js', array('jquery'), COMPRESSX_VERSION, $arg);
         }
 
-        if(get_current_screen()->id=='compressx_page_logs-compressx')
+        $logs_screen_id='compressx_page_logs-compressx';
+        $logs_screen_id=apply_filters('compressx_get_screen_id',$logs_screen_id);
+        if(get_current_screen()->id==$logs_screen_id)
         {
             $arg=array();
             $arg['in_footer']=true;
@@ -135,7 +141,9 @@ class CompressX_Display
             wp_enqueue_script(COMPRESSX_SLUG.'_logs', COMPRESSX_URL . '/includes/display/js/compressx_log.js', array('jquery'), COMPRESSX_VERSION, $arg);
         }
 
-        if(get_current_screen()->id=='compressx_page_info-compressx')
+        $info_screen_id='compressx_page_info-compressx';
+        $info_screen_id=apply_filters('compressx_get_screen_id',$info_screen_id);
+        if(get_current_screen()->id==$info_screen_id)
         {
             $arg=array();
             $arg['in_footer']=true;
@@ -145,6 +153,10 @@ class CompressX_Display
 
     public function add_plugin_network_admin_menu()
     {
+        if(apply_filters('compressx_support_mu',false))
+        {
+            return;
+        }
         $menu['page_title']= 'CompressX';
         $menu['menu_title']= 'CompressX';
         $menu['capability']='manage_options';

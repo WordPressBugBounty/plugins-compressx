@@ -1847,7 +1847,19 @@ class CompressX_Image_Opt_Method
     {
         $compressx_path=WP_CONTENT_DIR."/compressx-nextgen/uploads";
 
-        $upload_dir = wp_get_upload_dir();
+        if(is_multisite())
+        {
+            $tmp_id=get_current_blog_id();
+            $main_site_id = get_main_site_id();
+            switch_to_blog($main_site_id);
+            $upload_dir = wp_get_upload_dir();
+            switch_to_blog($tmp_id);
+        }
+        else
+        {
+            $upload_dir = wp_get_upload_dir();
+        }
+
         $upload_root=CompressX_Image_Opt_Method::transfer_path($upload_dir['basedir']);
         $attachment_dir=dirname($og_path);
         $attachment_dir=CompressX_Image_Opt_Method::transfer_path($attachment_dir);

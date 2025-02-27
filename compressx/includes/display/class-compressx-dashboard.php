@@ -1700,6 +1700,10 @@ class CompressX_Dashboard
         {
             return 'gd';
         }
+        else if( function_exists( 'gd_info' ) )
+        {
+            return 'gd';
+        }
         else if ( extension_loaded( 'imagick' ) && class_exists( '\Imagick' ) )
         {
             if( \Imagick::queryformats( 'AVIF' ))

@@ -691,6 +691,7 @@ function compressx_delete_files()
     var confirm_text=jQuery('#cx_confirm_delete_file').val();
     if(confirm_text!="Delete")
     {
+        alert('Please type the word "Delete" to confirm the deletion. Note that "Delete" is case sensitive.');
         return;
     }
 

@@ -394,27 +394,6 @@ class CompressX_Bulk_Action
                     </div>
                 </div>
             </div>
-            <div class="compressing-converting-information" style="position:relative;">
-
-                <div style="padding-bottom: 0.5rem;"><span><strong><?php esc_html_e('Processed Images','compressx')?></strong></a></span>
-                    <span> (</span><a href="<?php echo esc_url($url);?>"><span><?php esc_html_e('Failed: ','compressx')?></span><span id="cx_failed_images_count"><?php echo esc_html($failed_images_count);?></span></a><span>)</span></div>
-                <div class="cx-overview_body-webp-free">
-
-                    <div class="cx-process-media-files">
-
-                        <span class="cx-process-media-type"><?php esc_html_e('Webp Size:','compressx')?></span><span class="cx-porcess-media-files-label"><?php echo esc_html(size_format($webp_data['webp_saved'],2));?></span>
-                    </div>
-                    <div class="cx-process-media-files">
-                        <span class="cx-process-media-type"><?php esc_html_e('Total Savings:','compressx')?></span><span class="cx-porcess-media-files-label"><?php echo esc_html($webp_data['webp_saved_percent']);?>%</span>
-                    </div>
-                    <div class="cx-process-media-files">
-                        <span class="cx-process-media-type"><?php esc_html_e('AVIF Size:','compressx')?></span><span class="cx-porcess-media-files-label"><?php echo esc_html(size_format($webp_data['avif_saved'],2));?></span>
-                    </div>
-                    <div class="cx-process-media-files">
-                        <span class="cx-process-media-type"><?php esc_html_e('Total Savings:','compressx')?></span><span class="cx-porcess-media-files-label"><?php echo esc_html($webp_data['avif_saved_percent']);?>%</span>
-                    </div>
-                </div>
-            </div>
         </div>
         <?php
     }
