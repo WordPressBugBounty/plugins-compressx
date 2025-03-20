@@ -138,84 +138,13 @@ class CompressX_Auto_Optimization
 
         $this->WriteLog('Start optimizing new media images id:'.$attachment_id,'notice');
 
-        $output_format_webp=get_option('compressx_output_format_webp',1);
-        $output_format_avif=get_option('compressx_output_format_avif',1);
+        $options['convert_to_webp']=CompressX_Image_Opt_Method::get_convert_to_webp();
+        $options['convert_to_avif']=CompressX_Image_Opt_Method::get_convert_to_avif();
 
-        $convert_to_webp=$output_format_webp;
-        $convert_to_avif=$output_format_avif;
-        $compressed_webp=$output_format_webp;
-        $compressed_avif=$output_format_avif;
+        $options['compressed_webp']=CompressX_Image_Opt_Method::get_compress_to_webp();
+        $options['compressed_avif']=CompressX_Image_Opt_Method::get_compress_to_avif();
 
-        $converter_method=get_option('compressx_converter_method',false);
-        if(empty($converter_method))
-        {
-            if( function_exists( 'gd_info' ) && function_exists( 'imagewebp' )  )
-            {
-                $converter_method= 'gd';
-            }
-            else if ( extension_loaded( 'imagick' ) && class_exists( '\Imagick' ) )
-            {
-                $converter_method= 'imagick';
-            }
-            else
-            {
-                $converter_method= 'gd';
-            }
-
-        }
-
-        if($converter_method=='gd')
-        {
-            if($convert_to_webp&&CompressX_Image_Opt_Method::is_support_gd_webp())
-            {
-                $convert_to_webp=true;
-            }
-            else
-            {
-                $convert_to_webp=false;
-                $compressed_webp=false;
-            }
-
-            if($convert_to_avif&&CompressX_Image_Opt_Method::is_support_gd_avif())
-            {
-                $convert_to_avif=true;
-            }
-            else
-            {
-                $convert_to_avif=false;
-                $compressed_avif=false;
-            }
-        }
-        else
-        {
-            if($convert_to_webp&&CompressX_Image_Opt_Method::is_support_imagick_webp())
-            {
-                $convert_to_webp=true;
-            }
-            else
-            {
-                $convert_to_webp=false;
-                $compressed_webp=false;
-            }
-
-            if($convert_to_avif&&CompressX_Image_Opt_Method::is_support_imagick_avif())
-            {
-                $convert_to_avif=true;
-            }
-            else
-            {
-                $convert_to_avif=false;
-                $compressed_avif=false;
-            }
-        }
-
-        $options['convert_to_webp']=$convert_to_webp;
-        $options['convert_to_avif']=$convert_to_avif;
-
-        $options['compressed_webp']=$compressed_webp;
-        $options['compressed_avif']=$compressed_avif;
-
-        $options['converter_method']=$converter_method;
+        $options['converter_method']=CompressX_Image_Opt_Method::get_converter_method();
 
         $quality_options=get_option('compressx_quality',array());
 
@@ -328,10 +257,17 @@ class CompressX_Auto_Optimization
 
     public function check_file_mime_content_type($file_path)
     {
-        $type=mime_content_type($file_path);
-        if($type=="text/html")
+        if(function_exists( 'mime_content_type' ))
         {
-            return false;
+            $type=mime_content_type($file_path);
+            if($type=="text/html")
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
         else
         {

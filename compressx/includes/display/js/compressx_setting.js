@@ -55,8 +55,23 @@ jQuery('#cx_convert_to_avif').click(function()
     var value = '0';
     if(jQuery('#cx_convert_to_avif').prop('checked'))
     {
+        if(jQuery('#cx_converter_method_imagick').prop('checked'))
+        {
+            if(compressx_alert.imagick_avif)
+            {
+                var descript = 'We detect that you use ImageMagick 6.x, this version has a known bug that can cause AVIF conversion timeout. Enabling AVIF conversion with this version is not recommended. Are you sure you wish to proceed?';
+            }
+            else
+            {
+                var descript = 'Are you sure to enable AVIF as output format? This will convert your images to AVIF format.';
+            }
+        }
+        else
+        {
+            var descript = 'Are you sure to enable AVIF as output format? This will convert your images to AVIF format.';
+        }
+
         value = '1';
-        var descript = 'Are you sure to enable AVIF as output format? This will convert your images to AVIF format.';
     }
     else {
         value = '0';

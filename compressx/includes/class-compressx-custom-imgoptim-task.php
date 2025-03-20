@@ -81,75 +81,13 @@ class CompressX_Custom_ImgOptim_Task
             $this->task['options']['quality_avif']=isset($quality_options['quality_avif'])?$quality_options['quality_avif']: 60;
         }
 
-        $converter_method=get_option('compressx_converter_method',false);
-        if(empty($converter_method))
-        {
-            if( function_exists( 'gd_info' ) && function_exists( 'imagewebp' )  )
-            {
-                $converter_method= 'gd';
-            }
-            else if ( extension_loaded( 'imagick' ) && class_exists( '\Imagick' ) )
-            {
-                $converter_method= 'imagick';
-            }
-            else
-            {
-                $converter_method= 'gd';
-            }
+        $this->task['options']['convert_to_webp']=CompressX_Image_Opt_Method::get_convert_to_webp();
+        $this->task['options']['convert_to_avif']=CompressX_Image_Opt_Method::get_convert_to_avif();
 
-        }
+        $this->task['options']['compressed_webp']=CompressX_Image_Opt_Method::get_compress_to_webp();
+        $this->task['options']['compressed_avif']=CompressX_Image_Opt_Method::get_compress_to_avif();
 
-        $this->task['options']['converter_method']=$converter_method;
-
-        $output_format_webp=get_option('compressx_output_format_webp',1);
-        $output_format_avif=get_option('compressx_output_format_avif',1);
-
-        $convert_to_webp=$output_format_webp;
-        $convert_to_avif=$output_format_avif;
-
-        if($converter_method=='gd')
-        {
-            if($convert_to_webp&&CompressX_Image_Opt_Method::is_support_gd_webp())
-            {
-                $convert_to_webp=true;
-            }
-            else
-            {
-                $convert_to_webp=false;
-            }
-
-            if($convert_to_avif&&CompressX_Image_Opt_Method::is_support_gd_avif())
-            {
-                $convert_to_avif=true;
-            }
-            else
-            {
-                $convert_to_avif=false;
-            }
-        }
-        else
-        {
-            if($convert_to_webp&&CompressX_Image_Opt_Method::is_support_imagick_webp())
-            {
-                $convert_to_webp=true;
-            }
-            else
-            {
-                $convert_to_webp=false;
-            }
-
-            if($convert_to_avif&&CompressX_Image_Opt_Method::is_support_imagick_avif())
-            {
-                $convert_to_avif=true;
-            }
-            else
-            {
-                $convert_to_avif=false;
-            }
-        }
-
-        $this->task['options']['convert_to_webp']=$convert_to_webp;
-        $this->task['options']['convert_to_avif']=$convert_to_avif;
+        $this->task['options']['converter_method']=CompressX_Image_Opt_Method::get_converter_method();
 
     }
 

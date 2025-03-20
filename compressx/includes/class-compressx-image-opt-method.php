@@ -279,6 +279,7 @@ class CompressX_Image_Opt_Method
 
             if($type=='webp')
             {
+                $image->setImageFormat( "WEBP" );
                 $image->setImageCompressionQuality( $quality );
                 if(isset($options['remove_exif'])&&$options['remove_exif'])
                 {
@@ -341,6 +342,7 @@ class CompressX_Image_Opt_Method
                     $quality=80;
                 }
 
+                $image->setImageFormat( "AVIF" );
                 $image->setCompressionQuality( $quality );
                 if(isset($options['remove_exif'])&&$options['remove_exif'])
                 {
@@ -1963,5 +1965,380 @@ class CompressX_Image_Opt_Method
         delete_post_meta($image_id,'compressx_image_progressing');
 
         do_action('compressx_delete_image',$image_id);
+    }
+
+    public static function set_default_compress_server()
+    {
+       if( function_exists( 'gd_info' ) )
+        {
+            update_option('compressx_converter_method','gd');
+            return 'gd';
+        }
+        else if ( extension_loaded( 'imagick' ) && class_exists( '\Imagick' ) )
+        {
+            update_option('compressx_converter_method','imagick');
+            return 'imagick';
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public static function set_default_output_format_webp()
+    {
+        $converter_method=get_option('compressx_converter_method',false);
+
+        if(empty($converter_method))
+        {
+            $converter_method=CompressX_Image_Opt_Method::set_default_compress_server();
+        }
+
+        if($converter_method=="gd")
+        {
+            if(CompressX_Image_Opt_Method::is_support_gd_webp())
+            {
+                update_option('compressx_output_format_webp',1);
+                return 1;
+            }
+            else
+            {
+                update_option('compressx_output_format_webp',0);
+                return 0;
+            }
+        }
+        else if($converter_method=="imagick")
+        {
+            if(CompressX_Image_Opt_Method::is_support_imagick_webp())
+            {
+                update_option('compressx_output_format_webp',1);
+                return 1;
+            }
+            else
+            {
+                update_option('compressx_output_format_webp',0);
+                return 0;
+            }
+        }
+        else
+        {
+           return false;
+        }
+    }
+
+    public static function set_default_output_format_avif()
+    {
+        $converter_method=get_option('compressx_converter_method',false);
+
+        if(empty($converter_method))
+        {
+            $converter_method=CompressX_Image_Opt_Method::set_default_compress_server();
+        }
+
+        if($converter_method=="gd")
+        {
+            if(CompressX_Image_Opt_Method::is_support_gd_avif())
+            {
+                update_option('compressx_output_format_avif',1);
+                return 1;
+            }
+            else
+            {
+                update_option('compressx_output_format_avif',0);
+                return 0;
+            }
+        }
+        else if($converter_method=="imagick")
+        {
+            if(CompressX_Image_Opt_Method::is_support_imagick_avif())
+            {
+                if(CompressX_Image_Opt_Method::check_imagick_avif())
+                {
+                    update_option('compressx_output_format_avif',1);
+                    return 1;
+                }
+                else
+                {
+                    update_option('compressx_output_format_avif',0);
+                    return 0;
+                }
+            }
+            else
+            {
+                update_option('compressx_output_format_avif',0);
+                return 0;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public static function check_imagick_avif()
+    {
+        if ( extension_loaded( 'imagick' ) && class_exists( '\Imagick' ) )
+        {
+            $info = \Imagick::getVersion();
+            $versionString = $info['versionString'];
+            $version="7.0";
+            if (preg_match('/^ImageMagick (\d+\.\d+\.\d+)(?:-\d+)?/', $versionString, $matches))
+            {
+                $mainVersion = $matches[1];
+                if(version_compare($mainVersion,$version,'>'))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public static function is_current_support_webp()
+    {
+        $converter_method=get_option('compressx_converter_method',false);
+
+        if(empty($converter_method))
+        {
+            $converter_method=CompressX_Image_Opt_Method::set_default_compress_server();
+        }
+
+        if($converter_method=="gd")
+        {
+            if(CompressX_Image_Opt_Method::is_support_gd_webp())
+            {
+               return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else if($converter_method=="imagick")
+        {
+            if(CompressX_Image_Opt_Method::is_support_imagick_webp())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public static function is_current_support_avif()
+    {
+        $converter_method=get_option('compressx_converter_method',false);
+
+        if(empty($converter_method))
+        {
+            $converter_method=CompressX_Image_Opt_Method::set_default_compress_server();
+        }
+
+        if($converter_method=="gd")
+        {
+            if(CompressX_Image_Opt_Method::is_support_gd_avif())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else if($converter_method=="imagick")
+        {
+            if(CompressX_Image_Opt_Method::is_support_imagick_avif())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public static function get_convert_to_webp()
+    {
+        $converter_method=get_option('compressx_converter_method',false);
+        if(empty($converter_method))
+        {
+            $converter_method=CompressX_Image_Opt_Method::set_default_compress_server();
+        }
+
+        $convert_to_webp=get_option('compressx_output_format_webp','not init');
+        if($convert_to_webp=='not init')
+        {
+            $convert_to_webp=CompressX_Image_Opt_Method::set_default_output_format_webp();
+        }
+
+        if($converter_method=='gd')
+        {
+            if($convert_to_webp&&CompressX_Image_Opt_Method::is_support_gd_webp())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if($convert_to_webp&&CompressX_Image_Opt_Method::is_support_imagick_webp())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+
+    public static function get_convert_to_avif()
+    {
+        $converter_method=get_option('compressx_converter_method',false);
+        if(empty($converter_method))
+        {
+            $converter_method=CompressX_Image_Opt_Method::set_default_compress_server();
+        }
+
+        $convert_to_avif=get_option('compressx_output_format_avif','not init');
+        if($convert_to_avif=='not init')
+        {
+            $convert_to_avif=CompressX_Image_Opt_Method::set_default_output_format_avif();
+        }
+
+        if($converter_method=='gd')
+        {
+            if($convert_to_avif&&CompressX_Image_Opt_Method::is_support_gd_avif())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if($convert_to_avif&&CompressX_Image_Opt_Method::is_support_imagick_avif())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+
+    public static function get_compress_to_webp()
+    {
+        $converter_method=get_option('compressx_converter_method',false);
+        if(empty($converter_method))
+        {
+            $converter_method=CompressX_Image_Opt_Method::set_default_compress_server();
+        }
+
+        $convert_to_webp=get_option('compressx_output_format_webp','not init');
+        if($convert_to_webp=='not init')
+        {
+            $convert_to_webp=CompressX_Image_Opt_Method::set_default_output_format_webp();
+        }
+
+        if($converter_method=='gd')
+        {
+            if($convert_to_webp&&CompressX_Image_Opt_Method::is_support_gd_webp())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if($convert_to_webp&&CompressX_Image_Opt_Method::is_support_imagick_webp())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+
+    public static function get_compress_to_avif()
+    {
+        $converter_method=get_option('compressx_converter_method',false);
+        if(empty($converter_method))
+        {
+            $converter_method=CompressX_Image_Opt_Method::set_default_compress_server();
+        }
+
+        $convert_to_avif=get_option('compressx_output_format_avif','not init');
+        if($convert_to_avif=='not init')
+        {
+            $convert_to_avif=CompressX_Image_Opt_Method::set_default_output_format_avif();
+        }
+
+        if($converter_method=='gd')
+        {
+            if($convert_to_avif&&CompressX_Image_Opt_Method::is_support_gd_avif())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if($convert_to_avif&&CompressX_Image_Opt_Method::is_support_imagick_avif())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+
+    public static function get_converter_method()
+    {
+        $converter_method=get_option('compressx_converter_method',false);
+        if(empty($converter_method))
+        {
+            $converter_method=CompressX_Image_Opt_Method::set_default_compress_server();
+        }
+
+        return $converter_method;
     }
 }

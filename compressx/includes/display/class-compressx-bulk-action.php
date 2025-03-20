@@ -30,65 +30,8 @@ class CompressX_Bulk_Action
             $force=false;
         }
 
-        $convert_to_webp=get_option('compressx_output_format_webp',true);
-        $convert_to_avif=get_option('compressx_output_format_avif',true);
-        $converter_method=get_option('compressx_converter_method',false);
-        if(empty($converter_method))
-        {
-            if( function_exists( 'gd_info' ) && function_exists( 'imagewebp' )  )
-            {
-                $converter_method= 'gd';
-            }
-            else if ( extension_loaded( 'imagick' ) && class_exists( '\Imagick' ) )
-            {
-                $converter_method= 'imagick';
-            }
-            else
-            {
-                $converter_method= 'gd';
-            }
-        }
-
-        if($converter_method=='gd')
-        {
-            if($convert_to_webp&&CompressX_Image_Opt_Method::is_support_gd_webp())
-            {
-                $convert_to_webp=true;
-            }
-            else
-            {
-                $convert_to_webp=false;
-            }
-
-            if($convert_to_avif&&CompressX_Image_Opt_Method::is_support_gd_avif())
-            {
-                $convert_to_avif=true;
-            }
-            else
-            {
-                $convert_to_avif=false;
-            }
-        }
-        else
-        {
-            if($convert_to_webp&&CompressX_Image_Opt_Method::is_support_imagick_webp())
-            {
-                $convert_to_webp=true;
-            }
-            else
-            {
-                $convert_to_webp=false;
-            }
-
-            if($convert_to_avif&&CompressX_Image_Opt_Method::is_support_imagick_avif())
-            {
-                $convert_to_avif=true;
-            }
-            else
-            {
-                $convert_to_avif=false;
-            }
-        }
+        $convert_to_webp=CompressX_Image_Opt_Method::get_convert_to_webp();
+        $convert_to_avif=CompressX_Image_Opt_Method::get_convert_to_avif();
 
         $excludes=get_option('compressx_media_excludes',array());
         $exclude_regex_folder=array();

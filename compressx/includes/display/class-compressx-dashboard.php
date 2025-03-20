@@ -816,8 +816,7 @@ class CompressX_Dashboard
 
         if(empty($converter_method))
         {
-            $converter_method=$this->set_default_compress_server();
-            update_option('compressx_converter_method',$converter_method,false);
+            $converter_method=CompressX_Image_Opt_Method::set_default_compress_server();
         }
 
         if($converter_method=="gd")
@@ -836,8 +835,18 @@ class CompressX_Dashboard
             $imagick_checked="";
         }
 
-        $convert_to_webp=get_option('compressx_output_format_webp',1);
+        $convert_to_webp=get_option('compressx_output_format_webp','not init');
+        if($convert_to_webp==='not init')
+        {
+            $convert_to_webp=CompressX_Image_Opt_Method::set_default_output_format_webp();
+        }
 
+        $convert_to_avif=get_option('compressx_output_format_avif','not init');
+        if($convert_to_avif==='not init')
+        {
+            $convert_to_avif=CompressX_Image_Opt_Method::set_default_output_format_avif();
+        }
+        
         if($convert_to_webp)
         {
             $convert_to_webp='checked';
@@ -847,8 +856,37 @@ class CompressX_Dashboard
             $convert_to_webp='';
         }
 
-        $convert_to_avif=get_option('compressx_output_format_avif',1);
+        if($convert_to_avif)
+        {
+            $convert_to_avif='checked';
+        }
+        else
+        {
+            $convert_to_avif='';
+        }
 
+
+        if(CompressX_Image_Opt_Method::is_current_support_webp())
+        {
+            $webp_support='';
+        }
+        else
+        {
+            $convert_to_webp='';
+            $webp_support='disabled';
+        }
+        
+        if(CompressX_Image_Opt_Method::is_current_support_avif())
+        {
+            $avif_support='';
+        }
+        else
+        {
+            $convert_to_avif='';
+            $avif_support='disabled';
+        }
+
+        /*
         if($convert_to_avif)
         {
             $convert_to_avif='checked';
@@ -910,6 +948,7 @@ class CompressX_Dashboard
             $convert_to_webp='';
             $convert_to_avif='';
         }
+        */
 
         $webp_data=$this->get_optimized_data();
         $webp_saved=$webp_data['webp_saved_percent'];
@@ -1694,37 +1733,6 @@ class CompressX_Dashboard
         <?php
     }
 
-    public function set_default_compress_server()
-    {
-        if( function_exists( 'gd_info' ) && function_exists( 'imageavif' )  )
-        {
-            return 'gd';
-        }
-        else if( function_exists( 'gd_info' ) )
-        {
-            return 'gd';
-        }
-        else if ( extension_loaded( 'imagick' ) && class_exists( '\Imagick' ) )
-        {
-            if( \Imagick::queryformats( 'AVIF' ))
-            {
-                return 'imagick';
-            }
-            else if(CompressX_Image_Opt_Method::is_support_gd())
-            {
-                return 'gd';
-            }
-            else
-            {
-                return 'imagick';
-            }
-        }
-        else
-        {
-            return false;
-        }
-    }
-
     public function set_general_setting()
     {
         global $compressx;
@@ -1756,7 +1764,6 @@ class CompressX_Dashboard
 
                 update_option('compressx_auto_optimize',$options,false);
             }
-
 
             if(isset($setting['convert_to_webp']))
             {

@@ -83,25 +83,8 @@ class CompressX_Custom_Bulk_Action
         $stats['total']=0;
         $stats['processed']=0;
 
-        $convert_to_webp=get_option('compressx_output_format_webp',1);
-        $convert_to_avif=get_option('compressx_output_format_avif',1);
-        if($convert_to_webp&&CompressX_Image_Opt_Method::is_support_webp())
-        {
-            $convert_to_webp=true;
-        }
-        else
-        {
-            $convert_to_webp=false;
-        }
-
-        if($convert_to_avif&&CompressX_Image_Opt_Method::is_support_avif())
-        {
-            $convert_to_avif=true;
-        }
-        else
-        {
-            $convert_to_avif=false;
-        }
+        $convert_to_webp=CompressX_Image_Opt_Method::get_convert_to_webp();
+        $convert_to_avif=CompressX_Image_Opt_Method::get_convert_to_avif();
 
         foreach ($includes as $include)
         {
@@ -429,25 +412,8 @@ class CompressX_Custom_Bulk_Action
         $stats['total']=0;
         $stats['processed']=0;
 
-        $convert_to_webp=get_option('compressx_output_format_webp',1);
-        $convert_to_avif=get_option('compressx_output_format_avif',1);
-        if($convert_to_webp&&CompressX_Image_Opt_Method::is_support_webp())
-        {
-            $convert_to_webp=true;
-        }
-        else
-        {
-            $convert_to_webp=false;
-        }
-
-        if($convert_to_avif&&CompressX_Image_Opt_Method::is_support_avif())
-        {
-            $convert_to_avif=true;
-        }
-        else
-        {
-            $convert_to_avif=false;
-        }
+        $convert_to_webp=CompressX_Image_Opt_Method::get_convert_to_webp();
+        $convert_to_avif=CompressX_Image_Opt_Method::get_convert_to_avif();
 
         $abs_path = trailingslashit(str_replace('\\', '/', realpath(ABSPATH)));
 
@@ -492,25 +458,8 @@ class CompressX_Custom_Bulk_Action
         $stats['total']=0;
         $stats['processed']=0;
 
-        $convert_to_webp=get_option('compressx_output_format_webp',true);
-        $convert_to_avif=get_option('compressx_output_format_avif',true);
-        if($convert_to_webp&&CompressX_Image_Opt_Method::is_support_webp())
-        {
-            $convert_to_webp=true;
-        }
-        else
-        {
-            $convert_to_webp=false;
-        }
-
-        if($convert_to_avif&&CompressX_Image_Opt_Method::is_support_avif())
-        {
-            $convert_to_avif=true;
-        }
-        else
-        {
-            $convert_to_avif=false;
-        }
+        $convert_to_webp=CompressX_Image_Opt_Method::get_convert_to_webp();
+        $convert_to_avif=CompressX_Image_Opt_Method::get_convert_to_avif();
 
         foreach ($includes as $include)
         {
@@ -552,25 +501,8 @@ class CompressX_Custom_Bulk_Action
         $stats['total']=0;
         $stats['processed']=0;
 
-        $convert_to_webp=get_option('compressx_output_format_webp',true);
-        $convert_to_avif=get_option('compressx_output_format_avif',true);
-        if($convert_to_webp&&CompressX_Image_Opt_Method::is_support_webp())
-        {
-            $convert_to_webp=true;
-        }
-        else
-        {
-            $convert_to_webp=false;
-        }
-
-        if($convert_to_avif&&CompressX_Image_Opt_Method::is_support_avif())
-        {
-            $convert_to_avif=true;
-        }
-        else
-        {
-            $convert_to_avif=false;
-        }
+        $convert_to_webp=CompressX_Image_Opt_Method::get_convert_to_webp();
+        $convert_to_avif=CompressX_Image_Opt_Method::get_convert_to_avif();
 
         foreach ($includes as $include)
         {

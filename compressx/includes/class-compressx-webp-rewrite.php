@@ -39,16 +39,22 @@ class CompressX_Webp_Rewrite
         $remove_thumbnails=isset($options['remove_thumbnails'])?$options['remove_thumbnails']:false;
 
         $document_root=$this->transfer_path($_SERVER['DOCUMENT_ROOT']);
+        $document_root_real=$this->transfer_path(realpath( $_SERVER['DOCUMENT_ROOT'] ));
         $wordpress_root=$this->get_wordpress_root();
-        $document_root2='%{DOCUMENT_ROOT}'.str_replace($document_root,'',$wordpress_root);
-        $document_root3=str_replace($document_root,'',$wordpress_root);
 
-        $path=WP_CONTENT_DIR;
+        $root_path   = trim( str_replace( $document_root_real ?: '', '', $wordpress_root ?: '' ), '\/' );
+        $root_suffix = str_replace( '//', '/', sprintf( '/%s/', $root_path ) );
+
+        //$document_root2='%{DOCUMENT_ROOT}'.str_replace($document_root,'',$wordpress_root);
+        $document_root2=( $document_root !== $document_root_real ) ? ( $wordpress_root . '/' ) : ( '%{DOCUMENT_ROOT}' . $root_suffix );
+
+        $document_root3=str_replace($document_root,'',$wordpress_root);
 
         $upload_root  = wp_parse_url( content_url() );
         $upload_root  = $upload_root['path'].'/compressx-nextgen';
         $upload_root2=str_replace($document_root3,'',$upload_root);
 
+        $path=WP_CONTENT_DIR;
         $htaccess_file=$path . '/.htaccess';
 
         $line[]='<IfModule mod_rewrite.c>';
@@ -72,9 +78,15 @@ class CompressX_Webp_Rewrite
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.avif -f';
             $line[]='RewriteRule (.+)\.avif '.$upload_root.'/$1.avif [NC,T=image/avif,L]';
         }
-        else
+        elseif ( strpos( $document_root, '%{DOCUMENT_ROOT}' ) !== false )
         {
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.avif -f [OR]';
+            $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.avif -f';
+            $line[]='RewriteRule (.+)\.avif '.$upload_root.'/$1.avif [NC,T=image/avif,L]';
+        }
+        else
+        {
+            $line[]='RewriteCond '.untrailingslashit($document_root2).$upload_root2.'/$1.avif -f [OR]';
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.avif -f';
             $line[]='RewriteRule (.+)\.avif '.$upload_root.'/$1.avif [NC,T=image/avif,L]';
         }
@@ -90,9 +102,15 @@ class CompressX_Webp_Rewrite
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.webp.avif -f';
             $line[]='RewriteRule (.+)\.webp '.$upload_root.'/$1.webp.avif [NC,T=image/avif,L]';
         }
-        else
+        elseif ( strpos( $document_root, '%{DOCUMENT_ROOT}' ) !== false )
         {
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.webp.avif -f [OR]';
+            $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.webp.avif -f';
+            $line[]='RewriteRule (.+)\.webp '.$upload_root.'/$1.webp.avif [NC,T=image/avif,L]';
+        }
+        else
+        {
+            $line[]='RewriteCond '.untrailingslashit($document_root2).$upload_root2.'/$1.webp.avif -f [OR]';
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.webp.avif -f';
             $line[]='RewriteRule (.+)\.webp '.$upload_root.'/$1.webp.avif [NC,T=image/avif,L]';
         }
@@ -108,9 +126,15 @@ class CompressX_Webp_Rewrite
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.jpg.avif -f';
             $line[]='RewriteRule (.+)\.jpg$ '.$upload_root.'/$1.jpg.avif [NC,T=image/avif,L]';
         }
-        else
+        elseif ( strpos( $document_root, '%{DOCUMENT_ROOT}' ) !== false )
         {
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.jpg.avif -f [OR]';
+            $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.jpg.avif -f';
+            $line[]='RewriteRule (.+)\.jpg$ '.$upload_root.'/$1.jpg.avif [NC,T=image/avif,L]';
+        }
+        else
+        {
+            $line[]='RewriteCond '.untrailingslashit($document_root2).$upload_root2.'/$1.jpg.avif -f [OR]';
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.jpg.avif -f';
             $line[]='RewriteRule (.+)\.jpg$ '.$upload_root.'/$1.jpg.avif [NC,T=image/avif,L]';
         }
@@ -126,9 +150,15 @@ class CompressX_Webp_Rewrite
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.png.avif -f';
             $line[]='RewriteRule (.+)\.png$ '.$upload_root.'/$1.png.avif [NC,T=image/avif,L]';
         }
-        else
+        elseif ( strpos( $document_root, '%{DOCUMENT_ROOT}' ) !== false )
         {
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.png.avif -f [OR]';
+            $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.png.avif -f';
+            $line[]='RewriteRule (.+)\.png$ '.$upload_root.'/$1.png.avif [NC,T=image/avif,L]';
+        }
+        else
+        {
+            $line[]='RewriteCond '.untrailingslashit($document_root2).$upload_root2.'/$1.png.avif -f [OR]';
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.png.avif -f';
             $line[]='RewriteRule (.+)\.png$ '.$upload_root.'/$1.png.avif [NC,T=image/avif,L]';
         }
@@ -145,9 +175,15 @@ class CompressX_Webp_Rewrite
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.jpeg.avif -f';
             $line[]='RewriteRule (.+)\.jpeg$ '.$upload_root.'/$1.jpeg.avif [NC,T=image/avif,L]';
         }
-        else
+        elseif ( strpos( $document_root, '%{DOCUMENT_ROOT}' ) !== false )
         {
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.jpeg.avif -f [OR]';
+            $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.jpeg.avif -f';
+            $line[]='RewriteRule (.+)\.jpeg$ '.$upload_root.'/$1.jpeg.avif [NC,T=image/avif,L]';
+        }
+        else
+        {
+            $line[]='RewriteCond '.untrailingslashit($document_root2).$upload_root2.'/$1.jpeg.avif -f [OR]';
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.jpeg.avif -f';
             $line[]='RewriteRule (.+)\.jpeg$ '.$upload_root.'/$1.jpeg.avif [NC,T=image/avif,L]';
         }
@@ -163,9 +199,15 @@ class CompressX_Webp_Rewrite
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.webp -f';
             $line[]='RewriteRule (.+)\.webp '.$upload_root.'/$1.webp [NC,T=image/webp,L]';
         }
-        else
+        elseif ( strpos( $document_root, '%{DOCUMENT_ROOT}' ) !== false )
         {
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.webp -f [OR]';
+            $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.webp -f';
+            $line[]='RewriteRule (.+)\.webp '.$upload_root.'/$1.webp [NC,T=image/webp,L]';
+        }
+        else
+        {
+            $line[]='RewriteCond '.untrailingslashit($document_root2).$upload_root2.'/$1.webp -f [OR]';
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.webp -f';
             $line[]='RewriteRule (.+)\.webp '.$upload_root.'/$1.webp [NC,T=image/webp,L]';
         }
@@ -182,9 +224,15 @@ class CompressX_Webp_Rewrite
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.jpg.webp -f';
             $line[]='RewriteRule (.+)\.jpg$ '.$upload_root.'/$1.jpg.webp [NC,T=image/webp,L]';
         }
-        else
+        elseif ( strpos( $document_root, '%{DOCUMENT_ROOT}' ) !== false )
         {
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.jpg.webp -f [OR]';
+            $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.jpg.webp -f';
+            $line[]='RewriteRule (.+)\.jpg$ '.$upload_root.'/$1.jpg.webp [NC,T=image/webp,L]';
+        }
+        else
+        {
+            $line[]='RewriteCond '.untrailingslashit($document_root2).$upload_root2.'/$1.jpg.webp -f [OR]';
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.jpg.webp -f';
             $line[]='RewriteRule (.+)\.jpg$ '.$upload_root.'/$1.jpg.webp [NC,T=image/webp,L]';
         }
@@ -200,9 +248,15 @@ class CompressX_Webp_Rewrite
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.png.webp -f';
             $line[]='RewriteRule (.+)\.png$ '.$upload_root.'/$1.png.webp [NC,T=image/webp,L]';
         }
-        else
+        elseif ( strpos( $document_root, '%{DOCUMENT_ROOT}' ) !== false )
         {
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.png.webp -f [OR]';
+            $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.png.webp -f';
+            $line[]='RewriteRule (.+)\.png$ '.$upload_root.'/$1.png.webp [NC,T=image/webp,L]';
+        }
+        else
+        {
+            $line[]='RewriteCond '.untrailingslashit($document_root2).$upload_root2.'/$1.png.webp -f [OR]';
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.png.webp -f';
             $line[]='RewriteRule (.+)\.png$ '.$upload_root.'/$1.png.webp [NC,T=image/webp,L]';
         }
@@ -218,9 +272,15 @@ class CompressX_Webp_Rewrite
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.jpeg.webp -f';
             $line[]='RewriteRule (.+)\.jpeg$ '.$upload_root.'/$1.jpeg.webp [NC,T=image/webp,L]';
         }
-        else
+        elseif ( strpos( $document_root, '%{DOCUMENT_ROOT}' ) !== false )
         {
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.jpeg.webp -f [OR]';
+            $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.jpeg.webp -f';
+            $line[]='RewriteRule (.+)\.jpeg$ '.$upload_root.'/$1.jpeg.webp [NC,T=image/webp,L]';
+        }
+        else
+        {
+            $line[]='RewriteCond '.untrailingslashit($document_root2).$upload_root2.'/$1.jpeg.webp -f [OR]';
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.jpeg.webp -f';
             $line[]='RewriteRule (.+)\.jpeg$ '.$upload_root.'/$1.jpeg.webp [NC,T=image/webp,L]';
         }
@@ -248,8 +308,15 @@ class CompressX_Webp_Rewrite
         $remove_thumbnails=isset($options['remove_thumbnails'])?$options['remove_thumbnails']:false;
 
         $document_root=$this->transfer_path($_SERVER['DOCUMENT_ROOT']);
+        $document_root_real=$this->transfer_path(realpath( $_SERVER['DOCUMENT_ROOT'] ));
+
         $wordpress_root=$this->get_wordpress_root();
-        $document_root2='%{DOCUMENT_ROOT}'.str_replace($document_root,'',$wordpress_root);
+        $root_path   = trim( str_replace( $document_root_real ?: '', '', $wordpress_root ?: '' ), '\/' );
+        $root_suffix = str_replace( '//', '/', sprintf( '/%s/', $root_path ) );
+
+        //$document_root2='%{DOCUMENT_ROOT}'.str_replace($document_root,'',$wordpress_root);
+        $document_root2=( $document_root !== $document_root_real ) ? ( $wordpress_root . '/' ) : ( '%{DOCUMENT_ROOT}' . $root_suffix );
+
         $document_root3=str_replace($document_root,'',$wordpress_root);
 
         $upload_dir = wp_upload_dir();
@@ -276,14 +343,21 @@ class CompressX_Webp_Rewrite
         {
             $line[]='RewriteCond %{REQUEST_FILENAME} -f';
         }
+
         if($document_root2=='%{DOCUMENT_ROOT}')
         {
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.avif -f';
             $line[]='RewriteRule (.+)\.avif '.$upload_root.'/$1.avif [NC,T=image/avif,L]';
         }
-        else
+        elseif ( strpos( $document_root, '%{DOCUMENT_ROOT}' ) !== false )
         {
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.avif -f [OR]';
+            $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.avif -f';
+            $line[]='RewriteRule (.+)\.avif '.$upload_root.'/$1.avif [NC,T=image/avif,L]';
+        }
+        else
+        {
+            $line[]='RewriteCond '.untrailingslashit($document_root2).$upload_root2.'/$1.avif -f [OR]';
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.avif -f';
             $line[]='RewriteRule (.+)\.avif '.$upload_root.'/$1.avif [NC,T=image/avif,L]';
         }
@@ -299,27 +373,39 @@ class CompressX_Webp_Rewrite
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.webp.avif -f';
             $line[]='RewriteRule (.+)\.webp '.$upload_root.'/$1.webp.avif [NC,T=image/avif,L]';
         }
-        else
+        elseif ( strpos( $document_root, '%{DOCUMENT_ROOT}' ) !== false )
         {
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.webp.avif -f [OR]';
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.webp.avif -f';
             $line[]='RewriteRule (.+)\.webp '.$upload_root.'/$1.webp.avif [NC,T=image/avif,L]';
         }
-
+        else
+        {
+            $line[]='RewriteCond '.untrailingslashit($document_root2).$upload_root2.'/$1.webp.avif -f [OR]';
+            $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.webp.avif -f';
+            $line[]='RewriteRule (.+)\.webp '.$upload_root.'/$1.webp.avif [NC,T=image/avif,L]';
+        }
 
         $line[]='RewriteCond %{HTTP_ACCEPT} image/avif';
         if(!$remove_thumbnails)
         {
             $line[]='RewriteCond %{REQUEST_FILENAME} -f';
         }
+
         if($document_root2=='%{DOCUMENT_ROOT}')
         {
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.jpg.avif -f';
             $line[]='RewriteRule (.+)\.jpg$ '.$upload_root.'/$1.jpg.avif [NC,T=image/avif,L]';
         }
-        else
+        elseif ( strpos( $document_root, '%{DOCUMENT_ROOT}' ) !== false )
         {
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.jpg.avif -f [OR]';
+            $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.jpg.avif -f';
+            $line[]='RewriteRule (.+)\.jpg$ '.$upload_root.'/$1.jpg.avif [NC,T=image/avif,L]';
+        }
+        else
+        {
+            $line[]='RewriteCond '.untrailingslashit($document_root2).$upload_root2.'/$1.jpg.avif -f [OR]';
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.jpg.avif -f';
             $line[]='RewriteRule (.+)\.jpg$ '.$upload_root.'/$1.jpg.avif [NC,T=image/avif,L]';
         }
@@ -335,12 +421,19 @@ class CompressX_Webp_Rewrite
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.png.avif -f';
             $line[]='RewriteRule (.+)\.png$ '.$upload_root.'/$1.png.avif [NC,T=image/avif,L]';
         }
-        else
+        elseif ( strpos( $document_root, '%{DOCUMENT_ROOT}' ) !== false )
         {
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.png.avif -f [OR]';
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.png.avif -f';
             $line[]='RewriteRule (.+)\.png$ '.$upload_root.'/$1.png.avif [NC,T=image/avif,L]';
         }
+        else
+        {
+            $line[]='RewriteCond '.untrailingslashit($document_root2).$upload_root2.'/$1.png.avif -f [OR]';
+            $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.png.avif -f';
+            $line[]='RewriteRule (.+)\.png$ '.$upload_root.'/$1.png.avif [NC,T=image/avif,L]';
+        }
+
 
         $line[]='RewriteCond %{HTTP_ACCEPT} image/avif';
         if(!$remove_thumbnails)
@@ -353,12 +446,19 @@ class CompressX_Webp_Rewrite
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.jpeg.avif -f';
             $line[]='RewriteRule (.+)\.jpeg$ '.$upload_root.'/$1.jpeg.avif [NC,T=image/avif,L]';
         }
-        else
+        elseif ( strpos( $document_root, '%{DOCUMENT_ROOT}' ) !== false )
         {
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.jpeg.avif -f [OR]';
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.jpeg.avif -f';
             $line[]='RewriteRule (.+)\.jpeg$ '.$upload_root.'/$1.jpeg.avif [NC,T=image/avif,L]';
         }
+        else
+        {
+            $line[]='RewriteCond '.untrailingslashit($document_root2).$upload_root2.'/$1.jpeg.avif -f [OR]';
+            $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.jpeg.avif -f';
+            $line[]='RewriteRule (.+)\.jpeg$ '.$upload_root.'/$1.jpeg.avif [NC,T=image/avif,L]';
+        }
+
 
         $line[]='RewriteCond %{HTTP_ACCEPT} image/webp';
         if(!$remove_thumbnails)
@@ -370,12 +470,19 @@ class CompressX_Webp_Rewrite
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.webp -f';
             $line[]='RewriteRule (.+)\.webp '.$upload_root.'/$1.webp [NC,T=image/webp,L]';
         }
-        else
+        elseif ( strpos( $document_root, '%{DOCUMENT_ROOT}' ) !== false )
         {
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.webp -f [OR]';
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.webp -f';
             $line[]='RewriteRule (.+)\.webp '.$upload_root.'/$1.webp [NC,T=image/webp,L]';
         }
+        else
+        {
+            $line[]='RewriteCond '.untrailingslashit($document_root2).$upload_root2.'/$1.webp -f [OR]';
+            $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.webp -f';
+            $line[]='RewriteRule (.+)\.webp '.$upload_root.'/$1.webp [NC,T=image/webp,L]';
+        }
+
 
         $line[]='RewriteCond %{HTTP_ACCEPT} image/webp';
         if(!$remove_thumbnails)
@@ -388,9 +495,15 @@ class CompressX_Webp_Rewrite
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.jpg.webp -f';
             $line[]='RewriteRule (.+)\.jpg$ '.$upload_root.'/$1.jpg.webp [NC,T=image/webp,L]';
         }
-        else
+        elseif ( strpos( $document_root, '%{DOCUMENT_ROOT}' ) !== false )
         {
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.jpg.webp -f [OR]';
+            $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.jpg.webp -f';
+            $line[]='RewriteRule (.+)\.jpg$ '.$upload_root.'/$1.jpg.webp [NC,T=image/webp,L]';
+        }
+        else
+        {
+            $line[]='RewriteCond '.untrailingslashit($document_root2).$upload_root2.'/$1.jpg.webp -f [OR]';
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.jpg.webp -f';
             $line[]='RewriteRule (.+)\.jpg$ '.$upload_root.'/$1.jpg.webp [NC,T=image/webp,L]';
         }
@@ -406,9 +519,15 @@ class CompressX_Webp_Rewrite
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.png.webp -f';
             $line[]='RewriteRule (.+)\.png$ '.$upload_root.'/$1.png.webp [NC,T=image/webp,L]';
         }
-        else
+        elseif ( strpos( $document_root, '%{DOCUMENT_ROOT}' ) !== false )
         {
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.png.webp -f [OR]';
+            $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.png.webp -f';
+            $line[]='RewriteRule (.+)\.png$ '.$upload_root.'/$1.png.webp [NC,T=image/webp,L]';
+        }
+        else
+        {
+            $line[]='RewriteCond '.untrailingslashit($document_root2).$upload_root2.'/$1.png.webp -f [OR]';
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.png.webp -f';
             $line[]='RewriteRule (.+)\.png$ '.$upload_root.'/$1.png.webp [NC,T=image/webp,L]';
         }
@@ -418,14 +537,21 @@ class CompressX_Webp_Rewrite
         {
             $line[]='RewriteCond %{REQUEST_FILENAME} -f';
         }
+
         if($document_root2=='%{DOCUMENT_ROOT}')
         {
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.jpeg.webp -f';
             $line[]='RewriteRule (.+)\.jpeg$ '.$upload_root.'/$1.jpeg.webp [NC,T=image/webp,L]';
         }
-        else
+        elseif ( strpos( $document_root, '%{DOCUMENT_ROOT}' ) !== false )
         {
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.jpeg.webp -f [OR]';
+            $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.jpeg.webp -f';
+            $line[]='RewriteRule (.+)\.jpeg$ '.$upload_root.'/$1.jpeg.webp [NC,T=image/webp,L]';
+        }
+        else
+        {
+            $line[]='RewriteCond '.untrailingslashit($document_root2).$upload_root2.'/$1.jpeg.webp -f [OR]';
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root2.'/$1.jpeg.webp -f';
             $line[]='RewriteRule (.+)\.jpeg$ '.$upload_root.'/$1.jpeg.webp [NC,T=image/webp,L]';
         }

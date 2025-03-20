@@ -116,6 +116,15 @@ class CompressX_Display
             $path = str_replace('\\','/',$path);
             $custom_root_path = $path.'/';
 
+            if(CompressX_Image_Opt_Method::check_imagick_avif())
+            {
+                wp_localize_script(COMPRESSX_SLUG, 'compressx_alert', array('imagick_avif' => false));
+            }
+            else
+            {
+                wp_localize_script(COMPRESSX_SLUG, 'compressx_alert', array('imagick_avif' => true));
+            }
+
             wp_localize_script(COMPRESSX_SLUG, 'compressx_uploads_root', array('path' => $uploads_path,'custom_path'=>$custom_root_path));
             wp_enqueue_script(COMPRESSX_SLUG.'_setting', COMPRESSX_URL . '/includes/display/js/compressx_setting.js', array('jquery'), COMPRESSX_VERSION, $arg);
             wp_enqueue_script(COMPRESSX_SLUG.'_custom_bulk', COMPRESSX_URL . '/includes/display/js/compressx_custom_bulk.js', array('jquery'), COMPRESSX_VERSION, $arg);
