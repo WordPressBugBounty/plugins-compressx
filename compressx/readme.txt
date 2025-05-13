@@ -2,9 +2,9 @@
 Contributors: compressxio
 Tags: convert WebP, convert AVIF, WebP, AVIF
 Requires at least: 5.8
-Tested up to: 6.7.2
+Tested up to: 6.8.1
 Requires PHP: 7.0
-Stable tag: 0.9.26
+Stable tag: 0.9.27
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
@@ -65,6 +65,10 @@ Yes, absolutely. Whenever you need help, start a thread on the support forum or 
 Yes, we do. Here is a [tutorial](https://compressx.io/docs/compressx-overview/) for you to quickly get started with CompressX.
 
 == Changelog ==
+= 0.9.27 =
+- Refactored the plugin code and optimized the code structure.
+- Optimized and reduced CompressX entries in postmeta table.
+- Fixed some UI bugs.
 = 0.9.26 =
 - Expanded compatibility to support a wider range of server configurations.
 - Added a clear warning about potential AVIF conversion timeouts when using ImageMagick 6.x.
@@ -166,10 +170,8 @@ Yes, we do. Here is a [tutorial](https://compressx.io/docs/compressx-overview/) 
 - Initial release. Hello world!
 
 == Upgrade Notice ==
-Latest version 0.9.26:
-= 0.9.26 =
-- Expanded compatibility to support a wider range of server configurations.
-- Added a clear warning about potential AVIF conversion timeouts when using ImageMagick 6.x.
-- Enhanced compatibility of .htaccess rewrite rules to accommodate diverse server settings.
-- Optimized bulk image processing to skip stuck images.
-- Optimized the plugin code.
+Latest version 0.9.27:
+= 0.9.27 =
+- Refactored the plugin code and optimized the code structure.
+- Optimized and reduced CompressX entries in postmeta table.
+- Fixed some UI bugs.

@@ -22,7 +22,8 @@ class CompressX_Dashboard
         add_action('wp_ajax_compressx_hide_notice', array($this, 'compressx_hide_notice'));
         add_action('wp_ajax_compressx_rating_dismiss', array($this, 'compressx_rating_dismiss'));
 
-        //
+        add_action('compressx_output_review', array($this, 'output_review'));
+        add_action('compressx_output_notice', array($this, 'output_notice'));
     }
 
     public function display()
@@ -75,30 +76,73 @@ class CompressX_Dashboard
 
     public function output_review()
     {
-        ?>
-        <section id="cx_rating_box" style="display: none">
-            <div class="compressx-container compressx-section">
-                <div class="compressx-notification" style="position: relative">
-                    <div class="compressx-notification-5-star">
-                        <span class="dashicons dashicons-thumbs-up" style="font-size: 3rem; text-shadow: 2px 2px #7CDA24;"></span>
-                    </div>
-                    <div style="padding:0 1rem 0 6rem;">
-                        <h5 style="font-size: 0.9rem;">Compressx.io has successfully processed <span  style="color:#071c4d;"><strong><span id="cx_size_of_opt_images"></span></strong></span> of images, and it's <span style="color:#071c4d;"><strong>completely free</strong></span>.</h5>
-                        <p><?php esc_html_e('If the plugin has helped you, perhaps you could leave us a nice review and give us 5 stars? It would mean a lot to us and would be very motivating!','compressx')?></p>
-                        <div class="cx-rating">
-                            <div><span id="cx_rating_btn" class="cx-rating-btn"><?php esc_html_e('Yes, let me give a nice review','compressx')?></span></div>
-                            <div><span id="cx_rating_ask_me_later"><a href=""><?php esc_html_e('Ask me later','compressx')?></a></span></div>
-                            <div><span id="cx_rating_already"><a href=""><?php esc_html_e('I already did:)','compressx')?></a></span></div>
-                            <div><span id="cx_rating_dismiss"><a href=""><?php esc_html_e('Dismiss','compressx')?></a></span></div>
+        $show_review=CompressX_Options::get_option('compressx_show_review',false);
+        if($show_review===false||$show_review==1)
+        {
+            $show_review=false;
+        }
+
+        if($show_review!==false&&$show_review<time())
+        {
+            CompressX_Options::update_option('compressx_show_review',true);
+            $size=CompressX_Image_Method::get_opt_folder_size();
+            $opt_size=size_format($size,2);
+            ?>
+            <section id="cx_rating_box" >
+                <div class="compressx-container compressx-section">
+                    <div class="compressx-notification" style="position: relative">
+                        <div class="compressx-notification-5-star">
+                            <span class="dashicons dashicons-thumbs-up" style="font-size: 3rem; text-shadow: 2px 2px #7CDA24;"></span>
                         </div>
+                        <div style="padding:0 1rem 0 6rem;">
+                            <h5 style="font-size: 0.9rem;">Compressx.io has successfully processed <span  style="color:#071c4d;"><strong><span id="cx_size_of_opt_images"><?php echo esc_html($opt_size)?></span></strong></span> of images, and it's <span style="color:#071c4d;"><strong>completely free</strong></span>.</h5>
+                            <p><?php esc_html_e('If the plugin has helped you, perhaps you could leave us a nice review and give us 5 stars? It would mean a lot to us and would be very motivating!','compressx')?></p>
+                            <div class="cx-rating">
+                                <div><span id="cx_rating_btn" class="cx-rating-btn"><?php esc_html_e('Yes, let me give a nice review','compressx')?></span></div>
+                                <div><span id="cx_rating_ask_me_later"><a href=""><?php esc_html_e('Ask me later','compressx')?></a></span></div>
+                                <div><span id="cx_rating_already"><a href=""><?php esc_html_e('I already did:)','compressx')?></a></span></div>
+                                <div><span id="cx_rating_dismiss"><a href=""><?php esc_html_e('Dismiss','compressx')?></a></span></div>
+                            </div>
+                        </div>
+                        <div style="clear: both;"></div>
+                        <button id="cx_rating_close" type="button" class="notice-dismiss">
+                            <span class="screen-reader-text">Dismiss this notice.</span>
+                        </button>
                     </div>
-                    <div style="clear: both;"></div>
-                    <button id="cx_rating_close" type="button" class="notice-dismiss">
-                        <span class="screen-reader-text">Dismiss this notice.</span>
-                    </button>
                 </div>
-            </div>
-        </section>
+            </section>
+            <?php
+        }
+        else
+        {
+            ?>
+            <section id="cx_rating_box" style="display: none">
+                <div class="compressx-container compressx-section">
+                    <div class="compressx-notification" style="position: relative">
+                        <div class="compressx-notification-5-star">
+                            <span class="dashicons dashicons-thumbs-up" style="font-size: 3rem; text-shadow: 2px 2px #7CDA24;"></span>
+                        </div>
+                        <div style="padding:0 1rem 0 6rem;">
+                            <h5 style="font-size: 0.9rem;">Compressx.io has successfully processed <span  style="color:#071c4d;"><strong><span id="cx_size_of_opt_images"></span></strong></span> of images, and it's <span style="color:#071c4d;"><strong>completely free</strong></span>.</h5>
+                            <p><?php esc_html_e('If the plugin has helped you, perhaps you could leave us a nice review and give us 5 stars? It would mean a lot to us and would be very motivating!','compressx')?></p>
+                            <div class="cx-rating">
+                                <div><span id="cx_rating_btn" class="cx-rating-btn"><?php esc_html_e('Yes, let me give a nice review','compressx')?></span></div>
+                                <div><span id="cx_rating_ask_me_later"><a href=""><?php esc_html_e('Ask me later','compressx')?></a></span></div>
+                                <div><span id="cx_rating_already"><a href=""><?php esc_html_e('I already did:)','compressx')?></a></span></div>
+                                <div><span id="cx_rating_dismiss"><a href=""><?php esc_html_e('Dismiss','compressx')?></a></span></div>
+                            </div>
+                        </div>
+                        <div style="clear: both;"></div>
+                        <button id="cx_rating_close" type="button" class="notice-dismiss">
+                            <span class="screen-reader-text">Dismiss this notice.</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+            <?php
+        }
+        ?>
+
         <script>
             jQuery('#cx_rating_btn').click(function()
             {
@@ -192,7 +236,7 @@ class CompressX_Dashboard
 
     public function output_notice()
     {
-        if(!CompressX_Image_Opt_Method::is_support_gd()&&!CompressX_Image_Opt_Method::is_support_imagick())
+        if(!CompressX_Image_Method::is_support_gd()&&!CompressX_Image_Method::is_support_imagick())
         {
             $has_notice=true;
         }
@@ -201,7 +245,7 @@ class CompressX_Dashboard
             $has_notice=false;
         }
 
-        $options=get_option('compressx_general_settings',array());
+        $options=CompressX_Options::get_option('compressx_general_settings',array());
         $image_load=isset($options['image_load'])?$options['image_load']:'htaccess';
         if ($image_load == "htaccess")
         {
@@ -221,7 +265,7 @@ class CompressX_Dashboard
                 <div class="compressx-container compressx-section">
                     <div class="compressx-notification">
                         <?php
-                        if(!CompressX_Image_Opt_Method::is_support_gd()&&!CompressX_Image_Opt_Method::is_support_imagick())
+                        if(!CompressX_Image_Method::is_support_gd()&&!CompressX_Image_Method::is_support_imagick())
                         {
                             ?>
                             <p>
@@ -287,21 +331,18 @@ class CompressX_Dashboard
 
     public function output_overview()
     {
-        $webp_data=$this->get_optimized_data();
-        $failed_images_count=CompressX_Image_Meta::get_failed_images_count();
-        $url=admin_url().'upload.php?compressx-filter=failed_optimized';
         ?>
         <div class="cx-overview_body-free">
             <div class="cx-overview_body-webp-free">
                 <div class="cx-process-webp">
                     <div class="cx-process-position">
-                        <span class="cx-processed"><?php echo esc_html($webp_data['webp_converted_percent']);?>%<span class="cx-percent-sign"> images</span></span>
+                        <span id="cx_conversion_webp_percent" class="cx-processed" >0%<span class="cx-percent-sign"> images</span></span>
                         <span class="cx-processing"><?php esc_html_e('Outputted to WEBP','compressx')?></span>
                     </div>
                 </div>
                 <div class="cx-process-webp">
                     <div class="cx-process-position">
-                        <span class="cx-processed"><?php echo esc_html($webp_data['avif_converted_percent']);?>%<span class="cx-percent-sign"> images</span></span>
+                        <span id="cx_conversion_avif_percent" class="cx-processed">0%<span class="cx-percent-sign"> images</span></span>
                         <span class="cx-processing"><?php esc_html_e('Outputted to AVIF','compressx')?></span>
                     </div>
                 </div>
@@ -315,10 +356,29 @@ class CompressX_Dashboard
         global $compressx;
         $compressx->ajax_check_security('compressx-can-convert');
 
+        $stats=CompressX_Image_Meta::get_global_stats();
+
         $ret['result']='success';
-        ob_start();
-        $this->output_overview();
-        $ret['html'] = ob_get_clean();
+        $ret['html'] =" <div class=\"cx-overview_body-free\">
+            <div class=\"cx-overview_body-webp-free\">
+                <div class=\"cx-process-webp\">
+                    <div class=\"cx-process-position\">
+                        <span class=\"cx-processed\">".$stats['webp_converted_percent']."%<span class=\"cx-percent-sign\"> images</span></span>
+                        <span class=\"cx-processing\">Outputted to WEBP</span>
+                    </div>
+                </div>
+                <div class=\"cx-process-webp\">
+                    <div class=\"cx-process-position\">
+                        <span class=\"cx-processed\">".$stats['avif_converted_percent']."%<span class=\"cx-percent-sign\"> images</span></span>
+                        <span class=\"cx-processing\">Outputted to AVIF</span>
+                    </div>
+                </div>
+            </div>
+        </div>";
+        $ret['webp_saved']=$stats['avif_saved_percent'].'%';
+        $ret['avif_saved']=$stats['webp_saved_percent'].'%';
+        //webp_saved
+        //avif_saved
         echo wp_json_encode($ret);
 
         die();
@@ -329,7 +389,7 @@ class CompressX_Dashboard
         global $compressx;
         $compressx->ajax_check_security('compressx-can-convert');
 
-        update_option('compressx_hide_notice',true,false);
+        CompressX_Options::update_option('compressx_hide_notice',true);
 
         die();
     }
@@ -345,23 +405,22 @@ class CompressX_Dashboard
             if($value=='ask_me_later')
             {
                 $time=time()+259200;
-                update_option('compressx_rating_dismiss',$time,false);
+                CompressX_Options::update_option('compressx_rating_dismiss',$time);
             }
             if($value=='close')
             {
                 $time=time()+604800;
-                update_option('compressx_rating_dismiss',$time,false);
+                CompressX_Options::update_option('compressx_rating_dismiss',$time);
             }
             else if($value=='already')
             {
-                update_option('compressx_rating_dismiss',0,false);
+                CompressX_Options::update_option('compressx_rating_dismiss',0);
             }
             else if($value=='dismiss')
             {
-                update_option('compressx_rating_dismiss',0,false);
+                CompressX_Options::update_option('compressx_rating_dismiss',0);
             }
         }
-
 
         die();
     }
@@ -439,122 +498,6 @@ class CompressX_Dashboard
             }
         }
         @rmdir($dirPath);
-    }
-
-    public function get_optimized_data()
-    {
-        $stats=CompressX_Image_Meta::get_global_stats();
-
-        $webp_data=array();
-
-        $webp_data['webp_outputted']=$stats['webp_converted']+$stats['webp_compressed'];
-        $webp_data['webp_total']=$stats['webp_total'];
-        $webp_data['webp_saved']=$stats['webp_saved'];
-        $webp_images_count=$this->get_max_webp_image_count();
-        $avif_images_count=$this->get_max_avif_image_count();
-
-        if($webp_images_count!=0)
-        {
-            $webp_data['webp_converted_percent'] = ( $webp_data['webp_outputted'] / $webp_images_count ) * 100;
-            $webp_data['webp_converted_percent'] = round( $webp_data['webp_converted_percent'], 2 );
-        }
-        else
-        {
-            $webp_data['webp_converted_percent']=0;
-        }
-
-        if($stats['webp_total']!=0)
-        {
-            if($stats['webp_total']>$stats['webp_saved'])
-            {
-                $saved=$stats['webp_total']-$stats['webp_saved'];
-                $webp_data['webp_saved_percent'] = ( $saved / $stats['webp_total'] ) * 100;
-                $webp_data['webp_saved_percent'] = round( $webp_data['webp_saved_percent'], 2 );
-            }
-            else
-            {
-                $webp_data['webp_saved_percent']=0;
-            }
-        }
-        else
-        {
-            $webp_data['webp_saved_percent']=0;
-        }
-
-        $webp_data['avif_converted']=$stats['avif_converted']+$stats['avif_compressed'];
-        $webp_data['avif_total']=$stats['avif_total'];
-        $webp_data['avif_saved']=$stats['avif_saved'];
-        if($stats['avif_total']!=0)
-        {
-            if($stats['avif_total']>$stats['avif_saved'])
-            {
-                $saved=$stats['avif_total']-$stats['avif_saved'];
-
-                $webp_data['avif_saved_percent'] = ($saved / $stats['avif_total'] ) * 100;
-                $webp_data['avif_saved_percent'] = round( $webp_data['avif_saved_percent'], 2 );
-            }
-            else
-            {
-                $webp_data['avif_saved_percent'] = 0;
-            }
-
-            $webp_data['avif_converted_percent'] = ( $webp_data['avif_converted'] / $avif_images_count ) * 100;
-            $webp_data['avif_converted_percent'] = round( $webp_data['avif_converted_percent'], 2 );
-        }
-        else
-        {
-            $webp_data['avif_converted_percent']=0;
-            $webp_data['avif_saved_percent']=0;
-        }
-
-        return $webp_data;
-    }
-
-    private function get_max_webp_image_count()
-    {
-        global $wpdb;
-
-        $supported_mime_types = array(
-            "image/jpg",
-            "image/jpeg",
-            "image/png",
-            "image/webp",);
-
-        //$supported_mime_types=apply_filters('compressx_supported_mime_types',$supported_mime_types);
-
-        $result=$wpdb->get_results( $wpdb->prepare("SELECT COUNT(*) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_mime_type IN (%s,%s,%s,%s) ",$supported_mime_types),ARRAY_N);
-        if($result && sizeof($result)>0)
-        {
-            return $result[0][0];
-        }
-        else
-        {
-            return 0;
-        }
-    }
-
-    public function get_max_avif_image_count()
-    {
-        global $wpdb;
-
-        $supported_mime_types = array(
-            "image/jpg",
-            "image/jpeg",
-            "image/png",
-            "image/webp",
-            "image/avif");
-
-        //$supported_mime_types=apply_filters('compressx_supported_mime_types',$supported_mime_types);
-
-        $result=$wpdb->get_results($wpdb->prepare("SELECT COUNT(*) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_mime_type IN (%s,%s,%s,%s,%s) ",$supported_mime_types),ARRAY_N);
-        if($result && sizeof($result)>0)
-        {
-            return $result[0][0];
-        }
-        else
-        {
-            return 0;
-        }
     }
 
     public function output_bulk_and_settings()
@@ -710,7 +653,7 @@ class CompressX_Dashboard
 
     public function output_convert_setting()
     {
-        $is_auto=get_option('compressx_auto_optimize',false);
+        $is_auto=CompressX_Options::get_option('compressx_auto_optimize',false);
 
         if($is_auto)
         {
@@ -721,7 +664,7 @@ class CompressX_Dashboard
             $is_auto='';
         }
 
-        $options=get_option('compressx_quality',array());
+        $options=CompressX_Options::get_option('compressx_quality',array());
         $quality=isset($options['quality'])?$options['quality']:'lossy';
 
         if($quality=="lossless")
@@ -779,21 +722,6 @@ class CompressX_Dashboard
             $quality_custom="checked";
         }
 
-        //
-        /*
-        if(empty($quality_custom))
-        {
-            $quality_custom_style="display:none";
-        }
-        else
-        {
-            $quality_custom_style="";
-        }*/
-
-        $quality_custom_style="display:none";
-        $quality_webp=isset($options['quality_webp'])?$options['quality_webp']: 80;
-        $quality_avif=isset($options['quality_avif'])?$options['quality_avif']: 60;
-
         if(CompressX_Image_Opt_Method::is_support_gd())
         {
             $is_support_gd="";
@@ -812,7 +740,7 @@ class CompressX_Dashboard
             $is_support_imagick="disabled";
         }
 
-        $converter_method=get_option('compressx_converter_method',false);
+        $converter_method=CompressX_Options::get_option('compressx_converter_method',false);
 
         if(empty($converter_method))
         {
@@ -835,13 +763,13 @@ class CompressX_Dashboard
             $imagick_checked="";
         }
 
-        $convert_to_webp=get_option('compressx_output_format_webp','not init');
+        $convert_to_webp=CompressX_Options::get_option('compressx_output_format_webp','not init');
         if($convert_to_webp==='not init')
         {
             $convert_to_webp=CompressX_Image_Opt_Method::set_default_output_format_webp();
         }
 
-        $convert_to_avif=get_option('compressx_output_format_avif','not init');
+        $convert_to_avif=CompressX_Options::get_option('compressx_output_format_avif','not init');
         if($convert_to_avif==='not init')
         {
             $convert_to_avif=CompressX_Image_Opt_Method::set_default_output_format_avif();
@@ -886,74 +814,6 @@ class CompressX_Dashboard
             $avif_support='disabled';
         }
 
-        /*
-        if($convert_to_avif)
-        {
-            $convert_to_avif='checked';
-        }
-        else
-        {
-            $convert_to_avif='';
-        }
-
-        if($converter_method=='gd')
-        {
-            if(CompressX_Image_Opt_Method::is_support_gd_webp())
-            {
-                $webp_support='';
-            }
-            else
-            {
-                $webp_support='disabled';
-                $convert_to_webp='';
-            }
-
-            if(CompressX_Image_Opt_Method::is_support_gd_avif())
-            {
-                $avif_support='';
-            }
-            else
-            {
-                $avif_support='disabled';
-                $convert_to_avif='';
-            }
-        }
-        else if($converter_method=='imagick')
-        {
-            if(CompressX_Image_Opt_Method::is_support_imagick_webp())
-            {
-                $webp_support='';
-            }
-            else
-            {
-                $webp_support='disabled';
-                $convert_to_webp='';
-            }
-
-            if(CompressX_Image_Opt_Method::is_support_imagick_avif())
-            {
-                $avif_support='';
-            }
-            else
-            {
-                $avif_support='disabled';
-                $convert_to_avif='';
-            }
-        }
-        else
-        {
-            $webp_support='disabled';
-            $avif_support='disabled';
-
-            $convert_to_webp='';
-            $convert_to_avif='';
-        }
-        */
-
-        $webp_data=$this->get_optimized_data();
-        $webp_saved=$webp_data['webp_saved_percent'];
-        $avif_saved=$webp_data['avif_saved_percent'];
-
         ?>
         <article>
             <div class="compressx-general-settings-body-grid" style="border-bottom:1px solid #ddd;padding-bottom:0.8rem;">
@@ -964,8 +824,8 @@ class CompressX_Dashboard
                     </label><span style="padding-left:1rem;"><?php esc_html_e('Enable it to convert the new uploaded images.','compressx')?></span>
                 </div>
                 <div style="padding:0.4rem;">
-                    <span><span>Total Savings: </span><span>AVIF: </span><span id="cx_avif_saved"><?php echo esc_html($avif_saved); ?>%</span><span style="padding: 0 0.2rem;">|</span>
-                    <span>Webp: </span><span id="cx_webp_saved"><?php echo esc_html($webp_saved); ?>%</span></span>
+                    <span><span>Total Savings: </span><span>AVIF: </span><span id="cx_avif_saved">0%</span><span style="padding: 0 0.2rem;">|</span>
+                    <span>Webp: </span><span id="cx_webp_saved">0%</span></span>
                 </div>
             </div>
             <div class="compressx-general-settings-body-grid">
@@ -1020,7 +880,9 @@ class CompressX_Dashboard
                                             <div class="compressx-bottom">
                                                 <!-- The content you need -->
                                                 <p>
-                                                    <span>Add watermark to images during upload or bulk processing. You can configure watermark settings to suit your needs.</span>
+                                                    <span><?php esc_html_e('Convert .jpg and .png images to WebP or/and AVIF format.','compressx')?></span><br>
+                                                    <span><?php esc_html_e('If the original image is a WebP image, it will be converted to AVIF (if checked) and compressed.','compressx')?></span><br>
+                                                    <span><?php esc_html_e('If the original image is an AVIF image, it will be compressed.','compressx')?></span>
                                                 </p>
                                                 <i></i> <!-- do not delete this line -->
                                             </div>
@@ -1037,7 +899,7 @@ class CompressX_Dashboard
                                     <!-- The content you need -->
                                     <p>
                                         <span>Choose the most appropriate compression level. The 5 compression levels are increasing from lossless to lossy. The <strong>default level</strong> is the Thumb, which is suitable for most situations. You can customize the compression level for WebP and AVIF formats.</span><br>
-                                        <span><strong>Lossless: </strong>A compression level of 100</span><br>
+                                        <span><strong>Lossless: </strong>A compression level of 99</span><br>
                                         <span><span class="dashicons dashicons-arrow-left-alt"></span>: A compression level of 90</span><br>
                                         <span><span class="dashicons dashicons-thumbs-up"></span>: The default level. A compression level of 80</span><br>
                                         <span><span class="dashicons dashicons-arrow-right-alt"></span>: A compression level of 70</span><br>
@@ -1127,7 +989,7 @@ class CompressX_Dashboard
 
     public function output_custom_compression_setting()
     {
-        $options=get_option('compressx_quality',array());
+        $options=CompressX_Options::get_option('compressx_quality',array());
         $quality_custom_style="display:none";
         $quality_webp=isset($options['quality_webp'])?$options['quality_webp']: 80;
         $quality_avif=isset($options['quality_avif'])?$options['quality_avif']: 60;
@@ -1211,7 +1073,7 @@ class CompressX_Dashboard
 
     public function output_thumbnail_settings()
     {
-        $options=get_option('compressx_general_settings',array());
+        $options=CompressX_Options::get_option('compressx_general_settings',array());
 
         global $_wp_additional_image_sizes;
         $intermediate_image_sizes = get_intermediate_image_sizes();
@@ -1391,7 +1253,7 @@ class CompressX_Dashboard
 
     public function output_others_settings()
     {
-        $options=get_option('compressx_general_settings',array());
+        $options=CompressX_Options::get_option('compressx_general_settings',array());
 
         if(isset($options['resize']))
         {
@@ -1415,7 +1277,7 @@ class CompressX_Dashboard
             $resize='';
         }
 
-        $options=get_option('compressx_general_settings',array());
+        $options=CompressX_Options::get_option('compressx_general_settings',array());
 
         $remove_exif=isset($options['remove_exif'])?$options['remove_exif']:false;
 
@@ -1668,7 +1530,7 @@ class CompressX_Dashboard
 
     public function output_exclude()
     {
-        $excludes=get_option('compressx_media_excludes',array());
+        $excludes=CompressX_Options::get_option('compressx_media_excludes',array());
 
         $abs_path = trailingslashit(str_replace('\\', '/', realpath(ABSPATH)));
         ?>
@@ -1762,7 +1624,12 @@ class CompressX_Dashboard
                     $options=false;
                 }
 
-                update_option('compressx_auto_optimize',$options,false);
+                if(CompressX_Options::get_option('compressx_show_review',false)===false)
+                {
+                    CompressX_Options::update_option('compressx_show_review',time()+259200);
+                }
+
+                CompressX_Options::update_option('compressx_auto_optimize',$options);
             }
 
             if(isset($setting['convert_to_webp']))
@@ -1776,7 +1643,7 @@ class CompressX_Dashboard
                     $options=0;
                 }
 
-                update_option('compressx_output_format_webp',$options,false);
+                CompressX_Options::update_option('compressx_output_format_webp',$options);
             }
 
             if(isset($setting['convert_to_avif']))
@@ -1790,7 +1657,7 @@ class CompressX_Dashboard
                     $options=0;
                 }
 
-                update_option('compressx_output_format_avif',$options,false);
+                CompressX_Options::update_option('compressx_output_format_avif',$options);
             }
 
             if(isset($setting['quality']))
@@ -1802,15 +1669,15 @@ class CompressX_Dashboard
                     $options['quality_avif']=isset($setting['quality_avif'])?$setting['quality_avif']: 60;
                 }
 
-                update_option('compressx_quality',$options,false);
+                CompressX_Options::update_option('compressx_quality',$options);
             }
 
             if(isset($setting['converter_method']))
             {
                 $converter_method=$setting['converter_method'];
-                update_option('compressx_converter_method',$converter_method,false);
+                CompressX_Options::update_option('compressx_converter_method',$converter_method);
 
-                $convert_to_webp=get_option('compressx_output_format_webp',1);
+                $convert_to_webp=CompressX_Options::get_option('compressx_output_format_webp',1);
 
                 if($convert_to_webp)
                 {
@@ -1821,7 +1688,7 @@ class CompressX_Dashboard
                     $ret['check_webp']=false;
                 }
 
-                $convert_to_avif=get_option('compressx_output_format_avif',1);
+                $convert_to_avif=CompressX_Options::get_option('compressx_output_format_avif',1);
 
                 if($convert_to_avif)
                 {
@@ -1834,7 +1701,7 @@ class CompressX_Dashboard
 
                 if($converter_method=='gd')
                 {
-                    if(CompressX_Image_Opt_Method::is_support_gd_webp())
+                    if(CompressX_Image_Method::is_support_gd_webp())
                     {
                         $ret['disable_webp']=false;
                     }
@@ -1844,7 +1711,7 @@ class CompressX_Dashboard
                         $ret['check_webp']=false;
                     }
 
-                    if(CompressX_Image_Opt_Method::is_support_gd_avif())
+                    if(CompressX_Image_Method::is_support_gd_avif())
                     {
                         $ret['disable_avif']=false;
                     }
@@ -1856,7 +1723,7 @@ class CompressX_Dashboard
                 }
                 else if($converter_method=='imagick')
                 {
-                    if(CompressX_Image_Opt_Method::is_support_imagick_webp())
+                    if(CompressX_Image_Method::is_support_imagick_webp())
                     {
                         $ret['disable_webp']=false;
                     }
@@ -1866,7 +1733,7 @@ class CompressX_Dashboard
                         $ret['check_webp']=false;
                     }
 
-                    if(CompressX_Image_Opt_Method::is_support_imagick_avif())
+                    if(CompressX_Image_Method::is_support_imagick_avif())
                     {
                         $ret['disable_avif']=false;
                     }
@@ -1921,7 +1788,7 @@ class CompressX_Dashboard
                 die();
             }
 
-            $options=get_option('compressx_general_settings',array());
+            $options=CompressX_Options::get_option('compressx_general_settings',array());
 
             if(isset($setting['remove_exif']))
                 $options['remove_exif']=$setting['remove_exif'];
@@ -1953,12 +1820,12 @@ class CompressX_Dashboard
             if(isset($setting['converter_images_pre_request']))
                 $options['converter_images_pre_request']=intval($setting['converter_images_pre_request']);
             //
-            update_option('compressx_general_settings',$options,false);
+            CompressX_Options::update_option('compressx_general_settings',$options);
 
             if(isset($setting['converter_method']))
             {
                 $converter_method=$setting['converter_method'];
-                update_option('compressx_converter_method',$converter_method,false);
+                CompressX_Options::update_option('compressx_converter_method',$converter_method);
             }
 
             if($options['image_load']=='htaccess')
@@ -2008,7 +1875,7 @@ class CompressX_Dashboard
                 die();
             }
 
-            $options=get_option('compressx_general_settings',array());
+            $options=CompressX_Options::get_option('compressx_general_settings',array());
 
             $intermediate_image_sizes = get_intermediate_image_sizes();
 
@@ -2033,7 +1900,7 @@ class CompressX_Dashboard
                 }
             }
 
-            update_option('compressx_general_settings',$options,false);
+            CompressX_Options::update_option('compressx_general_settings',$options);
 
             $ret['result']='success';
             echo wp_json_encode($ret);
@@ -2249,7 +2116,7 @@ class CompressX_Dashboard
         $json_excludes = stripslashes($json_excludes);
         $new_excludes = json_decode($json_excludes, true);
 
-        update_option('compressx_media_excludes',$new_excludes,false);
+        CompressX_Options::update_option('compressx_media_excludes',$new_excludes);
 
         $abs_path = trailingslashit(str_replace('\\', '/', realpath(ABSPATH)));
         $html='<ul>';
@@ -2290,23 +2157,16 @@ class CompressX_Dashboard
         global $compressx;
         $compressx->ajax_check_security('compressx-can-use-exclude');
 
-        $excludes=get_option('compressx_media_excludes',array());
+        $excludes=CompressX_Options::get_option('compressx_media_excludes',array());
 
         $id = sanitize_text_field($_POST['id']);
         unset($excludes[$id]);
 
-        update_option('compressx_media_excludes',$excludes,false);
+        CompressX_Options::update_option('compressx_media_excludes',$excludes);
 
         $ret['result']='success';
 
         echo wp_json_encode($ret);
         die();
-    }
-
-    private function transfer_path($path)
-    {
-        $path = str_replace('\\','/',$path);
-        $values = explode('/',$path);
-        return implode(DIRECTORY_SEPARATOR,$values);
     }
 }

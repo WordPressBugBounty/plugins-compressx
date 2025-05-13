@@ -392,7 +392,7 @@ class CompressX_Display
         ?>
         <footer>
             <div class="compressx-container compressx-menu">
-                <div style="margin: auto;"><strong><span>If you like our plugin, a <a href=""><span class="dashicons dashicons-star-filled" style="color:#ffb900;"></span>
+                <div style="margin: auto;"><strong><span>If you like our plugin, a <a href="https://wordpress.org/support/plugin/compressx/reviews/?filter=5#new-post"><span class="dashicons dashicons-star-filled" style="color:#ffb900;"></span>
                     <span class="dashicons dashicons-star-filled" style="color:#ffb900;"></span>
                     <span class="dashicons dashicons-star-filled" style="color:#ffb900;"></span>
                     <span class="dashicons dashicons-star-filled" style="color:#ffb900;"></span>

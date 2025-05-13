@@ -140,7 +140,7 @@ class CompressX_Custom_Media_Lib
             $html.= '<li><span>'.__('Original','compressx').' : </span><strong>'.size_format($og_size,2).'</strong></li>';
             $html.= '<li><span>'.__('Webp','compressx').' : </span><strong>'.size_format($convert_size,2).'</strong><span> '.'Saved'.' : </span><strong>'.$webp_percent.'%</strong></li>';
             $html.= '<li><span>'.__('AVIF','compressx').' : </span><strong>'.size_format($avif_size,2).'</strong><span> '.'Saved'.' : </span><strong>'.$avif_percent.'%</strong></li>';
-            $html.= '<li><span>'.__('Thumbnails generated','compressx').' : </span><strong>'.$thumbnail_counts.'</li>';
+            $html.= '<li><span>'.__('Thumbnails generated','compressx').' : </span><strong>'.$thumbnail_counts.'</strong></li>';
             $html.="<li><a class='cx-media-delete button' data-id='".esc_attr($id)."'>".__('Delete','compressx')."</a>
 <span class='compressx-dashicons-help compressx-tooltip'>
                                     <a href='#'><span class='dashicons dashicons-editor-help' style='padding-top: 3px;'></span></a>
@@ -353,7 +353,7 @@ class CompressX_Custom_Media_Lib
                 echo '<li><span>' . esc_html__('Original','compressx') . ' : </span><strong>' . esc_html(size_format($og_size, 2)) . '</strong></li>';
                 echo '<li><span>' . esc_html__('Webp','compressx') . ' : </span><strong>' . esc_html(size_format($convert_size,2)) . '</strong><span> '.'Saved'.' : </span><strong>'.esc_html($webp_percent).'%</strong></li>';
                 echo '<li><span>' . esc_html__('AVIF','compressx'). ' : </span><strong>' . esc_html(size_format($avif_size,2)) . '</strong><span> '.'Saved'.' : </span><strong>'.esc_html($avif_percent).'%</strong></li>';
-                echo '<li><span>'.esc_html__('Thumbnails generated','compressx').' : </span><strong>'.esc_html($thumbnail_counts).'</li>';
+                echo '<li><span>'.esc_html__('Thumbnails generated','compressx').' : </span><strong>'.esc_html($thumbnail_counts).'</strong></li>';
                 echo "<li><a class='cx-media-delete button' data-id='" . esc_attr($post->ID) . "'>". esc_html__('Delete','compressx') ."</a>
 <span class='compressx-dashicons-help compressx-tooltip'>
                                     <a href='#'><span class='dashicons dashicons-editor-help' style='padding-top: 3px;'></span></a>
@@ -432,7 +432,7 @@ class CompressX_Custom_Media_Lib
                 $html.= '<li><span>'.__('Original','compressx').' : </span><strong>'.size_format($og_size,2).'</strong></li>';
                 $html.= '<li><span>'.__('Webp','compressx').' : </span><strong>'.size_format($convert_size,2).'</strong><span> '.'Saved'.' : </span><strong>'.$webp_percent.'%</strong></li>';
                 $html.= '<li><span>'.__('AVIF','compressx').' : </span><strong>'.size_format($avif_size,2).'</strong><span> '.'Saved'.' : </span><strong>'.$avif_percent.'%</strong></li>';
-                $html.= '<li><span>'.__('Thumbnails generated','compressx').' : </span><strong>'.$thumbnail_counts.'</li>';
+                $html.= '<li><span>'.__('Thumbnails generated','compressx').' : </span><strong>'.$thumbnail_counts.'</strong></li>';
                 $html.="<li><a class='cx-media-delete button' data-id='".esc_attr($attachment->ID)."'>".__('Delete','compressx')."</a></li>";
             }
             $html.='</div>';

@@ -42,7 +42,7 @@ class CompressX_CDN
 
     public function output_cdn()
     {
-        $options=get_option('compressx_general_settings',array());
+        $options=CompressX_Options::get_option('compressx_general_settings',array());
 
         $zone_id=isset($options['cf_cdn']['zone_id'])?$options['cf_cdn']['zone_id']:'';
         $email=isset($options['cf_cdn']['email'])?$options['cf_cdn']['email']:'';
@@ -291,7 +291,7 @@ class CompressX_CDN
                 }
             }
 
-            $options=get_option('compressx_general_settings',array());
+            $options=CompressX_Options::get_option('compressx_general_settings',array());
 
             $options['cf_cdn']['zone_id']=$setting['zone_id'];
             $options['cf_cdn']['email']=$setting['email'];
@@ -314,7 +314,7 @@ class CompressX_CDN
                 $options['cf_cdn']['auto_purge_cache_after_manual']=false;
             }
 
-            update_option('compressx_general_settings',$options,false);
+            CompressX_Options::update_option('compressx_general_settings',$options);
 
             $ret['result']='success';
             echo wp_json_encode($ret);
@@ -372,7 +372,7 @@ class CompressX_CDN
         {
             include_once COMPRESSX_DIR . '/includes/class-compressx-cloudflare-cdn.php';
 
-            $options=get_option('compressx_general_settings',array());
+            $options=CompressX_Options::get_option('compressx_general_settings',array());
 
             $setting=$options['cf_cdn'];
 

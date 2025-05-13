@@ -5,7 +5,7 @@ class CompressX_Picture_Load
 {
     public function __construct()
     {
-        $options=get_option('compressx_general_settings',array());
+        $options=CompressX_Options::get_option('compressx_general_settings',array());
         $image_load=isset($options['image_load'])?$options['image_load']:'htaccess';
         if ($image_load == "htaccess")
         {
@@ -510,9 +510,9 @@ class CompressX_Picture_Load
         {
             $path = str_replace($upload['baseurl'],$upload['basedir'],$url);
 
-            $upload_root=CompressX_Image_Opt_Method::transfer_path($upload['basedir']);
+            $upload_root=CompressX_Image_Method::transfer_path($upload['basedir']);
             $attachment_dir=$path;
-            $attachment_dir=CompressX_Image_Opt_Method::transfer_path($attachment_dir);
+            $attachment_dir=CompressX_Image_Method::transfer_path($attachment_dir);
             $sub_dir=str_replace($upload_root,'',$attachment_dir);
             $sub_dir=untrailingslashit($sub_dir);
             $compressx_path=WP_CONTENT_DIR."/compressx-nextgen/uploads".$sub_dir.'.webp';
@@ -547,9 +547,9 @@ class CompressX_Picture_Load
         {
             $path = str_replace($upload['baseurl'],$upload['basedir'],$url);
 
-            $upload_root=CompressX_Image_Opt_Method::transfer_path($upload['basedir']);
+            $upload_root=CompressX_Image_Method::transfer_path($upload['basedir']);
             $attachment_dir=$path;
-            $attachment_dir=CompressX_Image_Opt_Method::transfer_path($attachment_dir);
+            $attachment_dir=CompressX_Image_Method::transfer_path($attachment_dir);
             $sub_dir=str_replace($upload_root,'',$attachment_dir);
             $sub_dir=untrailingslashit($sub_dir);
             $compressx_path=WP_CONTENT_DIR."/compressx-nextgen/uploads".$sub_dir.'.avif';

@@ -539,7 +539,7 @@ function compressx_get_optimize_task_status()
                 jQuery('#compressx_bulk_progress_sub_text').html(jsonarray.sub_log);
                 jQuery('#compressx_bulk_progress_2_text').html(jsonarray.log);
                 jQuery('#compressx_bulk_progress_2_bar').width(jsonarray.percent+"%");
-                jQuery('#cx_overview').html(jsonarray.overview_html);
+                //jQuery('#cx_overview').html(jsonarray.overview_html);
                 if(jsonarray.continue)
                 {
                     setTimeout(function ()
@@ -614,26 +614,77 @@ function compressx_get_optimize_task_status()
 function compressx_update_overview()
 {
     var ajax_data = {
-        'action': 'compressx_update_overview',
+        'action': 'compressx_start_stats',
     };
 
-    compressx_post_request(ajax_data, function (data)
+    compressx_post_request(ajax_data, function (response)
     {
-        var jsonarray = jQuery.parseJSON(data);
+        if (response.success)
+        {
+            if (response.data.status === 'cached')
+            {
+                const data = response.data;
 
-        if (jsonarray.result === 'success')
-        {
-            //
-            jQuery('#cx_overview').html(jsonarray.html);
-        }
-        else
-        {
+                jQuery('#cx_webp_saved').html(data.cached.space_saved_webp_percent+"%");
+                jQuery('#cx_avif_saved').html(data.cached.space_saved_avif_percent+"%");
+                jQuery('#cx_conversion_webp_percent').html(data.cached.conversion_webp_percent+"%<span class=\"cx-percent-sign\"> images</span>");
+                jQuery('#cx_conversion_avif_percent').html(data.cached.conversion_avif_percent+"%<span class=\"cx-percent-sign\"> images</span>");
+            }
+            else {
+                compressx_get_stats();
+            }
         }
     }, function (XMLHttpRequest, textStatus, errorThrown)
     {
     });
 }
 
+function compressx_start_statsloop()
+{
+    var ajax_data = {
+        'action': 'compressx_continue_stats',
+    };
+
+    compressx_post_request(ajax_data, function (response)
+    {
+        if (response.success)
+        {
+            setTimeout(compressx_get_stats(), 2000);
+        } else {
+        }
+    }, function (XMLHttpRequest, textStatus, errorThrown)
+    {
+    });
+}
+
+function compressx_get_stats()
+{
+    var ajax_data = {
+        'action': 'compressx_get_stats',
+    };
+
+    compressx_post_request(ajax_data, function (response)
+    {
+        if (!response.success || !response.data) return;
+
+        const data = response.data;
+
+        if (data.status === 'done') {
+            jQuery('#cx_webp_saved').html(data.space_saved_webp_percent+"%");
+            jQuery('#cx_avif_saved').html(data.space_saved_avif_percent+"%");
+
+            jQuery('#cx_conversion_webp_percent').html(data.conversion_webp_percent+"%<span class=\"cx-percent-sign\"> images</span>");
+            jQuery('#cx_conversion_avif_percent').html(data.conversion_avif_percent+"%<span class=\"cx-percent-sign\"> images</span>");
+        } else if (data.status === 'in_progress') {
+            compressx_start_statsloop();
+        } else if (data.status === 'executing') {
+            setTimeout(compressx_get_stats, 2000);
+        } else if (data.status === 'not_started') {
+        }
+    }, function (XMLHttpRequest, textStatus, errorThrown)
+    {
+    });
+}
 
 jQuery('#cx_show_more_size').click(function()
 {
@@ -914,6 +965,7 @@ function compressx_init_exclude_tree()
 jQuery(document).ready(function ()
 {
     compressx_init_exclude_tree();
+    compressx_update_overview();
 });
 
 jQuery('#compressx_add_exclude_folders').click(function()

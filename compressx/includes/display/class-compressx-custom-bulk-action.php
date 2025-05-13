@@ -30,7 +30,7 @@ class CompressX_Custom_Bulk_Action
     {
         CompressX_Custom_Image_Meta::check_custom_table();
 
-        $includes=get_option('compressx_custom_includes',array());
+        $includes=CompressX_Options::get_option('compressx_custom_includes',array());
         $stats=$this->get_custom_stats($includes);
         $found=$stats['files'];
         $saved=$stats['saved'];
@@ -169,10 +169,10 @@ class CompressX_Custom_Bulk_Action
 
     public function output_custom_folders()
     {
-        $includes=get_option('compressx_custom_includes',array());
+        $includes=CompressX_Options::get_option('compressx_custom_includes',array());
         $abs_path = trailingslashit(str_replace('\\', '/', realpath(ABSPATH)));
 
-        $convert_to_avif=get_option('compressx_output_format_avif',1);
+        $convert_to_avif=CompressX_Options::get_option('compressx_output_format_avif',1);
 
         if($convert_to_avif&&CompressX_Image_Opt_Method::is_support_avif())
         {
@@ -394,7 +394,7 @@ class CompressX_Custom_Bulk_Action
         global $compressx;
         $compressx->ajax_check_security('compressx-can-bulk-custom-convert');
 
-        $includes=get_option('compressx_custom_includes',array());
+        $includes=CompressX_Options::get_option('compressx_custom_includes',array());
 
         $new_include = sanitize_text_field($_POST['id']);
 
@@ -402,7 +402,7 @@ class CompressX_Custom_Bulk_Action
 
         $includes=array_merge($includes,$new_includes);
 
-        update_option('compressx_custom_includes',$includes,false);
+        CompressX_Options::update_option('compressx_custom_includes',$includes);
 
         $stats=array();
 
@@ -448,7 +448,7 @@ class CompressX_Custom_Bulk_Action
         global $compressx;
         $compressx->ajax_check_security('compressx-can-bulk-custom-convert');
 
-        $includes=get_option('compressx_custom_includes',array());
+        $includes=CompressX_Options::get_option('compressx_custom_includes',array());
 
         $stats=array();
 
@@ -486,12 +486,12 @@ class CompressX_Custom_Bulk_Action
         global $compressx;
         $compressx->ajax_check_security('compressx-can-bulk-custom-convert');
 
-        $includes=get_option('compressx_custom_includes',array());
+        $includes=CompressX_Options::get_option('compressx_custom_includes',array());
 
         $id = sanitize_text_field($_POST['id']);
         unset($includes[$id]);
 
-        update_option('compressx_custom_includes',$includes,false);
+        CompressX_Options::update_option('compressx_custom_includes',$includes);
 
         $stats=array();
 
@@ -529,7 +529,7 @@ class CompressX_Custom_Bulk_Action
         global $compressx;
         $compressx->ajax_check_security('compressx-can-bulk-custom-convert');
 
-        $includes=get_option('compressx_custom_includes',array());
+        $includes=CompressX_Options::get_option('compressx_custom_includes',array());
         if(empty($includes))
         {
             $ret['result']='failed';
@@ -538,7 +538,7 @@ class CompressX_Custom_Bulk_Action
             die();
         }
 
-        update_option("compressx_need_optimized_custom_images",array(),false);
+        CompressX_Options::update_option("compressx_need_optimized_custom_images",array());
 
         $images=array();
 
@@ -547,7 +547,7 @@ class CompressX_Custom_Bulk_Action
             $this->get_folder_images($images,$include);
         }
 
-        update_option("compressx_need_optimized_custom_images",$images,false);
+        CompressX_Options::update_option("compressx_need_optimized_custom_images",$images);
 
         $ret['result']='success';
         $ret['progress']=sprintf(
@@ -662,17 +662,6 @@ class CompressX_Custom_Bulk_Action
         $task=new CompressX_Custom_ImgOptim_Task();
 
         $result=$task->get_task_progress();
-
-        if(empty($result['error_list']))
-        {
-            $result['html']='';
-            $result['update_error_log']=false;
-        }
-        else
-        {
-            $result['update_error_log']=true;
-            $result['html']='';
-        }
 
         echo wp_json_encode($result);
 

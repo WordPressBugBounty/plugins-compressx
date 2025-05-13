@@ -202,6 +202,8 @@ function compressx_get_custom_optimize_task_status()
 
                     jQuery('#compressx_cancel_custom_bulk_optimization').hide();
                     jQuery('#compressx_start_custom_bulk_optimization').show();
+
+                    compressx_custom_show_review_box(jsonarray);
                 }
                 else
                 {
@@ -258,6 +260,15 @@ function compressx_get_custom_optimize_task_status()
             compressx_get_custom_optimize_task_status();
         }, 1000);
     });
+}
+
+function compressx_custom_show_review_box(jsonarray)
+{
+    if(jsonarray.show_review)
+    {
+        jQuery('#cx_rating_box').show();
+        jQuery('#cx_size_of_opt_images').html(jsonarray.opt_size);
+    }
 }
 
 function compressx_get_dir_info()

@@ -5,13 +5,56 @@ class CompressX
 {
     public function __construct()
     {
-        include_once COMPRESSX_DIR . '/includes/class-compressx-image-meta.php';
-        include_once COMPRESSX_DIR . '/includes/class-compressx-custom-image-meta.php';
-        include_once COMPRESSX_DIR . '/includes/class-compressx-imgoptim-task.php';
-        include_once COMPRESSX_DIR . '/includes/class-compressx-image-opt-method.php';
-        include_once COMPRESSX_DIR . '/includes/class-compressx-custom-imgoptim-task.php';
+        $this->load_method();
+        $this->load_meta();
+        $this->load_dependencies();
+        $this->load_admin();
 
+        $this->load_hooks();
+    }
+
+    public function load_method()
+    {
+        include_once COMPRESSX_DIR . '/includes/method/class-compressx-image-method.php';
+        include_once COMPRESSX_DIR . '/includes/method/class-compressx-image-opt-method.php';
+        include_once COMPRESSX_DIR . '/deprecated/class-compressx-image-opt-method-deprecated.php';
+    }
+
+    public function load_meta()
+    {
+        include_once COMPRESSX_DIR . '/includes/meta/class-compressx-image-meta.php';
+        include_once COMPRESSX_DIR . '/includes/meta/class-compressx-custom-image-meta.php';
+    }
+
+    public function load_dependencies()
+    {
+        include_once COMPRESSX_DIR . '/includes/class-compressx-image.php';
+        include_once COMPRESSX_DIR . '/includes/class-compressx-options.php';
+        include_once COMPRESSX_DIR . '/includes/class-compressx-imgoptim-task.php';
+        include_once COMPRESSX_DIR . '/includes/class-compressx-custom-imgoptim-task.php';
         include_once COMPRESSX_DIR. '/includes/class-compressx-log.php';
+        include_once COMPRESSX_DIR . '/includes/class-compressx-auto-optimization.php';
+        new CompressX_Auto_Optimization();
+        include_once COMPRESSX_DIR . '/includes/class-compressx-picture-load.php';
+        new CompressX_Picture_Load();
+        include_once COMPRESSX_DIR . '/includes/class-compressx-stats-manager.php';
+        CompressX_Stats_Manager::init();
+    }
+
+    public function load_hooks()
+    {
+        add_action( 'delete_attachment', array( $this, 'delete_images' ), 20 );
+
+        $plugin_basename = plugin_basename( plugin_dir_path( __DIR__ ) . 'compressx.php' );
+        add_filter('plugin_action_links_' . $plugin_basename, array( $this,'add_action_links'));
+
+        add_action( 'wp_ajax_compressx_dissmiss_conflict_notice', array( $this, 'dissmiss_conflict_notice' ), 20 );
+        add_action('compressx_purge_cache_event',array( $this,'purge_cache_event'));
+        add_action('compressx_purge_cache',array( $this,'purge_cache'));
+    }
+
+    public function load_admin()
+    {
         if(is_admin())
         {
             include_once COMPRESSX_DIR . '/includes/display/class-compressx-display.php';
@@ -19,6 +62,7 @@ class CompressX
 
             include_once COMPRESSX_DIR . '/includes/display/class-compressx-custom-media-lib.php';
             new CompressX_Custom_Media_Lib();
+
             include_once COMPRESSX_DIR . '/includes/class-compressx-manual-optimization.php';
             new CompressX_Manual_Optimization();
 
@@ -27,21 +71,6 @@ class CompressX
 
             $this->set_locale();
         }
-
-        include_once COMPRESSX_DIR . '/includes/class-compressx-auto-optimization.php';
-        new CompressX_Auto_Optimization();
-
-        add_action( 'delete_attachment', array( $this, 'delete_images' ), 20 );
-
-        $plugin_basename = plugin_basename( plugin_dir_path( __DIR__ ) . 'compressx.php' );
-        add_filter('plugin_action_links_' . $plugin_basename, array( $this,'add_action_links'));
-
-        add_action( 'wp_ajax_compressx_dissmiss_conflict_notice', array( $this, 'dissmiss_conflict_notice' ), 20 );
-        //
-        include_once COMPRESSX_DIR . '/includes/class-compressx-picture-load.php';
-        new CompressX_Picture_Load();
-
-        add_action('compressx_purge_cache_event',array( $this,'purge_cache_event'));
     }
 
     public function ajax_check_security($role='manage_options')
@@ -109,7 +138,7 @@ class CompressX
             return;
         }
 
-        $dissmiss=get_option('compressx_dissmiss_conflict_notice',false);
+        $dissmiss=CompressX_Options::get_option('compressx_dissmiss_conflict_notice');
         if($dissmiss)
         {
             return;
@@ -219,84 +248,14 @@ class CompressX
             return;
         }
 
-        $this->delete_webp($image_id);
-
-        delete_transient('compressx_set_global_stats');
-    }
-
-    public function delete_webp($image_id)
-    {
-        $files=array();
-        $file_path = get_attached_file( $image_id );
-        $meta = wp_get_attachment_metadata( $image_id, true );
-
-        if ( ! empty( $meta['sizes'] ) )
-        {
-            foreach ( $meta['sizes'] as $size_key => $size_data )
-            {
-                $filename= path_join( dirname( $file_path ), $size_data['file'] );
-                $files[$size_key] =$filename;
-            }
-
-            if(!in_array($file_path,$files))
-            {
-                $files['og']=$file_path;
-            }
-        }
-        else
-        {
-            $files['og']=$file_path;
-        }
-
-        foreach ($files as $size_key=>$file)
-        {
-            $file=$this->get_output_path($file);
-            $webp_file =$file.'.webp';
-            $avif_file =$file.'.avif';
-            if(file_exists($webp_file))
-                @wp_delete_file($webp_file);
-
-            if(file_exists($avif_file))
-                @wp_delete_file($avif_file);
-
-            if(file_exists($file))
-                @wp_delete_file($file);
-
-        }
-    }
-
-    public function get_output_path($og_path)
-    {
-        $compressx_path=WP_CONTENT_DIR."/compressx-nextgen/uploads";
-
-        $upload_dir = wp_get_upload_dir();
-        $upload_root=$this->transfer_path($upload_dir['basedir']);
-        $attachment_dir=dirname($og_path);
-        $attachment_dir=$this->transfer_path($attachment_dir);
-        $sub_dir=str_replace($upload_root,'',$attachment_dir);
-        $sub_dir=untrailingslashit($sub_dir);
-        $real_path=$compressx_path.'/'.$sub_dir;
-
-        if(!file_exists($real_path))
-        {
-            @mkdir($real_path,0777,true);
-        }
-
-        return $real_path.'/'.basename($og_path);
-    }
-
-    private function transfer_path($path)
-    {
-        $path = str_replace('\\','/',$path);
-        $values = explode('/',$path);
-        return implode(DIRECTORY_SEPARATOR,$values);
+        CompressX_Image_Method::delete_image($image_id);
     }
 
     public function purge_cache_event()
     {
         include_once COMPRESSX_DIR . '/includes/class-compressx-cloudflare-cdn.php';
 
-        $options=get_option('compressx_general_settings',array());
+        $options=CompressX_Options::get_option('compressx_general_settings',array());
 
         $setting=$options['cf_cdn'];
 
@@ -304,5 +263,17 @@ class CompressX
 
         $cdn->purge_cache();
         die();
+    }
+
+    public function purge_cache()
+    {
+        $options=CompressX_Options::get_option('compressx_general_settings',array());
+        if(isset($options['cf_cdn']['auto_purge_cache'])&&$options['cf_cdn']['auto_purge_cache'])
+        {
+            include_once COMPRESSX_DIR . '/includes/class-compressx-cloudflare-cdn.php';
+            $setting=$options['cf_cdn'];
+            $cdn=new CompressX_CloudFlare_CDN($setting);
+            $cdn->purge_cache();
+        }
     }
 }

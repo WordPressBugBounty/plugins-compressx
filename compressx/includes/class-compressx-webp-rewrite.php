@@ -35,7 +35,7 @@ class CompressX_Webp_Rewrite
 
     public function create_wp_content_rules()
     {
-        $options=get_option('compressx_general_settings',array());
+        $options=CompressX_Options::get_option('compressx_general_settings',array());
         $remove_thumbnails=isset($options['remove_thumbnails'])?$options['remove_thumbnails']:false;
 
         $document_root=$this->transfer_path($_SERVER['DOCUMENT_ROOT']);
@@ -285,7 +285,7 @@ class CompressX_Webp_Rewrite
             $line[]='RewriteRule (.+)\.jpeg$ '.$upload_root.'/$1.jpeg.webp [NC,T=image/webp,L]';
         }
 
-        $options=get_option('compressx_general_settings',array());
+        $options=CompressX_Options::get_option('compressx_general_settings',array());
         $disable_cache_control=isset($options['disable_cache_control'])?$options['disable_cache_control']:false;
 
         if(!$disable_cache_control)
@@ -304,7 +304,7 @@ class CompressX_Webp_Rewrite
 
     public function create_uploads_rules()
     {
-        $options=get_option('compressx_general_settings',array());
+        $options=CompressX_Options::get_option('compressx_general_settings',array());
         $remove_thumbnails=isset($options['remove_thumbnails'])?$options['remove_thumbnails']:false;
 
         $document_root=$this->transfer_path($_SERVER['DOCUMENT_ROOT']);

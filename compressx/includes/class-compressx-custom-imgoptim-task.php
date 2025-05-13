@@ -8,8 +8,19 @@ class CompressX_Custom_ImgOptim_Task
 
     public function __construct()
     {
-        $this->task=get_option('compressx_custom_image_opt_task',array());
+        $this->get_task();
         CompressX_Custom_Image_Meta::check_custom_table();
+    }
+
+    public function update_task()
+    {
+        CompressX_Options::update_option('compressx_custom_image_opt_task',$this->task);
+        $this->get_task();
+    }
+
+    public function get_task()
+    {
+        $this->task=CompressX_Options::get_option('compressx_custom_image_opt_task',array());
     }
 
     public function init_task($force=false)
@@ -30,7 +41,7 @@ class CompressX_Custom_ImgOptim_Task
         {
             $ret['result']='failed';
             $ret['error']=__('No unoptimized images found.','compressx');
-            update_option('compressx_custom_image_opt_task',$this->task,false);
+            $this->update_task();
             return $ret;
         }
 
@@ -42,9 +53,7 @@ class CompressX_Custom_ImgOptim_Task
         $this->task['failed_images']=0;
 
         $this->task['error']='';
-        $this->task['error_list']=array();
-        $this->task['update_error_list']=false;
-        update_option('compressx_custom_image_opt_task',$this->task,false);
+        $this->update_task();
 
         $ret['result']='success';
         $ret["test"]=$this->task;
@@ -67,33 +76,15 @@ class CompressX_Custom_ImgOptim_Task
 
     public function init_options()
     {
-        $options=get_option('compressx_general_settings',array());
-
-        $this->task['options']['remove_exif']=isset($options['remove_exif'])?$options['remove_exif']:false;
-        $this->task['options']['auto_remove_larger_format']=isset($options['auto_remove_larger_format'])?$options['auto_remove_larger_format']:true;
-
-        $quality_options=get_option('compressx_quality',array());
-
-        $this->task['options']['quality']=isset($quality_options['quality'])?$quality_options['quality']:'lossy';
-        if($this->task['options']['quality']=="custom")
-        {
-            $this->task['options']['quality_webp']=isset($quality_options['quality_webp'])?$quality_options['quality_webp']: 80;
-            $this->task['options']['quality_avif']=isset($quality_options['quality_avif'])?$quality_options['quality_avif']: 60;
-        }
-
-        $this->task['options']['convert_to_webp']=CompressX_Image_Opt_Method::get_convert_to_webp();
-        $this->task['options']['convert_to_avif']=CompressX_Image_Opt_Method::get_convert_to_avif();
-
-        $this->task['options']['compressed_webp']=CompressX_Image_Opt_Method::get_compress_to_webp();
-        $this->task['options']['compressed_avif']=CompressX_Image_Opt_Method::get_compress_to_avif();
-
-        $this->task['options']['converter_method']=CompressX_Image_Opt_Method::get_converter_method();
+        $general_options=CompressX_Options::get_general_settings();
+        $quality_options=CompressX_Options::get_quality_option();
+        $this->task['options']=array_merge($general_options,$quality_options);
 
     }
 
     public function get_need_optimize_images()
     {
-        $images=get_option("compressx_need_optimized_custom_images",array());
+        $images=CompressX_Options::get_option("compressx_need_optimized_custom_images",array());
         $need_optimize_images=array();
         $index=0;
         foreach ($images as $path)
@@ -127,8 +118,6 @@ class CompressX_Custom_ImgOptim_Task
 
     public function get_task_status()
     {
-        $this->task=get_option('compressx_custom_image_opt_task',array());
-
         if(empty($this->task))
         {
             $ret['result']='failed';
@@ -171,10 +160,9 @@ class CompressX_Custom_ImgOptim_Task
 
     public function do_optimize_image()
     {
-        $this->task=get_option('compressx_custom_image_opt_task',array());
         $this->task['status']='running';
         $this->task['last_update_time']=time();
-        update_option('compressx_custom_image_opt_task',$this->task,false);
+        $this->update_task();
 
         if(empty($this->task)||!isset($this->task['images']))
         {
@@ -203,14 +191,9 @@ class CompressX_Custom_ImgOptim_Task
 
             $this->task['status']='finished';
             $this->task['last_update_time']=time();
-            update_option('compressx_custom_image_opt_task',$this->task,false);
-
+            $this->update_task();
             return $ret;
         }
-
-        $this->task['status']='running';
-        $this->task['last_update_time']=time();
-        update_option('compressx_custom_image_opt_task',$this->task,false);
 
         if($need_reset)
         {
@@ -218,7 +201,7 @@ class CompressX_Custom_ImgOptim_Task
             if($ret['result']=='success')
             {
                 $this->task['images'][$image_id]['force']=1;
-                update_option('compressx_image_opt_task',$this->task,false);
+                $this->update_task();
             }
         }
 
@@ -232,7 +215,7 @@ class CompressX_Custom_ImgOptim_Task
             $this->task['status']='completed';
             $this->task['last_update_time']=time();
             $this->task['retry']=0;
-            update_option('compressx_custom_image_opt_task',$this->task,false);
+            $this->update_task();
 
             $ret['result']='success';
             $ret['test']=$this->task;
@@ -245,21 +228,9 @@ class CompressX_Custom_ImgOptim_Task
             $this->task['status']='error';
             $this->task['error']=$ret['error'];
             $this->task['last_update_time']=time();
-            update_option('compressx_custom_image_opt_task',$this->task,false);
+            $this->update_task();
             return $ret;
         }
-    }
-
-    public function get_file_path($path)
-    {
-        $root_path = WP_CONTENT_DIR;
-        $root_path = str_replace('\\','/',$root_path);
-        $root_path = $root_path.'/';
-
-        $root_path=$this->transfer_path($root_path);
-        $path=str_replace($root_path,'',$this->transfer_path($path));
-
-        return $path;
     }
 
     public function reset_optimize_image($image_id)
@@ -299,15 +270,12 @@ class CompressX_Custom_ImgOptim_Task
 
         if($has_error)
         {
-            $this->task=get_option('compressx_image_opt_task',array());
             $this->task['failed_images']++;
-            update_option('compressx_custom_image_opt_task',$this->task,false);
-        }
+            $this->update_task();        }
         else
         {
-            $this->task=get_option('compressx_image_opt_task',array());
             $this->task['opt_images']++;
-            update_option('compressx_custom_image_opt_task',$this->task,false);
+            $this->update_task();
         }
 
 
@@ -315,35 +283,15 @@ class CompressX_Custom_ImgOptim_Task
         return $ret;
     }
 
-    public function get_output_path($og_path)
-    {
-        $compressx_path=WP_CONTENT_DIR."/compressx-nextgen";
-
-
-        $upload_root=$this->transfer_path(WP_CONTENT_DIR.'/');
-        $attachment_dir=dirname($og_path);
-        $attachment_dir=$this->transfer_path($attachment_dir);
-        $sub_dir=str_replace($upload_root,'',$attachment_dir);
-        $sub_dir=untrailingslashit($sub_dir);
-        $path=$compressx_path.'/'.$sub_dir;
-
-        if(!file_exists($path))
-        {
-            @mkdir($path,0777,true);
-        }
-
-        return $path.DIRECTORY_SEPARATOR.basename($og_path);
-    }
-
     public function get_image_path($image_id)
     {
         $image=$this->task['images'][$image_id];
-        return $this->transfer_path($image['path']);
+        return CompressX_Image_Method::transfer_path($image['path']);
     }
 
     public function get_custom_image_meta($filename)
     {
-        $filename=$this->transfer_path($filename);
+        $filename=CompressX_Image_Method::transfer_path($filename);
         $meta=CompressX_Custom_Image_Meta::get_custom_image_meta($filename);
         if(empty($meta))
         {
@@ -353,16 +301,9 @@ class CompressX_Custom_ImgOptim_Task
         return $meta;
     }
 
-    private function transfer_path($path)
-    {
-        $path = str_replace('\\','/',$path);
-        $values = explode('/',$path);
-        return implode(DIRECTORY_SEPARATOR,$values);
-    }
-
     public function get_task_progress()
     {
-        $this->task=get_option('compressx_custom_image_opt_task',array());
+        $this->get_task();
 
         if(empty($this->task))
         {
@@ -371,9 +312,6 @@ class CompressX_Custom_ImgOptim_Task
             $ret['percent']=0;
             $ret['timeout']=0;
             $ret['log']=__('All image(s) optimized successfully.','compressx');
-            $ret['error_list']=$this->task['error_list'];
-            $this->task['update_error_list']=false;
-            update_option('compressx_custom_image_opt_task',$this->task,false);
             return $ret;
         }
 
@@ -423,6 +361,31 @@ class CompressX_Custom_ImgOptim_Task
                 $ret['timeout']=0;
                 $ret['percent']= 100;
                 $ret['log']=__('Finish Optimizing images.','compressx');
+
+                $dismiss=CompressX_Options::get_option('compressx_rating_dismiss',false);
+                if($dismiss===false)
+                {
+                    $ret['show_review']=1;
+                }
+                else if($dismiss==0)
+                {
+                    $ret['show_review']=0;
+                }
+                else if($dismiss<time())
+                {
+                    $ret['show_review']=1;
+                }
+                else
+                {
+                    $ret['show_review']=0;
+                }
+
+                if($ret['show_review']==1)
+                {
+                    delete_transient('compressx_set_global_stats');
+                    $size=CompressX_Image_Method::get_opt_folder_size();
+                    $ret['opt_size']=size_format($size,2);
+                }
             }
             else if($this->task['status']=='completed')
             {
@@ -441,7 +404,7 @@ class CompressX_Custom_ImgOptim_Task
                         $this->task['last_update_time']=time();
                         $this->task['retry']++;
                         $this->task['status']='timeout';
-                        update_option('compressx_custom_image_opt_task',$this->task,false);
+                        $this->update_task();
                         if($this->task['retry']<3)
                         {
                             $ret['timeout']=1;
@@ -449,7 +412,8 @@ class CompressX_Custom_ImgOptim_Task
                         else
                         {
                             $ret['timeout']=0;
-                            update_option('compressx_custom_image_opt_task',array(),false);
+                            $this->task=array();
+                            $this->update_task();
                         }
 
                         $ret['result']='failed';
@@ -487,16 +451,6 @@ class CompressX_Custom_ImgOptim_Task
             $ret['log']='Not start task';
         }
 
-        if(isset($this->task['error_list']))
-            $ret['error_list']=$this->task['error_list'];
-        else
-            $ret['error_list']=array();
-
-        if(!empty($ret['error_list']))
-        {
-            $this->task['update_error_list']=false;
-            update_option('compressx_custom_image_opt_task',$this->task,false);
-        }
         return $ret;
     }
 }

@@ -18,7 +18,7 @@ class CompressX_Bulk_Action
         $compressx->ajax_check_security('compressx-can-convert');
 
         delete_transient('compressx_set_global_stats');
-        $max_image_count=$this->get_max_image_count();
+        $max_image_count=CompressX_Image_Method::get_max_image_count();
 
         $force=isset($_POST['force'])?sanitize_key($_POST['force']):'0';
         if($force=='1')
@@ -30,18 +30,10 @@ class CompressX_Bulk_Action
             $force=false;
         }
 
-        $convert_to_webp=CompressX_Image_Opt_Method::get_convert_to_webp();
-        $convert_to_avif=CompressX_Image_Opt_Method::get_convert_to_avif();
+        $convert_to_webp=CompressX_Image_Method::get_convert_to_webp();
+        $convert_to_avif=CompressX_Image_Method::get_convert_to_avif();
 
-        $excludes=get_option('compressx_media_excludes',array());
-        $exclude_regex_folder=array();
-        if(!empty($excludes))
-        {
-            foreach ($excludes as $item)
-            {
-                $exclude_regex_folder[]='#'.preg_quote(CompressX_Image_Opt_Method::transfer_path($item), '/').'#';
-            }
-        }
+        $exclude_regex_folder=CompressX_Options::get_excludes();
 
         $time_start=time();
         $max_timeout_limit=21;
@@ -52,17 +44,17 @@ class CompressX_Bulk_Action
         if($start_row==0)
         {
             $need_optimize_images=0;
-            delete_option('compressx_need_optimized_images');
+            CompressX_Options::delete_option('compressx_need_optimized_images');
         }
         else
         {
-            $need_optimize_images=get_option("compressx_need_optimized_images",0);
+            $need_optimize_images=CompressX_Options::get_option("compressx_need_optimized_images",0);
         }
 
         $count=0;
         for ($offset=$start_row; $offset <= $max_image_count; $offset += $page)
         {
-            $images=CompressX_Image_Opt_Method::scan_unoptimized_image($page,$offset,$convert_to_webp,$convert_to_avif,$exclude_regex_folder,$force);
+            $images=CompressX_Image_Method::scan_unoptimized_image($page,$offset,$convert_to_webp,$convert_to_avif,$exclude_regex_folder,$force);
 
             $count=$count+$page;
             $need_optimize_images=$need_optimize_images+sizeof($images);
@@ -81,7 +73,7 @@ class CompressX_Bulk_Action
             }
         }
 
-        update_option("compressx_need_optimized_images",$need_optimize_images,false);
+        CompressX_Options::update_option("compressx_need_optimized_images",$need_optimize_images);
 
         if($finished)
         {
@@ -112,110 +104,6 @@ class CompressX_Bulk_Action
         die();
     }
 
-    public function get_max_image_count()
-    {
-        global $wpdb;
-
-        $supported_mime_types = array(
-            "image/jpg",
-            "image/jpeg",
-            "image/png",
-            "image/webp",
-            "image/avif");
-
-        $args  = $supported_mime_types;
-        $result=$wpdb->get_results($wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_mime_type IN (%s,%s,%s,%s,%s)", $args ),ARRAY_N);
-
-        if($result && sizeof($result)>0)
-        {
-            return $result[0][0];
-        }
-        else
-        {
-            return 0;
-        }
-    }
-
-    private function transfer_path($path)
-    {
-        $path = str_replace('\\','/',$path);
-        $values = explode('/',$path);
-        return implode(DIRECTORY_SEPARATOR,$values);
-    }
-
-    public function is_image_optimized($post_id,$exclude_regex_folder,$force=false)
-    {
-        $meta=CompressX_Image_Meta::get_image_meta($post_id);
-        if(!empty($meta)&&isset($meta['size'])&&!empty($meta['size']))
-        {
-            foreach ($meta['size'] as $size_key => $size_data)
-            {
-                if(!isset($size_data['convert_webp_status'])||$size_data['convert_webp_status']==0||$force)
-                {
-                    if($this->exclude_path($post_id,$exclude_regex_folder))
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        }
-        else
-        {
-            if($this->exclude_path($post_id,$exclude_regex_folder))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-    }
-
-    public function exclude_path($post_id,$exclude_regex_folder)
-    {
-        if(empty($exclude_regex_folder))
-        {
-            return false;
-        }
-
-        $file_path = get_attached_file( $post_id );
-        $file_path = $this->transfer_path($file_path);
-        if ($this->regex_match($exclude_regex_folder, $file_path))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    private function regex_match($regex_array,$string)
-    {
-        if(empty($regex_array))
-        {
-            return false;
-        }
-
-        foreach ($regex_array as $regex)
-        {
-            if(preg_match($regex,$string))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public function init_bulk_optimization_task()
     {
         global $compressx;
@@ -242,7 +130,7 @@ class CompressX_Bulk_Action
         global $compressx;
         $compressx->ajax_check_security('compressx-can-convert');
 
-        set_time_limit(180);
+        set_time_limit(120);
         $task=new CompressX_ImgOptim_Task();
 
         $ret=$task->get_task_status();
@@ -296,182 +184,7 @@ class CompressX_Bulk_Action
 
         $result=$task->get_task_progress();
 
-        if(empty($result['error_list']))
-        {
-            $result['html']='';
-            $result['update_error_log']=false;
-        }
-        else
-        {
-            $result['update_error_log']=true;
-            $result['html']='';
-        }
-
-        ob_start();
-        $this->output_overview();
-        $result['overview_html'] = ob_get_clean();
-
         echo wp_json_encode($result);
-
-        die();
-    }
-
-    public function output_overview()
-    {
-        $webp_data=$this->get_optimized_data();
-        $failed_images_count=CompressX_Image_Meta::get_failed_images_count();
-        $url=admin_url().'upload.php?compressx-filter=failed_optimized';
-        ?>
-        <div class="cx-overview_body-free">
-            <div class="cx-overview_body-webp-free">
-                <div class="cx-process-webp">
-                    <div class="cx-process-position">
-                        <span class="cx-processed"><?php echo esc_html($webp_data['webp_converted_percent']);?>%<span class="cx-percent-sign"> images</span></span>
-                        <span class="cx-processing"><?php esc_html_e('Outputted to WEBP','compressx')?></span>
-                    </div>
-                </div>
-                <div class="cx-process-webp">
-                    <div class="cx-process-position">
-                        <span class="cx-processed"><?php echo esc_html($webp_data['avif_converted_percent']);?>%<span class="cx-percent-sign"> images</span></span>
-                        <span class="cx-processing"><?php esc_html_e('Outputted to AVIF','compressx')?></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <?php
-    }
-
-    public function get_optimized_data()
-    {
-        $stats=CompressX_Image_Meta::get_global_stats();
-
-        $webp_data=array();
-
-        $webp_data['webp_outputted']=$stats['webp_converted']+$stats['webp_compressed'];
-        $webp_data['webp_total']=$stats['webp_total'];
-        $webp_data['webp_saved']=$stats['webp_saved'];
-        $webp_images_count=$this->get_max_webp_image_count();
-        $avif_images_count=$this->get_max_avif_image_count();
-
-        if($webp_images_count!=0)
-        {
-            $webp_data['webp_converted_percent'] = ( $webp_data['webp_outputted'] / $webp_images_count ) * 100;
-            $webp_data['webp_converted_percent'] = round( $webp_data['webp_converted_percent'], 2 );
-        }
-        else
-        {
-            $webp_data['webp_converted_percent']=0;
-        }
-
-        if($stats['webp_total']!=0)
-        {
-            if($stats['webp_total']>$stats['webp_saved'])
-            {
-                $saved=$stats['webp_total']-$stats['webp_saved'];
-                $webp_data['webp_saved_percent'] = ( $saved / $stats['webp_total'] ) * 100;
-                $webp_data['webp_saved_percent'] = round( $webp_data['webp_saved_percent'], 2 );
-            }
-            else
-            {
-                $webp_data['webp_saved_percent']=0;
-            }
-        }
-        else
-        {
-            $webp_data['webp_saved_percent']=0;
-        }
-
-        $webp_data['avif_converted']=$stats['avif_converted']+$stats['avif_compressed'];
-        $webp_data['avif_total']=$stats['avif_total'];
-        $webp_data['avif_saved']=$stats['avif_saved'];
-        if($stats['avif_total']!=0)
-        {
-            if($stats['avif_total']>$stats['avif_saved'])
-            {
-                $saved=$stats['avif_total']-$stats['avif_saved'];
-
-                $webp_data['avif_saved_percent'] = ($saved / $stats['avif_total'] ) * 100;
-                $webp_data['avif_saved_percent'] = round( $webp_data['avif_saved_percent'], 2 );
-            }
-            else
-            {
-                $webp_data['avif_saved_percent'] = 0;
-            }
-
-            $webp_data['avif_converted_percent'] = ( $webp_data['avif_converted'] / $avif_images_count ) * 100;
-            $webp_data['avif_converted_percent'] = round( $webp_data['avif_converted_percent'], 2 );
-        }
-        else
-        {
-            $webp_data['avif_converted_percent']=0;
-            $webp_data['avif_saved_percent']=0;
-        }
-
-        return $webp_data;
-    }
-
-    private function get_max_webp_image_count()
-    {
-        global $wpdb;
-
-        $supported_mime_types = array(
-            "image/jpg",
-            "image/jpeg",
-            "image/png",
-            "image/webp",);
-
-        //$supported_mime_types=apply_filters('compressx_supported_mime_types',$supported_mime_types);
-
-        $result=$wpdb->get_results( $wpdb->prepare("SELECT COUNT(*) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_mime_type IN (%s,%s,%s,%s) ",$supported_mime_types),ARRAY_N);
-        if($result && sizeof($result)>0)
-        {
-            return $result[0][0];
-        }
-        else
-        {
-            return 0;
-        }
-    }
-
-    public function get_max_avif_image_count()
-    {
-        global $wpdb;
-
-        $supported_mime_types = array(
-            "image/jpg",
-            "image/jpeg",
-            "image/png",
-            "image/webp",
-            "image/avif");
-
-        //$supported_mime_types=apply_filters('compressx_supported_mime_types',$supported_mime_types);
-
-        $result=$wpdb->get_results($wpdb->prepare("SELECT COUNT(*) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_mime_type IN (%s,%s,%s,%s,%s) ",$supported_mime_types),ARRAY_N);
-        if($result && sizeof($result)>0)
-        {
-            return $result[0][0];
-        }
-        else
-        {
-            return 0;
-        }
-    }
-
-    public function deal_shutdown_error()
-    {
-        if($this->end_shutdown_function===false)
-        {
-            $task=new CompressX_ImgOptim_Task();
-            $error = error_get_last();
-
-            if (!is_null($error))
-            {
-                if (empty($error) || !in_array($error['type'], array(E_ERROR,E_RECOVERABLE_ERROR,E_CORE_ERROR,E_COMPILE_ERROR), true))
-                {
-                    $task->WriteLog('In shutdown function last message type:'.$error['type'].' str:'.$error['message'],'notice');
-                }
-            }
-        }
 
         die();
     }
