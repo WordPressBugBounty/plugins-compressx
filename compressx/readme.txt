@@ -4,7 +4,7 @@ Tags: convert WebP, convert AVIF, WebP, AVIF
 Requires at least: 5.8
 Tested up to: 6.8.1
 Requires PHP: 7.0
-Stable tag: 0.9.27
+Stable tag: 0.9.28
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
@@ -65,6 +65,10 @@ Yes, absolutely. Whenever you need help, start a thread on the support forum or 
 Yes, we do. Here is a [tutorial](https://compressx.io/docs/compressx-overview/) for you to quickly get started with CompressX.
 
 == Changelog ==
+= 0.9.28 =
+- Fixed: Incorrect image statistics calculation.
+- Added support for image rotation during WebP/AVIF conversion.
+- Fixed: Image resizing data could not be updated in the database.
 = 0.9.27 =
 - Refactored the plugin code and optimized the code structure.
 - Optimized and reduced CompressX entries in postmeta table.
@@ -170,8 +174,8 @@ Yes, we do. Here is a [tutorial](https://compressx.io/docs/compressx-overview/) 
 - Initial release. Hello world!
 
 == Upgrade Notice ==
-Latest version 0.9.27:
-= 0.9.27 =
-- Refactored the plugin code and optimized the code structure.
-- Optimized and reduced CompressX entries in postmeta table.
-- Fixed some UI bugs.
+Latest version 0.9.28:
+= 0.9.28 =
+- Fixed: Incorrect image statistics calculation.
+- Added support for image rotation during WebP/AVIF conversion.
+- Fixed: Image resizing data could not be updated in the database.

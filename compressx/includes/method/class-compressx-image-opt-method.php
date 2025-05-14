@@ -276,6 +276,7 @@ class CompressX_Image_Opt_Method
             }
             else
             {
+                $img=self::correctImageOrientation($in,$img);
                 $result = imagewebp($img, $out, $quality);
                 imagedestroy($img);
                 if (!$result)
@@ -369,6 +370,45 @@ class CompressX_Image_Opt_Method
         }
     }
 
+    public static function correctImageOrientation($sourcePath,$image)
+    {
+        $orientation = 1;
+        if (function_exists('exif_read_data')) {
+            $exif = @exif_read_data($sourcePath);
+            if (!empty($exif['Orientation'])) {
+                $orientation = $exif['Orientation'];
+            }
+        }
+
+        switch ($orientation) {
+            case 2:
+                imageflip( $image, IMG_FLIP_HORIZONTAL );
+                break;
+            case 3:
+                $image = imagerotate( $image, 180, 0 );
+                break;
+            case 4:
+                imageflip( $image, IMG_FLIP_HORIZONTAL );
+                $image = imagerotate( $image, 180, 0 );
+                break;
+            case 5:
+                imageflip( $image, IMG_FLIP_VERTICAL );
+                $image = imagerotate( $image, -90, 0 );
+                break;
+            case 6:
+                $image = imagerotate( $image, -90, 0 );
+                break;
+            case 7:
+                imageflip( $image, IMG_FLIP_VERTICAL );
+                $image = imagerotate( $image, 90, 0 );
+                break;
+            case 8:
+                $image = imagerotate( $image, 90, 0 );
+                break;
+        }
+        return $image;
+    }
+
     public static function convert_webp_imagick_ex($in,$out,$options)
     {
         if(!CompressX_Image_Method::is_support_imagick())
@@ -393,6 +433,25 @@ class CompressX_Image_Opt_Method
                 $ret['result']='failed';
                 $ret['error']="not support webp";
                 return $ret;
+            }
+
+            if (method_exists($image, 'autoOrient'))
+            {
+                $image->autoOrient();
+            } else {
+                $orientation = $image->getImageOrientation();
+                switch ($orientation) {
+                    case Imagick::ORIENTATION_BOTTOMRIGHT:
+                        $image->rotateImage("#000", 180);
+                        break;
+                    case Imagick::ORIENTATION_RIGHTTOP:
+                        $image->rotateImage("#000", 90);
+                        break;
+                    case Imagick::ORIENTATION_LEFTBOTTOM:
+                        $image->rotateImage("#000", -90);
+                        break;
+                }
+                $image->setImageOrientation(Imagick::ORIENTATION_TOPLEFT);
             }
 
             $image->setImageFormat( "WEBP" );
@@ -457,6 +516,7 @@ class CompressX_Image_Opt_Method
             }
             else
             {
+                $img=self::correctImageOrientation($in,$img);
                 $result = imageavif($img, $out, $quality);
                 imagedestroy($img);
                 if (!$result)
@@ -609,6 +669,26 @@ class CompressX_Image_Opt_Method
                 $ret['error']="not support webp";
                 return $ret;
             }
+
+            if (method_exists($image, 'autoOrient'))
+            {
+                $image->autoOrient();
+            } else {
+                $orientation = $image->getImageOrientation();
+                switch ($orientation) {
+                    case Imagick::ORIENTATION_BOTTOMRIGHT:
+                        $image->rotateImage("#000", 180);
+                        break;
+                    case Imagick::ORIENTATION_RIGHTTOP:
+                        $image->rotateImage("#000", 90);
+                        break;
+                    case Imagick::ORIENTATION_LEFTBOTTOM:
+                        $image->rotateImage("#000", -90);
+                        break;
+                }
+                $image->setImageOrientation(Imagick::ORIENTATION_TOPLEFT);
+            }
+
             $image->setImageFormat( "AVIF" );
 
             if(isset($options['remove_exif'])&&$options['remove_exif'])
@@ -815,7 +895,6 @@ class CompressX_Image_Opt_Method
             return true;
         }
 
-
         $image_meta = wp_get_attachment_metadata($image_id);
         $original_file_path = wp_get_original_image_path( $image_id );
 
@@ -829,12 +908,10 @@ class CompressX_Image_Opt_Method
 
         $max_width=isset($options['resize_width'])?$options['resize_width']:2560;
         $max_height=isset($options['resize_height'])?$options['resize_height']:2560;
-
         if ( ( $og_width < $max_width ) || ( $og_height < $max_height) )
         {
             return true;
         }
-
         /*
         $resize_method=isset($resize['method'])?$resize['method']:'auto';
         if($resize_method==='width')
@@ -908,10 +985,125 @@ class CompressX_Image_Opt_Method
 
         // Store the original image file name in image_meta.
         $image_meta['original_image'] = wp_basename( $original_file_path );
-
         update_post_meta( $image_id, '_wp_attachment_metadata', $image_meta );
         CompressX_Image_Meta::update_og_size($image_id,$image_meta['filesize']);
         return true;
+    }
+
+    public static function resize_ex($image_id,$options,$metadata,$log=false)
+    {
+        if($options['resize_enable']===false)
+        {
+            $ret['result']='success';
+            $ret['meta']=$metadata;
+            return $ret;
+        }
+
+        $image_meta = $metadata;
+        $original_file_path = wp_get_original_image_path( $image_id );
+
+        if(empty($original_file_path))
+        {
+            $ret['result']='failed';
+            $ret['meta']=$metadata;
+            return $ret;
+        }
+
+        $imagesize  = wp_getimagesize( $original_file_path );
+        $og_width  = $imagesize[0];
+        $og_height = $imagesize[1];
+
+
+        $max_width=isset($options['resize_width'])?$options['resize_width']:2560;
+        $max_height=isset($options['resize_height'])?$options['resize_height']:2560;
+        if ( ( $og_width < $max_width ) || ( $og_height < $max_height) )
+        {
+            $ret['result']='success';
+            $ret['meta']=$metadata;
+            return $ret;
+        }
+        /*
+        $resize_method=isset($resize['method'])?$resize['method']:'auto';
+        if($resize_method==='width')
+        {
+            $max_height='0';
+        }
+        else if($resize_method==='height')
+        {
+            $max_width='0';
+        }*/
+
+        CompressX_Image_Opt_Method::WriteLog($log,'Start resizing image id:'.$image_id,'notice');
+
+        $saved_data=image_make_intermediate_size($original_file_path,$max_width,$max_height);
+        if($saved_data===false)
+        {
+            $ret['result']='failed';
+            $ret['meta']=$metadata;
+            return $ret;
+        }
+
+        $resize_path = path_join( dirname( $original_file_path ),$saved_data['file']);
+        if (!file_exists($resize_path))
+        {
+            $ret['result']='failed';
+            $ret['meta']=$metadata;
+            return $ret;
+        }
+
+        $suffix='scaled';
+        $dir = pathinfo( $original_file_path, PATHINFO_DIRNAME );
+        $ext = pathinfo( $original_file_path, PATHINFO_EXTENSION );
+        $name = wp_basename( $original_file_path, ".$ext" );
+        $scaled_file_path=trailingslashit( $dir ) . "{$name}-{$suffix}.{$ext}";
+
+        @copy($resize_path,$scaled_file_path);
+
+        if(!empty($image_meta['sizes']))
+        {
+            $path_parts = pathinfo($resize_path );
+            $filename   = ! empty( $path_parts['basename'] ) ? $path_parts['basename'] : $path_parts['filename'];
+            $unlink=true;
+            foreach ( $image_meta['sizes'] as $image_size )
+            {
+                if ( false === strpos( $image_size['file'], $filename ) )
+                {
+                    continue;
+                }
+                $unlink = false;
+            }
+
+            if($unlink)
+            {
+                @wp_delete_file($resize_path );
+            }
+        }
+        else
+        {
+            @wp_delete_file( $resize_path );
+        }
+
+
+        // Update the attached file meta.
+        update_attached_file( $image_id, _wp_relative_upload_path( $scaled_file_path ) );
+
+        // Width and height of the new image.
+        $image_meta['width']  = $saved_data['width'];
+        $image_meta['height'] = $saved_data['height'];
+
+        // Make the file path relative to the upload dir.
+        $image_meta['file'] = _wp_relative_upload_path( $scaled_file_path );
+
+        // Add image file size.
+        $image_meta['filesize'] = wp_filesize( $scaled_file_path );
+
+        // Store the original image file name in image_meta.
+        $image_meta['original_image'] = wp_basename( $original_file_path );
+        CompressX_Image_Meta::update_og_size($image_id,$image_meta['filesize']);
+
+        $ret['result']='success';
+        $ret['meta']=$image_meta;
+        return $ret;
     }
 
     public static function WriteLog($log,$text,$type)

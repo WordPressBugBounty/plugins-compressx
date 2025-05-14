@@ -21,7 +21,6 @@ class CompressX_Stats_Manager
     {
         global $compressx;
         $compressx->ajax_check_security('compressx-can-convert');
-        delete_transient(self::TRANSIENT_KEY);
         $cached = get_transient(self::TRANSIENT_KEY);
 
         if ($cached)
@@ -115,29 +114,68 @@ class CompressX_Stats_Manager
             foreach ($results as $row) {
                 $meta = maybe_unserialize($row['meta_value']);
                 if (!is_array($meta)) continue;
-
                 $original = isset($meta['og_file_size']) ? (int)$meta['og_file_size'] : 0;
 
-                if (!empty($meta['webp_converted']) && $meta['webp_converted'] == 1) {
-                    $webp = isset($meta['webp_converted_size']) ? (int)$meta['webp_converted_size'] : 0;
-                    $data['converted_webp']++;
-                    if ($original > 0 && $webp > 0 && $webp <= $original)
-                    {
-                        $data['original_total_webp'] += $original;
-                        $data['webp_total'] += $webp;
-                    }
-                }
-
-                if (!empty($meta['avif_converted']) && $meta['avif_converted'] == 1)
+                if(isset($meta['webp_converted']))
                 {
-                    $avif = isset($meta['avif_converted_size']) ? (int)$meta['avif_converted_size'] : 0;
-                    $data['converted_avif']++;
-                    if ($original > 0 && $avif > 0 && $avif <= $original) {
-
-                        $data['original_total_avif'] += $original;
-                        $data['avif_total'] += $avif;
+                    if (!empty($meta['webp_converted']) && $meta['webp_converted'] == 1)
+                    {
+                        $webp = isset($meta['webp_converted_size']) ? (int)$meta['webp_converted_size'] : 0;
+                        $data['converted_webp']++;
+                        if ($original > 0 && $webp > 0 && $webp <= $original)
+                        {
+                            $data['original_total_webp'] += $original;
+                            $data['webp_total'] += $webp;
+                        }
                     }
                 }
+                else
+                {
+                    $post_id=$row['post_id'];
+                    if(CompressX_Image_Meta::get_image_meta_webp_converted($post_id))
+                    {
+                        $webp = CompressX_Image_Meta::get_webp_converted_size($post_id);
+                        $data['converted_webp']++;
+                        if ($original > 0 && $webp > 0 && $webp <= $original)
+                        {
+                            $data['original_total_webp'] += $original;
+                            $data['webp_total'] += $webp;
+                        }
+                    }
+
+                    wp_cache_delete($post_id, 'post_meta' );
+                }
+
+                if(isset($meta['avif_converted']))
+                {
+                    if (!empty($meta['avif_converted']) && $meta['avif_converted'] == 1)
+                    {
+                        $avif = isset($meta['avif_converted_size']) ? (int)$meta['avif_converted_size'] : 0;
+                        $data['converted_avif']++;
+                        if ($original > 0 && $avif > 0 && $avif <= $original) {
+
+                            $data['original_total_avif'] += $original;
+                            $data['avif_total'] += $avif;
+                        }
+                    }
+                }
+                else
+                {
+                    $post_id=$row['post_id'];
+                    if(CompressX_Image_Meta::get_image_meta_avif_converted($post_id))
+                    {
+                        $avif = CompressX_Image_Meta::get_avif_converted_size($post_id);
+                        $data['converted_avif']++;
+                        if ($original > 0 && $avif > 0 && $avif <= $original) {
+
+                            $data['original_total_avif'] += $original;
+                            $data['avif_total'] += $avif;
+                        }
+                    }
+
+                    wp_cache_delete($post_id, 'post_meta' );
+                }
+
 
                 $data['total_count']++;
             }

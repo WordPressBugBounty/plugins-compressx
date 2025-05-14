@@ -208,6 +208,9 @@ class CompressX_Manual_Optimization
         CompressX_Image_Meta::update_image_progressing($attachment_id);
 
         $image=new Compressx_Image($attachment_id,$options);
+
+        $image->resize();
+
         if($image->convert())
         {
             CompressX_Image_Meta::delete_image_progressing($attachment_id);

@@ -85,7 +85,11 @@ class CompressX_Auto_Optimization
 
                     set_time_limit(300);
                     delete_transient('compressx_set_global_stats');
-                    $this->do_optimize_image($attachment_id);
+                    $ret=$this->do_optimize_image($attachment_id,$metadata);
+                    if(isset($ret['meta']))
+                    {
+                        return $ret['meta'];
+                    }
                 }
             }
         }
@@ -121,7 +125,7 @@ class CompressX_Auto_Optimization
         }
     }
 
-    public function do_optimize_image($attachment_id)
+    public function do_optimize_image($attachment_id,$metadata)
     {
         $general_options=CompressX_Options::get_general_settings();
         $quality_options=CompressX_Options::get_quality_option();
@@ -135,6 +139,13 @@ class CompressX_Auto_Optimization
         CompressX_Image_Meta::update_image_progressing($attachment_id);
 
         $image=new Compressx_Image($attachment_id,$options);
+
+        $ret=$image->resize_ex($metadata);
+        if($ret['result']=='success')
+        {
+            $metadata=$ret['meta'];
+        }
+
         if($image->convert())
         {
             CompressX_Image_Meta::update_image_meta_status($attachment_id,'optimized');
@@ -149,6 +160,7 @@ class CompressX_Auto_Optimization
         CompressX_Image_Meta::delete_image_progressing($attachment_id);
 
         $ret['result']='success';
+        $ret['meta']=$metadata;
         return $ret;
     }
 }

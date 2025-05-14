@@ -31,6 +31,23 @@ class Compressx_Image
         }
     }
 
+    public function resize_ex($metadata)
+    {
+        if(CompressX_Image_Meta::get_image_meta_value($this->image_id,'resize_status')==0)
+        {
+            $ret=CompressX_Image_Opt_Method::resize_ex($this->image_id,$this->options,$metadata,$this->log);
+            if($ret['result']=='success')
+            {
+                CompressX_Image_Meta::update_images_meta_value($this->image_id,'resize_status',1);
+                return $ret;
+            }
+        }
+
+        $ret['result']='success';
+        $ret['meta']=$metadata;
+        return $ret;
+    }
+
     public function convert()
     {
         $has_error=false;
