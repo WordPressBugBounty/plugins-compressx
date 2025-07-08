@@ -320,4 +320,32 @@ class CompressX_Options
 
         return $quality;
     }
+
+    public static function get_default_advanced_woocommerce_quality_option()
+    {
+        $list= [
+            // WooCommerce
+            'wc_product_featured_images'   => ['enable'=>false,'webp' => 90, 'avif' => 65],
+            'wc_product_gallery_images'    => ['enable'=>false,'webp' => 80, 'avif' => 55],
+            'wc_variation_images'          => ['enable'=>false,'webp' => 80, 'avif' => 55],
+            'wc_product_category_images'   => ['enable'=>false,'webp' => 75, 'avif' => 50],
+        ];
+
+        return $list;
+    }
+
+    public static function get_default_advanced_quality_option()
+    {
+        $list= [
+            // core
+            'site_logo'            => ['enable'=>false,'webp' => 90, 'avif' => 80],
+            'header_background'    => ['enable'=>false,'webp' => 85, 'avif' => 60],
+            'featured_post'        => ['enable'=>false,'webp' => 88, 'avif' => 62],
+            'featured_page'        => ['enable'=>false,'webp' => 88, 'avif' => 62],
+            'sidebar_widget'       => ['enable'=>false,'webp' => 75, 'avif' => 50],
+            'acf_image_fields'      => ['enable'=>false,'webp' => 80, 'avif' => 55],
+        ];
+
+        return $list;
+    }
 }

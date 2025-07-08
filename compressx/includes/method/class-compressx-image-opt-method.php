@@ -890,7 +890,7 @@ class CompressX_Image_Opt_Method
 
     public static function resize($image_id,$options,$log=false)
     {
-        if($options['resize_enable']===false)
+        if($options['resize_enable']==false)
         {
             return true;
         }
@@ -992,7 +992,7 @@ class CompressX_Image_Opt_Method
 
     public static function resize_ex($image_id,$options,$metadata,$log=false)
     {
-        if($options['resize_enable']===false)
+        if($options['resize_enable']==false)
         {
             $ret['result']='success';
             $ret['meta']=$metadata;

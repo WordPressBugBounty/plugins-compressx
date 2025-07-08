@@ -73,12 +73,12 @@ class CompressX_Image_Meta
         delete_post_meta($image_id,'compressx_image_meta_avif_converted_size');
         delete_post_meta($image_id,'compressx_image_meta_compressed_size');
 
-        update_post_meta($image_id,'compressx_image_meta_status','unoptimized');
+        update_post_meta($image_id,'compressx_image_meta_status','pending');
         //update_post_meta($image_id,'compressx_image_meta_webp_converted',0);
         //update_post_meta($image_id,'compressx_image_meta_avif_converted',0);
         //update_post_meta($image_id,'compressx_image_meta_compressed',0);
 
-        $image_optimize_meta['status']='unoptimized';
+        $image_optimize_meta['status']='pending';
         $image_optimize_meta['webp_converted']=0;
         $image_optimize_meta['avif_converted']=0;
         $image_optimize_meta['compressed']=0;
@@ -99,7 +99,7 @@ class CompressX_Image_Meta
             $image_optimize_meta['size']['og']['compress_status']=0;
             $image_optimize_meta['size']['og']['convert_webp_status']=0;
             $image_optimize_meta['size']['og']['convert_avif_status']=0;
-            $image_optimize_meta['size']['og']['status']="unoptimized";
+            $image_optimize_meta['size']['og']['status']="pending";
             $image_optimize_meta['size']['og']['error']="";
             $image_optimize_meta['size']['og']['file'] = get_post_meta( $image_id, '_wp_attached_file', true );
         }
@@ -108,7 +108,7 @@ class CompressX_Image_Meta
             $image_optimize_meta['size']['og']['compress_status']=0;
             $image_optimize_meta['size']['og']['convert_webp_status']=0;
             $image_optimize_meta['size']['og']['convert_avif_status']=0;
-            $image_optimize_meta['size']['og']['status']="unoptimized";
+            $image_optimize_meta['size']['og']['status']="pending";
             $image_optimize_meta['size']['og']['error']="";
             $image_optimize_meta['size']['og']['file']= get_post_meta( $image_id, '_wp_attached_file', true );
 
@@ -117,7 +117,7 @@ class CompressX_Image_Meta
                 $image_optimize_meta['size'][$size_key]['compress_status']=0;
                 $image_optimize_meta['size'][$size_key]['convert_webp_status']=0;
                 $image_optimize_meta['size'][$size_key]['convert_avif_status']=0;
-                $image_optimize_meta['size'][$size_key]['status']="unoptimized";
+                $image_optimize_meta['size'][$size_key]['status']="pending";
                 $image_optimize_meta['size'][$size_key]['error']="";
 
                 $image_optimize_meta['size'][$size_key]['file']=$size_data['file'];
@@ -169,9 +169,13 @@ class CompressX_Image_Meta
 
     public static function update_image_meta_status($image_id,$status)
     {
-        $meta=get_post_meta( $image_id, 'compressx_image_meta', true );
-        $meta['status']=$status;
-        update_post_meta($image_id,'compressx_image_meta',$meta);
+        if(CompressX_Image_Meta::has_image_meta($image_id))
+        {
+            $meta=get_post_meta( $image_id, 'compressx_image_meta', true );
+            $meta['status']=$status;
+            update_post_meta($image_id,'compressx_image_meta',$meta);
+        }
+
         update_post_meta($image_id,'compressx_image_meta_status',$status);
     }
 

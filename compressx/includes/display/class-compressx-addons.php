@@ -45,6 +45,24 @@ class CompressX_Addons
                 <div class="compressx-addons-grid">
                     <div class="cx-addons" style="position: relative;">
                         <div class="cx-addons-icon-block">
+                            <span class="dashicons dashicons-admin-generic compressx-icon-style" style="color:green"></span>
+                        </div>
+                        <div>
+                            <h5>Advanced Compression Level Settings</h5>
+                            <span>Maximize image optimization with smart algorithms that reduce file size while preserving visual quality. Ideal for users who want the best balance of speed and image clarity for their site</span>
+                        </div>
+                    </div>
+                    <div class="cx-addons" style="position: relative;">
+                        <div class="cx-addons-icon-block">
+                            <span class="dashicons dashicons-admin-appearance compressx-icon-style"></span>
+                        </div>
+                        <div>
+                            <h5>Remove JPG/PNG Thumbnails</h5>
+                            <span>Automatically delete original JPG/PNG thumbnails after converting them to WebP or AVIF to free up disk space.</span>
+                        </div>
+                    </div>
+                    <div class="cx-addons" style="position: relative;">
+                        <div class="cx-addons-icon-block">
                             <span class="dashicons dashicons-calendar-alt compressx-icon-style"></span>
                         </div>
                         <div>
@@ -72,7 +90,15 @@ class CompressX_Addons
                         </div>
 
                     </div>
-
+                    <div class="cx-addons" style="position: relative;">
+                        <div class="cx-addons-icon-block">
+                            <span class="dashicons dashicons-admin-appearance compressx-icon-style"></span>
+                        </div>
+                        <div>
+                            <h5>Advanced Exclude Rules</h5>
+                            <span>Automatically delete original JPG/PNG thumbnails after converting them to WebP or AVIF to free up disk space.</span>
+                        </div>
+                    </div>
                     <div class="cx-addons" style="position: relative;">
                         <div class="cx-addons-icon-block">
                             <span class="dashicons dashicons-cover-image compressx-icon-style"></span>
@@ -111,22 +137,7 @@ class CompressX_Addons
                             <h5>Multisite Support</h5>
                             <span>Coming soon..</span>
                         </div>
-
                     </div>
-                    <div class="cx-addons" style="position: relative; display:none;">
-                        <div class="cx-addons-icon-block">
-                            <span class="dashicons dashicons-wordpress compressx-icon-style" style="color:#ffb116"></span>
-                        </div>
-                        <div>
-                            <h5>Multisite Support</h5>
-                            <span>Include rules are processed first, however, if an exclude rule matches data that matched the include rule filter, the data is excluded</span>
-                        </div>
-                        <label class="compressx-switch" title="Enable/Disable the addon" style="position:absolute; top:1rem;right:1rem">
-                            <input type="checkbox">
-                            <span class="compressx-slider compressx-round"></span>
-                        </label>
-                    </div>
-
                 </div>
             </div>
         </header>

@@ -331,18 +331,30 @@ class CompressX_Dashboard
 
     public function output_overview()
     {
+        $cached = get_transient("compressx_set_global_stats");
+
+        if ($cached)
+        {
+            $cx_webp_percent=$cached['conversion_webp_percent'].'%';
+            $cx_avif_percent=$cached['conversion_avif_percent'].'%';
+        }
+        else
+        {
+            $cx_webp_percent='0%';
+            $cx_avif_percent='0%';
+        }
         ?>
         <div class="cx-overview_body-free">
             <div class="cx-overview_body-webp-free">
                 <div class="cx-process-webp">
                     <div class="cx-process-position">
-                        <span id="cx_conversion_webp_percent" class="cx-processed" >0%<span class="cx-percent-sign"> images</span></span>
+                        <span id="cx_conversion_webp_percent" class="cx-processed" ><?php echo esc_html($cx_webp_percent)?><span class="cx-percent-sign"> images</span></span>
                         <span class="cx-processing"><?php esc_html_e('Outputted to WEBP','compressx')?></span>
                     </div>
                 </div>
                 <div class="cx-process-webp">
                     <div class="cx-process-position">
-                        <span id="cx_conversion_avif_percent" class="cx-processed">0%<span class="cx-percent-sign"> images</span></span>
+                        <span id="cx_conversion_avif_percent" class="cx-processed"><?php echo esc_html($cx_avif_percent)?><span class="cx-percent-sign"> images</span></span>
                         <span class="cx-processing"><?php esc_html_e('Outputted to AVIF','compressx')?></span>
                     </div>
                 </div>
@@ -675,6 +687,7 @@ class CompressX_Dashboard
             $quality_lossy_plus="";
             $quality_lossy_super="";
             $quality_custom="";
+            $quality_custom_notice="display:none";
         }
         else if($quality=="lossy_minus")
         {
@@ -684,6 +697,7 @@ class CompressX_Dashboard
             $quality_lossy_plus="";
             $quality_lossy_super="";
             $quality_custom="";
+            $quality_custom_notice="display:none";
         }
         else if($quality=="lossy")
         {
@@ -693,6 +707,7 @@ class CompressX_Dashboard
             $quality_lossy_plus="";
             $quality_lossy_super="";
             $quality_custom="";
+            $quality_custom_notice="display:none";
         }
         else if($quality=="lossy_plus")
         {
@@ -702,6 +717,7 @@ class CompressX_Dashboard
             $quality_lossy_plus="checked";
             $quality_lossy_super="";
             $quality_custom="";
+            $quality_custom_notice="display:none";
         }
         else if($quality=="lossy_super")
         {
@@ -711,6 +727,7 @@ class CompressX_Dashboard
             $quality_lossy_plus="";
             $quality_lossy_super="checked";
             $quality_custom="";
+            $quality_custom_notice="display:none";
         }
         else
         {
@@ -720,6 +737,7 @@ class CompressX_Dashboard
             $quality_lossy_plus="";
             $quality_lossy_super="";
             $quality_custom="checked";
+            $quality_custom_notice="";
         }
 
         if(CompressX_Image_Opt_Method::is_support_gd())
@@ -814,6 +832,20 @@ class CompressX_Dashboard
             $avif_support='disabled';
         }
 
+        $compression_level_url=admin_url(). 'admin.php?page=compression-level-compressx';
+
+        $cached = get_transient("compressx_set_global_stats");
+
+        if ($cached)
+        {
+            $cx_webp_saved=$cached['space_saved_webp_percent'].'%';
+            $cx_avif_saved=$cached['space_saved_avif_percent'].'%';
+        }
+        else
+        {
+            $cx_webp_saved='0%';
+            $cx_avif_saved='0%';
+        }
         ?>
         <article>
             <div class="compressx-general-settings-body-grid" style="border-bottom:1px solid #ddd;padding-bottom:0.8rem;">
@@ -824,8 +856,8 @@ class CompressX_Dashboard
                     </label><span style="padding-left:1rem;"><?php esc_html_e('Enable it to convert the new uploaded images.','compressx')?></span>
                 </div>
                 <div style="padding:0.4rem;">
-                    <span><span>Total Savings: </span><span>AVIF: </span><span id="cx_avif_saved">0%</span><span style="padding: 0 0.2rem;">|</span>
-                    <span>Webp: </span><span id="cx_webp_saved">0%</span></span>
+                    <span><span>Total Savings: </span><span>AVIF: </span><span id="cx_avif_saved"><?php echo esc_html($cx_avif_saved); ?></span><span style="padding: 0 0.2rem;">|</span>
+                    <span>Webp: </span><span id="cx_webp_saved"><?php echo esc_html($cx_webp_saved); ?></span></span>
                 </div>
             </div>
             <div class="compressx-general-settings-body-grid">
@@ -890,6 +922,41 @@ class CompressX_Dashboard
                             <span id="cx_save_convert_format" class="success hidden" aria-hidden="true" style="color:#007017"><?php esc_html_e('Saved!','compressx')?></span>
                         </div>
                     </div>
+                    <div class="compressx-general-settings-body">
+                        <div class="cx-title">
+                            <span>
+                                <strong>Watermark</strong>
+                            </span>
+                            <span style="padding:0 0.1rem"></span>
+                            <span>
+                                <a href="https://compressx.io">(Pro only)</a>
+                            </span>
+                            <span class="compressx-dashicons-help compressx-tooltip">
+                                <a href="#"><span class="dashicons dashicons-editor-help"></span></a>
+                                <div class="compressx-bottom">
+                                    <!-- The content you need -->
+                                    <p>
+                                        <span>Enable this option to automatically tag newly uploaded images, making them ready for batch watermarking. This feature allows you to easily identify and process recent uploads for watermark application, streamlining your image protection process.</span>
+                                    </p>
+                                    <i></i> <!-- do not delete this line -->
+                                </div>
+                            </span>
+                            <p>
+                                <span>
+                                    <label class="compressx-switch" title="">
+                                        <input type="checkbox" disabled>
+                                        <span class="compressx-slider compressx-round"></span>
+                                    </label>
+                                    <span style="padding:0 0.2rem;"></span>
+                                    <span>Mark New Uploads for Watermarking</span>
+                                     <span style="padding:0 0.1rem"></span>
+                                    <span><a href="https://compressx.io">(Pro only)</a></span>
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div>
                     <div class="compressx-general-settings-body" style="margin-bottom: 0;">
                         <div class="cx-title">
                             <span><strong><?php esc_html_e('Compression Level','compressx')?></strong></span>
@@ -932,53 +999,9 @@ class CompressX_Dashboard
 
                                 <span id="cx_save_compression_level" class="success hidden" aria-hidden="true" style="color:#007017">Saved!</span>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div class="compressx-general-settings-body">
-                        <div class="cx-title">
-                            <span>
-                                <strong>Watermark</strong>
-                            </span>
-                            <span style="padding:0 0.1rem"></span>
-                            <span>
-                                <a href="https://compressx.io">(Pro only)</a>
-                            </span>
-                            <span class="compressx-dashicons-help compressx-tooltip">
-                                <a href="#"><span class="dashicons dashicons-editor-help"></span></a>
-                                <div class="compressx-bottom">
-                                    <!-- The content you need -->
-                                    <p>
-                                        <span>Add watermark to images during upload or bulk processing. You can configure watermark settings to suit your needs.</span>
-                                    </p>
-                                    <i></i> <!-- do not delete this line -->
-                                </div>
-                            </span>
-                            <p>
-                                <span>
-                                    <label class="compressx-switch" title="">
-                                        <input type="checkbox" disabled>
-                                        <span class="compressx-slider compressx-round"></span>
-                                    </label>
-                                    <span style="padding:0 0.2rem;"></span>
-                                    <span>Apply watermark during bulk processing</span>
-                                    <span style="padding:0 0.1rem"></span>
-                                    <span><a href="https://compressx.io">(Pro only)</a></span>
-                                </span>
-                            </p>
-                            <p>
-                                <span>
-                                    <label class="compressx-switch" title="">
-                                        <input type="checkbox" disabled>
-                                        <span class="compressx-slider compressx-round"></span>
-                                    </label>
-                                    <span style="padding:0 0.2rem;"></span>
-                                    <span>Apply watermark when uploading new images</span>
-                                     <span style="padding:0 0.1rem"></span>
-                                    <span><a href="https://compressx.io">(Pro only)</a></span>
-                                </span>
-                            </p>
+                            <!--p id="cx_custom_notice" style="padding-left:0.5rem;<?php //echo esc_attr($quality_custom_notice); ?>">
+                                <a href="<?php //echo esc_url( $compression_level_url);?>">Configure <strong>Advanced Custom Compression Level</strong> settings</a>
+                            </p-->
                         </div>
                     </div>
                 </div>
@@ -990,7 +1013,17 @@ class CompressX_Dashboard
     public function output_custom_compression_setting()
     {
         $options=CompressX_Options::get_option('compressx_quality',array());
-        $quality_custom_style="display:none";
+
+        $quality=isset($options['quality'])?$options['quality']:'lossy';
+        if($quality=="custom")
+        {
+            $quality_custom_style="";
+        }
+        else
+        {
+            $quality_custom_style="display:none";
+        }
+
         $quality_webp=isset($options['quality_webp'])?$options['quality_webp']: 80;
         $quality_avif=isset($options['quality_avif'])?$options['quality_avif']: 60;
         ?>
@@ -1005,17 +1038,16 @@ class CompressX_Dashboard
                     </div>
                     <div class="compressx-general-settings-body">
                         <div class="compressx-general-settings-body-grid">
-                            <div class="compressing-converting">
-                                <div class="compressing-strategy-custom">
-                                    <span class="custom-webp"><span><strong>Webp: </strong></span>
-                                        <span><input type="text" id="cx_quality_webp" value="<?php echo esc_attr($quality_webp); ?>" style="width: 3rem;"></span>
-                                        <span><?php esc_html_e(', while maintaining better image quality.','compressx')?></span>
-                                    </span>
-                                    <span class="custom-webp"><span><strong>AVIF: </strong></span>
-                                        <span><input type="text" id="cx_quality_avif" value="<?php echo esc_attr($quality_avif); ?>" style="width: 3rem;"></span>
-                                        <span><?php esc_html_e(', while maintaining better image quality.','compressx')?></span>
-                                    </span>
-                                </div>
+                            <div>
+                                <span>
+                                    <input type="radio" checked><span><strong>Global compression level</strong></span>
+                                </span>
+                                <p style="padding-left: 2rem;">
+                                    <span>Webp<input type="text" style="width: 2.5rem;" id="cx_quality_webp" value="<?php echo esc_attr($quality_webp); ?>"></span>
+                                    <span style="padding: 0 0.5rem;"></span>
+                                    <span>AVIF<input type="text" style="width: 2.5rem;" id="cx_quality_avif" value="<?php echo esc_attr($quality_avif); ?>"></span>
+                                </p>
+                                <p style="padding-left: 2rem;"><a href="<?php echo esc_url( admin_url("admin.php")."?page=addons-compressx" ); ?>">Advanced compression level</a></p>
                             </div>
                             <div class="compressing-converting">
                                 <div class="compressing-converting-information">
@@ -1329,17 +1361,26 @@ class CompressX_Dashboard
             {
                 $htaccess="checked";
                 $picture="";
+                $compat_htaccess="";
+            }
+            else if($options['image_load']=="compat_htaccess")
+            {
+                $htaccess="";
+                $picture="";
+                $compat_htaccess="checked";
             }
             else
             {
                 $htaccess="";
                 $picture="checked";
+                $compat_htaccess="";
             }
         }
         else
         {
             $htaccess="checked";
             $picture="";
+            $compat_htaccess="";
         }
 
         $converter_images_pre_request=isset($options['converter_images_pre_request'])?$options['converter_images_pre_request']:5;
@@ -1374,6 +1415,11 @@ class CompressX_Dashboard
                                 </p>
                                 <p style="padding-left: 1rem;">
                                     <span>
+                                        <input type="radio" option="others_setting" name="image_load" value="compat_htaccess" <?php echo esc_attr($compat_htaccess); ?> ><?php esc_html_e('Compatible Rewrite Rule (Beta)','compressx')?>
+                                    </span>
+                                </p>
+                                <p style="padding-left: 1rem;">
+                                    <span>
                                         <input type="radio" option="others_setting" name="image_load" value="picture" <?php echo esc_attr($picture); ?> ><?php esc_html_e('Use picture tag','compressx')?>
                                     </span>
                                 </p>
@@ -1381,6 +1427,9 @@ class CompressX_Dashboard
                             <div class="compressing-converting" style="margin-top: 0rem;">
                                 <div class="compressing-converting-information">
                                     <span><?php esc_html_e('Rewrite rule:Load WebP and AVIF images by adding rewrite rules to the .htaccess file. So if the browser supports AVIF, AVIF images will be loaded. If AVIF is not supported, WebP images will be loaded. If both formats are not supported, the original .jpg and .png images will be loaded if any.The \'.htaccess\' refers to \'/wp-content/.htaccess\'.','compressx')?></span>
+                                    <p>
+                                        <span><?php esc_html_e('Compatible Rewrite Rule (Beta): An alternative set of rewrite rules for broader server compatibility. Try it when the standard "Rewrite Rule" fails.','compressx')?></span>
+                                    </p>
                                     <p>
                                         <span><?php esc_html_e('Picture tag: Load WebP and AVIF images by replacing <img> tags with <picture> tags. You can use it when .htaccess can not take effect on your server. For example, if you are not able to restart an OpenLiteSpeed server which is required for .htaccess to take effect. This method works for most browsers but does not support images in CSS.','compressx')?></span>
                                     </p>
@@ -1663,11 +1712,11 @@ class CompressX_Dashboard
             if(isset($setting['quality']))
             {
                 $options['quality']=$setting['quality'];
-                if($options['quality']=="custom")
+                /*if($options['quality']=="custom")
                 {
                     $options['quality_webp']=isset($setting['quality_webp'])?$setting['quality_webp']: 80;
                     $options['quality_avif']=isset($setting['quality_avif'])?$setting['quality_avif']: 60;
-                }
+                }*/
 
                 CompressX_Options::update_option('compressx_quality',$options);
             }
@@ -1808,7 +1857,18 @@ class CompressX_Dashboard
             }
 
             if(isset($setting['image_load']))
+            {
+                if(!isset($options['image_load']))
+                {
+                    $options['image_load']='htaccess';
+                }
+
+                if($options['image_load']!=$setting['image_load'])
+                    $reset_rewrite=true;
+
                 $options['image_load']=$setting['image_load'];
+            }
+
 
             if(isset($setting['resize']))
                 $options['resize']['enable']=$setting['resize'];
@@ -1836,6 +1896,17 @@ class CompressX_Dashboard
 
                     $rewrite=new CompressX_Webp_Rewrite();
                     $rewrite->create_rewrite_rules();
+                    $ret['test']='1';
+                }
+            }
+            else if($options['image_load']=='compat_htaccess')
+            {
+                if( $reset_rewrite)
+                {
+                    include_once COMPRESSX_DIR . '/includes/class-compressx-webp-rewrite.php';
+
+                    $rewrite=new CompressX_Webp_Rewrite();
+                    $rewrite->create_rewrite_rules_ex();
                     $ret['test']='1';
                 }
             }

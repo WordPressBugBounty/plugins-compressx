@@ -14,6 +14,11 @@ class CompressX_Webp_Rewrite
         $this->create_uploads_rules();
     }
 
+    public function create_rewrite_rules_ex()
+    {
+        $this->create_wp_content_rules_ex();
+        $this->create_uploads_rules_ex();
+    }
     public function transfer_path($path)
     {
         return preg_replace( '/(\/|\\\\)/', '/', rtrim( $path, '\/' ) );
@@ -35,9 +40,6 @@ class CompressX_Webp_Rewrite
 
     public function create_wp_content_rules()
     {
-        $options=CompressX_Options::get_option('compressx_general_settings',array());
-        $remove_thumbnails=isset($options['remove_thumbnails'])?$options['remove_thumbnails']:false;
-
         $document_root=$this->transfer_path($_SERVER['DOCUMENT_ROOT']);
         $document_root_real=$this->transfer_path(realpath( $_SERVER['DOCUMENT_ROOT'] ));
         $wordpress_root=$this->get_wordpress_root();
@@ -61,17 +63,10 @@ class CompressX_Webp_Rewrite
         $line[]='RewriteEngine On';
         $line[]='RewriteOptions Inherit';
         $line[]='RewriteCond %{QUERY_STRING} original$';
-        if(!$remove_thumbnails)
-        {
-            $line[]='RewriteCond %{REQUEST_FILENAME} -f';
-        }
+
         $line[]='RewriteRule . - [L]';
 
         $line[]='RewriteCond %{HTTP_ACCEPT} image/avif';
-        if(!$remove_thumbnails)
-        {
-            $line[]='RewriteCond %{REQUEST_FILENAME} -f';
-        }
 
         if($document_root2=='%{DOCUMENT_ROOT}')
         {
@@ -92,10 +87,6 @@ class CompressX_Webp_Rewrite
         }
 
         $line[]='RewriteCond %{HTTP_ACCEPT} image/avif';
-        if(!$remove_thumbnails)
-        {
-            $line[]='RewriteCond %{REQUEST_FILENAME} -f';
-        }
 
         if($document_root2=='%{DOCUMENT_ROOT}')
         {
@@ -116,10 +107,6 @@ class CompressX_Webp_Rewrite
         }
 
         $line[]='RewriteCond %{HTTP_ACCEPT} image/avif';
-        if(!$remove_thumbnails)
-        {
-            $line[]='RewriteCond %{REQUEST_FILENAME} -f';
-        }
 
         if($document_root2=='%{DOCUMENT_ROOT}')
         {
@@ -140,10 +127,6 @@ class CompressX_Webp_Rewrite
         }
 
         $line[]='RewriteCond %{HTTP_ACCEPT} image/avif';
-        if(!$remove_thumbnails)
-        {
-            $line[]='RewriteCond %{REQUEST_FILENAME} -f';
-        }
 
         if($document_root2=='%{DOCUMENT_ROOT}')
         {
@@ -165,10 +148,6 @@ class CompressX_Webp_Rewrite
 
 
         $line[]='RewriteCond %{HTTP_ACCEPT} image/avif';
-        if(!$remove_thumbnails)
-        {
-            $line[]='RewriteCond %{REQUEST_FILENAME} -f';
-        }
 
         if($document_root2=='%{DOCUMENT_ROOT}')
         {
@@ -190,10 +169,7 @@ class CompressX_Webp_Rewrite
 
 
         $line[]='RewriteCond %{HTTP_ACCEPT} image/webp';
-        if(!$remove_thumbnails)
-        {
-            $line[]='RewriteCond %{REQUEST_FILENAME} -f';
-        }
+
         if($document_root2=='%{DOCUMENT_ROOT}')
         {
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.webp -f';
@@ -214,10 +190,6 @@ class CompressX_Webp_Rewrite
 
 
         $line[]='RewriteCond %{HTTP_ACCEPT} image/webp';
-        if(!$remove_thumbnails)
-        {
-            $line[]='RewriteCond %{REQUEST_FILENAME} -f';
-        }
 
         if($document_root2=='%{DOCUMENT_ROOT}')
         {
@@ -238,10 +210,6 @@ class CompressX_Webp_Rewrite
         }
 
         $line[]='RewriteCond %{HTTP_ACCEPT} image/webp';
-        if(!$remove_thumbnails)
-        {
-            $line[]='RewriteCond %{REQUEST_FILENAME} -f';
-        }
 
         if($document_root2=='%{DOCUMENT_ROOT}')
         {
@@ -262,10 +230,6 @@ class CompressX_Webp_Rewrite
         }
 
         $line[]='RewriteCond %{HTTP_ACCEPT} image/webp';
-        if(!$remove_thumbnails)
-        {
-            $line[]='RewriteCond %{REQUEST_FILENAME} -f';
-        }
 
         if($document_root2=='%{DOCUMENT_ROOT}')
         {
@@ -304,9 +268,6 @@ class CompressX_Webp_Rewrite
 
     public function create_uploads_rules()
     {
-        $options=CompressX_Options::get_option('compressx_general_settings',array());
-        $remove_thumbnails=isset($options['remove_thumbnails'])?$options['remove_thumbnails']:false;
-
         $document_root=$this->transfer_path($_SERVER['DOCUMENT_ROOT']);
         $document_root_real=$this->transfer_path(realpath( $_SERVER['DOCUMENT_ROOT'] ));
 
@@ -332,17 +293,9 @@ class CompressX_Webp_Rewrite
         $line[]='RewriteEngine On';
         $line[]='RewriteOptions Inherit';
         $line[]='RewriteCond %{QUERY_STRING} original$';
-        if(!$remove_thumbnails)
-        {
-            $line[]='RewriteCond %{REQUEST_FILENAME} -f';
-        }
         $line[]='RewriteRule . - [L]';
 
         $line[]='RewriteCond %{HTTP_ACCEPT} image/avif';
-        if(!$remove_thumbnails)
-        {
-            $line[]='RewriteCond %{REQUEST_FILENAME} -f';
-        }
 
         if($document_root2=='%{DOCUMENT_ROOT}')
         {
@@ -363,10 +316,6 @@ class CompressX_Webp_Rewrite
         }
 
         $line[]='RewriteCond %{HTTP_ACCEPT} image/avif';
-        if(!$remove_thumbnails)
-        {
-            $line[]='RewriteCond %{REQUEST_FILENAME} -f';
-        }
 
         if($document_root2=='%{DOCUMENT_ROOT}')
         {
@@ -387,10 +336,6 @@ class CompressX_Webp_Rewrite
         }
 
         $line[]='RewriteCond %{HTTP_ACCEPT} image/avif';
-        if(!$remove_thumbnails)
-        {
-            $line[]='RewriteCond %{REQUEST_FILENAME} -f';
-        }
 
         if($document_root2=='%{DOCUMENT_ROOT}')
         {
@@ -411,10 +356,6 @@ class CompressX_Webp_Rewrite
         }
 
         $line[]='RewriteCond %{HTTP_ACCEPT} image/avif';
-        if(!$remove_thumbnails)
-        {
-            $line[]='RewriteCond %{REQUEST_FILENAME} -f';
-        }
 
         if($document_root2=='%{DOCUMENT_ROOT}')
         {
@@ -436,10 +377,6 @@ class CompressX_Webp_Rewrite
 
 
         $line[]='RewriteCond %{HTTP_ACCEPT} image/avif';
-        if(!$remove_thumbnails)
-        {
-            $line[]='RewriteCond %{REQUEST_FILENAME} -f';
-        }
 
         if($document_root2=='%{DOCUMENT_ROOT}')
         {
@@ -461,10 +398,7 @@ class CompressX_Webp_Rewrite
 
 
         $line[]='RewriteCond %{HTTP_ACCEPT} image/webp';
-        if(!$remove_thumbnails)
-        {
-            $line[]='RewriteCond %{REQUEST_FILENAME} -f';
-        }
+
         if($document_root2=='%{DOCUMENT_ROOT}')
         {
             $line[]='RewriteCond %{DOCUMENT_ROOT}'.$upload_root.'/$1.webp -f';
@@ -485,10 +419,6 @@ class CompressX_Webp_Rewrite
 
 
         $line[]='RewriteCond %{HTTP_ACCEPT} image/webp';
-        if(!$remove_thumbnails)
-        {
-            $line[]='RewriteCond %{REQUEST_FILENAME} -f';
-        }
 
         if($document_root2=='%{DOCUMENT_ROOT}')
         {
@@ -509,10 +439,6 @@ class CompressX_Webp_Rewrite
         }
 
         $line[]='RewriteCond %{HTTP_ACCEPT} image/webp';
-        if(!$remove_thumbnails)
-        {
-            $line[]='RewriteCond %{REQUEST_FILENAME} -f';
-        }
 
         if($document_root2=='%{DOCUMENT_ROOT}')
         {
@@ -533,10 +459,6 @@ class CompressX_Webp_Rewrite
         }
 
         $line[]='RewriteCond %{HTTP_ACCEPT} image/webp';
-        if(!$remove_thumbnails)
-        {
-            $line[]='RewriteCond %{REQUEST_FILENAME} -f';
-        }
 
         if($document_root2=='%{DOCUMENT_ROOT}')
         {
@@ -570,5 +492,133 @@ class CompressX_Webp_Rewrite
         $path=$upload_dir['basedir'];
         $htaccess_file=$path . '/.htaccess';
         insert_with_markers($htaccess_file,'CompressX','');
+    }
+
+    public function create_wp_content_rules_ex()
+    {
+        $doc_root = rtrim(str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']), '/');
+        $abs_path = rtrim(str_replace('\\', '/', ABSPATH), '/');
+        $prefix = '';
+        if (strpos($abs_path, $doc_root) === 0) {
+            $subdir = substr($abs_path, strlen($doc_root));
+            $prefix = rtrim($subdir, '/');
+        }
+        $prefix = $prefix ? '/' . ltrim($prefix, '/') : '';
+        $disable_cache_control = isset($options['disable_cache_control']) ? $options['disable_cache_control'] : false;
+
+        $lines = [];
+        $lines[] = '<IfModule mod_rewrite.c>';
+        $lines[] = 'RewriteEngine On';
+        $lines[] = 'RewriteCond %{QUERY_STRING} original$';
+        $lines[] = 'RewriteRule . - [L]';
+        $lines[] = '';
+
+        // AVIF
+        $lines[] = '# AVIF';
+
+        $lines[] = 'RewriteCond %{DOCUMENT_ROOT}' . $prefix . '/wp-content/compressx-nextgen/$1.$2 -f';
+        $lines[] = 'RewriteRule ^(?:.*wp-content/)?(.+)\.(avif)$ ' . $prefix . '/wp-content/compressx-nextgen/$1.$2 [T=image/avif,L]';
+        $lines[] = '';
+
+        // WebP
+        $lines[] = '# WebP';
+
+        $lines[] = 'RewriteCond %{DOCUMENT_ROOT}' . $prefix . '/wp-content/compressx-nextgen/$1.$2 -f';
+        $lines[] = 'RewriteRule ^(?:.*wp-content/)?(.+)\.(webp)$ ' . $prefix . '/wp-content/compressx-nextgen/$1.$2 [T=image/webp,L]';
+        $lines[] = '';
+
+        // JPG/PNG → AVIF
+        $lines[] = '# JPG/PNG → AVIF';
+        $lines[] = 'RewriteCond %{HTTP_ACCEPT} image/avif';
+
+        $lines[] = 'RewriteCond %{DOCUMENT_ROOT}' . $prefix . '/wp-content/compressx-nextgen/$1.$2.avif -f';
+        $lines[] = 'RewriteRule ^(?:.*wp-content/)?(.+)\.(jpe?g|png)$ ' . $prefix . '/wp-content/compressx-nextgen/$1.$2.avif [T=image/avif,L]';
+        $lines[] = '';
+
+        // JPG/PNG → WebP
+        $lines[] = '# JPG/PNG → WebP';
+        $lines[] = 'RewriteCond %{HTTP_ACCEPT} image/webp';
+
+        $lines[] = 'RewriteCond %{DOCUMENT_ROOT}' . $prefix . '/wp-content/compressx-nextgen/$1.$2.webp -f';
+        $lines[] = 'RewriteRule ^(?:.*wp-content/)?(.+)\.(jpe?g|png)$ ' . $prefix . '/wp-content/compressx-nextgen/$1.$2.webp [T=image/webp,L]';
+        $lines[] = '';
+
+        $lines[] = '</IfModule>';
+
+        if (!$disable_cache_control) {
+            $lines[] = '<IfModule mod_headers.c>';
+            $lines[] = '<FilesMatch "(?i)\.(jpg|png|webp|jpeg)(\.(webp|avif))?$">';
+            $lines[] = 'Header always set Cache-Control "private"';
+            $lines[] = 'Header append Vary "Accept"';
+            $lines[] = '</FilesMatch>';
+            $lines[] = '</IfModule>';
+        }
+
+        $target_path = WP_CONTENT_DIR . '/.htaccess';
+        insert_with_markers($target_path, 'CompressX', $lines);
+    }
+
+    public function create_uploads_rules_ex()
+    {
+        $doc_root = rtrim(str_replace(['\\', '/'], '/', $_SERVER['DOCUMENT_ROOT']), '/');
+        $abs_path = rtrim(str_replace(['\\', '/'], '/', ABSPATH), '/');
+        $prefix = '';
+        if (strpos($abs_path, $doc_root) === 0) {
+            $subdir = substr($abs_path, strlen($doc_root));
+            $prefix = rtrim($subdir, '/');
+        }
+        $prefix = $prefix ? '/' . ltrim($prefix, '/') : '';
+
+        $upload_dir = wp_get_upload_dir();
+        $upload_basedir = rtrim(str_replace(['\\', '/'], '/', $upload_dir['basedir']), '/');
+        $wp_content_dir = rtrim(str_replace(['\\', '/'], '/', WP_CONTENT_DIR), '/');
+        $upload_relative_path = ltrim(str_replace($wp_content_dir, '', $upload_basedir), '/');
+        $upload_prefix = $prefix . '/wp-content/compressx-nextgen/' . $upload_relative_path;
+        $upload_folder = trim(str_replace($abs_path, '', $upload_basedir), '/');
+
+        $filename_match = '(.+)';
+        $upload_rule_base = '^(?:.*' . preg_quote($upload_folder, '/') . '/)?' . $filename_match . '\.(%s)$';
+
+        $lines = [];
+        $lines[] = '<IfModule mod_rewrite.c>';
+        $lines[] = 'RewriteEngine On';
+        $lines[] = 'RewriteCond %{QUERY_STRING} original$';
+        $lines[] = 'RewriteRule . - [L]';
+        $lines[] = '';
+
+        //
+        $lines[] = '# AVIF';
+
+        $lines[] = 'RewriteCond %{DOCUMENT_ROOT}' . $prefix . '/wp-content/compressx-nextgen/' . $upload_relative_path . '/$1.$2 -f';
+        $lines[] = 'RewriteRule ' . sprintf($upload_rule_base, 'avif') . ' ' . $upload_prefix . '/$1.avif [T=image/avif,L]';
+        $lines[] = '';
+
+        //
+        $lines[] = '# WebP';
+
+        $lines[] = 'RewriteCond %{DOCUMENT_ROOT}' . $prefix . '/wp-content/compressx-nextgen/' . $upload_relative_path . '/$1.$2 -f';
+        $lines[] = 'RewriteRule ' . sprintf($upload_rule_base, 'webp') . ' ' . $upload_prefix . '/$1.webp [T=image/webp,L]';
+        $lines[] = '';
+
+        // JPG/PNG → AVIF
+        $lines[] = '# JPG/PNG → AVIF';
+        $lines[] = 'RewriteCond %{HTTP_ACCEPT} image/avif';
+
+        $lines[] = 'RewriteCond %{DOCUMENT_ROOT}' . $prefix . '/wp-content/compressx-nextgen/' . $upload_relative_path . '/$1.$2.avif -f';
+        $lines[] = 'RewriteRule ' . sprintf($upload_rule_base, 'jpe?g|png') . ' ' . $upload_prefix . '/$1.$2.avif [T=image/avif,L]';
+        $lines[] = '';
+
+        // JPG/PNG → WebP
+        $lines[] = '# JPG/PNG → WebP';
+        $lines[] = 'RewriteCond %{HTTP_ACCEPT} image/webp';
+
+        $lines[] = 'RewriteCond %{DOCUMENT_ROOT}' . $prefix . '/wp-content/compressx-nextgen/' . $upload_relative_path . '/$1.$2.webp -f';
+        $lines[] = 'RewriteRule ' . sprintf($upload_rule_base, 'jpe?g|png') . ' ' . $upload_prefix . '/$1.$2.webp [T=image/webp,L]';
+        $lines[] = '';
+
+        $lines[] = '</IfModule>';
+
+        $target_path = $upload_basedir . '/.htaccess';
+        insert_with_markers($target_path, 'CompressX', $lines);
     }
 }

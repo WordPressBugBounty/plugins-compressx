@@ -9,6 +9,7 @@ class CompressX_Display
     public $log;
     public $system_info;
     public $cdn;
+    public $compression;
     public $addons;
 
     public function __construct()
@@ -60,6 +61,7 @@ class CompressX_Display
             $screen_ids[]='compressx_page_logs-compressx';
             $screen_ids[]='compressx_page_cdn-compressx';
             $screen_ids[]='compressx_page_addons-compressx';
+            $screen_ids[]='compressx_page_compression-level-compressx';
         }
 
         $screen_ids=apply_filters('compressx_get_screen_ids',$screen_ids);
@@ -82,6 +84,7 @@ class CompressX_Display
         $screen_ids[]='compressx_page_info-compressx';
         $screen_ids[]='compressx_page_logs-compressx';
         $screen_ids[]='compressx_page_cdn-compressx';
+        $screen_ids[]='compressx_page_compression-level-compressx';
         $screen_ids=apply_filters('compressx_get_screen_ids',$screen_ids);
 
         if(in_array(get_current_screen()->id,$screen_ids))

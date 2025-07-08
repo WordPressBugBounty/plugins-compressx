@@ -65,7 +65,7 @@
     padding: 0.3rem 0.5rem;
     font-size: 0.8rem;
     border: 1px solid var(--color-grey);
-    border-radius: 0.4rem;
+    border-radius: 0.2rem;
     cursor: pointer;
 }
 #compressx-wrap .cx-radio-toolbar input[type="radio"]:checked + label {
@@ -136,8 +136,8 @@ a {
 .compressx-container .cx-switch {
     position: relative;
     display: inline-block;
-    width: 60px;
-    height: 34px;
+    width: 40px;
+    height: 20px;
 }
 
 /* Hide default HTML checkbox */
@@ -163,10 +163,10 @@ a {
 .compressx-container .cx-slider:before {
     position: absolute;
     content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
     background-color: white;
     -webkit-transition: .4s;
     transition: .4s;
@@ -181,13 +181,13 @@ a {
 }
 
 .compressx-container input:checked + .cx-slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
+    -webkit-transform: translateX(20px);
+    -ms-transform: translateX(20px);
+    transform: translateX(20px);
 }
 /* Rounded sliders */
 .compressx-container .cx-slider.cx-round {
-    border-radius: 34px;
+    border-radius: 20px;
 }
 
 .compressx-container .cx-slider.cx-round:before {
@@ -839,10 +839,152 @@ a {
     background-color: var(--color-notification);
     padding: 1rem;
 }
+.compressx-compression-level{
+    display: flex;
+    gap: 20px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+.compressx-compression-level-items{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.compressx-compression-level-item-high{
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align:middle;
+    border-radius: 2px;
+}
 .compressing-converting-information .dashicons-lightbulb{
     color:var(--color-light-blue);
 }
-
+.compressx-4-cols{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+.compressx-4-cols-single-col{
+    padding: 0rem 1rem 1rem 1rem;
+    border: 1px solid var(--color-grey);
+    background-color: var(--color-bg-block);
+    border-radius: 3px;
+}
+.compressx-4-cols-single-col h5{
+    font-size: 1rem;
+    color: var(--color-light-blue-2);
+}
+/******************************Compressx table******************************************************/
+.compressx-table{
+    margin-bottom: 1rem;
+}
+.compressx-table-5-cols-header{
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    gap: 1rem;
+    border-top: 1px solid var(--color-grey);
+    border-bottom: 1px solid var(--color-grey);
+    background-color:var(--color-light-grey);
+    padding: 0.5rem;
+}
+.compressx-table-5-cols-body{
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    gap: 1rem;
+    border-bottom: 1px solid var(--color-dark-grey);
+    padding: 1rem 0;
+    padding-left: 0.5rem;
+}
+.compressx-table-5-cols-body:hover{
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1frr;
+    gap: 1rem;
+    border-bottom: 1px solid var(--color-dark-grey);
+    padding: 1rem 0;
+    background-color: var(--color-notification);
+    padding-left: 0.5rem;
+}
+.compressx-table-5-cols-footer{
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    gap: 1rem;
+    border-top: 1px solid var(--color-grey);
+    border-bottom: 1px solid var(--color-grey);
+    background-color:var(--color-light-grey);
+    padding: 0.5rem;
+}
+.compressx-table-4-cols-header{
+    display: grid;
+    grid-template-columns: 2fr 1fr 2fr 1fr;
+    gap: 1rem;
+    border-top: 1px solid var(--color-grey);
+    border-bottom: 1px solid var(--color-grey);
+    background-color:var(--color-light-grey);
+    padding: 0.5rem;
+}
+.compressx-table-4-cols-body{
+    display: grid;
+    grid-template-columns: 2fr 1fr 2fr 1fr;
+    gap: 1rem;
+    border-bottom: 1px solid var(--color-dark-grey);
+    padding: 1rem 0;
+    padding-left: 0.5rem;
+}
+.compressx-table-4-cols-body:hover{
+    display: grid;
+    grid-template-columns: 2fr 1fr 2fr 1fr;
+    gap: 1rem;
+    border-bottom: 1px solid var(--color-dark-grey);
+    padding: 1rem 0;
+    background-color: var(--color-notification);
+    padding-left: 0.5rem;
+}
+.compressx-table-4-cols-footer{
+    display: grid;
+    grid-template-columns: 2fr 1fr 3fr;
+    gap: 1rem;
+    border-top: 1px solid var(--color-grey);
+    border-bottom: 1px solid var(--color-grey);
+    background-color:var(--color-light-grey);
+    padding: 0.5rem;
+}
+.compressx-table-3-cols-header{
+    display: grid;
+    grid-template-columns: 2fr 1fr 3fr;
+    gap: 1rem;
+    border-top: 1px solid var(--color-grey);
+    border-bottom: 1px solid var(--color-grey);
+    background-color:var(--color-light-grey);
+    padding: 0.5rem;
+}
+.compressx-table-3-cols-body{
+    display: grid;
+    grid-template-columns: 2fr 1fr 3fr;
+    gap: 1rem;
+    border-bottom: 1px solid var(--color-dark-grey);
+    padding: 1rem 0;
+    padding-left: 0.5rem;
+}
+.compressx-table-3-cols-body:hover{
+    display: grid;
+    grid-template-columns: 2fr 1fr 3fr;
+    gap: 1rem;
+    border-bottom: 1px solid var(--color-dark-grey);
+    padding: 1rem 0;
+    background-color: var(--color-notification);
+    padding-left: 0.5rem;
+}
+.compressx-table-3-cols-footer{
+    display: grid;
+    grid-template-columns: 2fr 1fr 3fr;
+    gap: 1rem;
+    border-top: 1px solid var(--color-grey);
+    border-bottom: 1px solid var(--color-grey);
+    background-color:var(--color-light-grey);
+    padding: 0.5rem;
+}
 /*=============================Compressx Bulk Optimization========================================*/
 
 .compressx-bulk-process{
@@ -972,6 +1114,11 @@ a {
     content: none;
 }
 /*=============================Compressx step bar ends=======================================*/
+/******************************CompressX Offload**********************************************/
+.cx-offload-border-bottom{
+    border-bottom: 1px solid var(--color-grey);
+    margin-bottom: 1rem;
+}
 /*=============================Compressx Addons Starts========================================*/
 .compressx-container .cx-addons {
     border: 1px solid var(--color-grey);
@@ -994,6 +1141,12 @@ a {
     color: var(--color-title);
 }
 /*=============================Compressx Addons End========================================*/
+
+/******************************Compressx Advanced Rules************************************/
+.compresx-add-advanced-rules-section{
+
+    margin-bottom: 1rem;
+}
 /*=============================Compressx Lazyload========================================*/
 .compressx-general-settings-body .compressx-lazyload .compressx-lazyload-information{
     border: 1px solid var(--color-grey);
@@ -1004,10 +1157,7 @@ a {
 .compressx-general-settings-body .compressx-lazyload .compressx-lazyload-information .dashicons-lightbulb{
     color:var(--color-light-blue);
 }
-.compressing-converting label{
-    display:block;
-    grid-row-gap:1rem;
-}
+
 .compressx-general-settings-body .compressx-lazyload-settings,
 .compressx-general-settings-body .compressx-lazyload-location,
 .compressx-general-settings-body .compressx-lazyload-compat,

@@ -31,6 +31,8 @@ class CompressX
         include_once COMPRESSX_DIR . '/includes/class-compressx-image.php';
         include_once COMPRESSX_DIR . '/includes/class-compressx-options.php';
         include_once COMPRESSX_DIR . '/includes/class-compressx-imgoptim-task.php';
+        include_once COMPRESSX_DIR . '/includes/class-compressx-image-scanner.php';
+
         include_once COMPRESSX_DIR . '/includes/class-compressx-custom-imgoptim-task.php';
         include_once COMPRESSX_DIR. '/includes/class-compressx-log.php';
         include_once COMPRESSX_DIR . '/includes/class-compressx-auto-optimization.php';

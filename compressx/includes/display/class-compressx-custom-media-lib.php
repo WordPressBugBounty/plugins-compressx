@@ -236,7 +236,7 @@ class CompressX_Custom_Media_Lib
             'relation' => 'OR',
             array(
                 'key'     => 'compressx_image_meta_status',
-                'value' => 'unoptimized',
+                'value' => 'pending',
             ),
             array(
                 'key'     => 'compressx_image_meta_status',

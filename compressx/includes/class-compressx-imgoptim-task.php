@@ -48,8 +48,10 @@ class CompressX_ImgOptim_Task
         $this->task['retry']=0;
         $this->task['total_retry']=0;
 
-        $this->task['total_images']=CompressX_Options::get_option("compressx_need_optimized_images",0);
+        //$this->task['total_images']=CompressX_Options::get_option("compressx_need_optimized_images",0);
+        $this->task['total_images']=CompressX_Image_Scanner::get_need_optimize_images_count($force);
         $this->task['optimized_images']=0;
+        $this->task['skipped_images']=0;
         $this->task['opt_images']=0;
         $this->task['failed_images']=0;
 
@@ -70,6 +72,8 @@ class CompressX_ImgOptim_Task
         $general_options=CompressX_Options::get_general_settings();
         $quality_options=CompressX_Options::get_quality_option();
         $this->task['options']=array_merge($general_options,$quality_options);
+
+        $this->task['options']['exclude']=CompressX_Options::get_excludes();
     }
 
     public function WriteLog($log,$type)
@@ -144,6 +148,38 @@ class CompressX_ImgOptim_Task
     public function init_optimize_images()
     {
         $this->task['images']=array();
+
+        $max_count=200;
+        $force=$this->task['options']['force'];
+        $start_row=$this->task['offset'];
+        $image_ids=CompressX_Image_Scanner::get_need_optimize_images_by_cursor($start_row,$max_count,$force);
+        if(!empty($image_ids))
+        {
+            $last_id=$this->task['offset'];
+            foreach ($image_ids as $image_id)
+            {
+                $image['id']=$image_id;
+                $image['finished']=0;
+                $this->task['images'][$image['id']]=$image;
+                $last_id = $image_id;
+            }
+            $this->task['offset'] = $last_id;
+            $this->update_task();
+        }
+
+        if (empty($image_ids)||count($image_ids) < $max_count)
+        {
+            $finished=true;
+        }
+        else
+        {
+            $finished=false;
+        }
+        $ret['result']='success';
+        $ret['finished']=$finished;
+        return $ret;
+
+        /*
         $max_image_count=CompressX_Image_Method::get_max_image_count();
 
         $page=100;
@@ -208,7 +244,7 @@ class CompressX_ImgOptim_Task
 
         $ret['result']='success';
         $ret['finished']=$finished;
-        return $ret;
+        return $ret;*/
     }
 
     public function get_need_optimize_image()
@@ -320,38 +356,52 @@ class CompressX_ImgOptim_Task
             $this->task['last_update_time']=time();
             $this->update_task();
 
-            if($this->task['options']['force'])
+            if(CompressX_Image_Method::exclude_path($image_id,$this->task['options']['exclude']))
             {
-                CompressX_Image_Meta::generate_images_meta($image_id,$this->task['options']);
-            }
-
-            $this->WriteLog('Start optimizing images: id:'.$image_id,'notice');
-
-            $ret=$this->optimize_image($image_id);
-
-            if($ret['result']=='success')
-            {
-                $this->WriteLog('Optimizing image id:'.$image_id.' succeeded.','notice');
-
+                $this->WriteLog('Exclude images: id:'.$image_id,'notice');
                 $this->task['images'][$image_id]['finished']=1;
                 $this->task['last_update_time']=time();
                 $this->task['retry']=0;
                 $this->task['total_retry']=0;
-                $this->task['optimized_images']++;
+                $this->task['skipped_images']++;
                 $this->update_task();
-
-                do_action('compressx_after_optimize_image',$image_id);
             }
             else
             {
-                $this->WriteLog('Optimizing image failed. Error:'.$ret['error'],'error');
+                if($this->task['options']['force'])
+                {
+                    CompressX_Image_Meta::generate_images_meta($image_id,$this->task['options']);
+                }
 
-                $this->task['status']='error';
-                $this->task['error']=$ret['error'];
-                $this->task['last_update_time']=time();
-                $this->update_task();
-                return $ret;
+                $this->WriteLog('Start optimizing images: id:'.$image_id,'notice');
+
+                $ret=$this->optimize_image($image_id);
+
+                if($ret['result']=='success')
+                {
+                    $this->WriteLog('Optimizing image id:'.$image_id.' succeeded.','notice');
+
+                    $this->task['images'][$image_id]['finished']=1;
+                    $this->task['last_update_time']=time();
+                    $this->task['retry']=0;
+                    $this->task['total_retry']=0;
+                    $this->task['optimized_images']++;
+                    $this->update_task();
+
+                    do_action('compressx_after_optimize_image',$image_id);
+                }
+                else
+                {
+                    $this->WriteLog('Optimizing image failed. Error:'.$ret['error'],'error');
+
+                    $this->task['status']='error';
+                    $this->task['error']=$ret['error'];
+                    $this->task['last_update_time']=time();
+                    $this->update_task();
+                    return $ret;
+                }
             }
+
 
             $time_spend=time()-$time_start;
             if($time_spend>$max_timeout_limit)

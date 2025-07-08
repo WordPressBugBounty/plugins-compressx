@@ -67,7 +67,7 @@ class CompressX_System_Info
                         <div style="padding:10px 10px 0">
                     <span>
                         <?php esc_html_e('CompressX support email:', 'compressx'); ?>
-                    </span><input type="text" id="compressx_support_mail" value="support@wpvivid.com" readonly />
+                    </span><input type="text" id="compressx_support_mail" value="support@compressx.io" readonly />
                             <span>
                         <?php esc_html_e('Your email:', 'compressx'); ?>
                     </span>
@@ -558,7 +558,7 @@ class CompressX_System_Info
 
     public function _send_debug_info($user_email,$comment)
     {
-        $send_to = 'support@wpvivid.com';
+        $send_to = 'support@compressx.io';
         $subject = 'Debug Information';
         $body = '<div>User\'s email: '.$user_email.'.</div>';
         $body .= '<div>Comment: '.$comment.'.</div>';

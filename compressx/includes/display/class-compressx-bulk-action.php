@@ -17,9 +17,6 @@ class CompressX_Bulk_Action
         global $compressx;
         $compressx->ajax_check_security('compressx-can-convert');
 
-        delete_transient('compressx_set_global_stats');
-        $max_image_count=CompressX_Image_Method::get_max_image_count();
-
         $force=isset($_POST['force'])?sanitize_key($_POST['force']):'0';
         if($force=='1')
         {
@@ -30,6 +27,12 @@ class CompressX_Bulk_Action
             $force=false;
         }
 
+        $start_row=isset($_POST['offset'])?sanitize_key($_POST['offset']):0;
+
+        $ret=CompressX_Image_Scanner::scan_unoptimized_images($force,$start_row);
+        /*
+        $max_image_count=CompressX_Image_Method::get_max_image_count();
+
         $convert_to_webp=CompressX_Image_Method::get_convert_to_webp();
         $convert_to_avif=CompressX_Image_Method::get_convert_to_avif();
 
@@ -39,8 +42,8 @@ class CompressX_Bulk_Action
         $max_timeout_limit=21;
         $finished=true;
         $page=300;
-        $start_row=isset($_POST['offset'])?sanitize_key($_POST['offset']):'0';
-        $max_count=5000;
+
+        $max_count=500;
         if($start_row==0)
         {
             $need_optimize_images=0;
@@ -92,12 +95,11 @@ class CompressX_Bulk_Action
 
         $ret['result']='success';
         $ret['progress']=sprintf(
-        /* translators: %1$d: Scanning images*/
             __('Scanning images: %1$d found' ,'compressx'),
             $need_optimize_images);
         $ret['finished']=$finished;
         $ret['offset']=$offset;
-        $ret['test']=$max_image_count;
+        $ret['test']=$max_image_count;*/
 
         echo wp_json_encode($ret);
 

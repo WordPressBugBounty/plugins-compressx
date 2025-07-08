@@ -154,6 +154,12 @@ jQuery('#cx_save_custom_quality').click(function()
 jQuery('#cx_radioCustom').click(function()
 {
     jQuery('#cx_compressing_strategy_custom').show();
+
+    var json = {};
+    json['quality']='custom';
+    var setting_data=JSON.stringify(json);
+
+    compressx_save_compression_settings(setting_data);
 });
 
 jQuery('#cx_radioLossless').click(function()
@@ -346,6 +352,7 @@ function compressx_start_bulk_optimization()
             }
             else
             {
+                jQuery('#compressx_bulk_progress_2_text').html(jsonarray.progress);
                 compressx_scanning_images(jsonarray.offset);
             }
         }
@@ -409,6 +416,7 @@ function compressx_scanning_images(offset)
             }
             else
             {
+                jQuery('#compressx_bulk_progress_2_text').html(jsonarray.progress);
                 compressx_scanning_images(jsonarray.offset);
             }
         }
@@ -624,11 +632,13 @@ function compressx_update_overview()
             if (response.data.status === 'cached')
             {
                 const data = response.data;
-
-                jQuery('#cx_webp_saved').html(data.cached.space_saved_webp_percent+"%");
-                jQuery('#cx_avif_saved').html(data.cached.space_saved_avif_percent+"%");
-                jQuery('#cx_conversion_webp_percent').html(data.cached.conversion_webp_percent+"%<span class=\"cx-percent-sign\"> images</span>");
-                jQuery('#cx_conversion_avif_percent').html(data.cached.conversion_avif_percent+"%<span class=\"cx-percent-sign\"> images</span>");
+                if (data.cached.space_saved_webp_percent !== undefined)
+                {
+                    jQuery('#cx_webp_saved').html(data.cached.space_saved_webp_percent+"%");
+                    jQuery('#cx_avif_saved').html(data.cached.space_saved_avif_percent+"%");
+                    jQuery('#cx_conversion_webp_percent').html(data.cached.conversion_webp_percent+"%<span class=\"cx-percent-sign\"> images</span>");
+                    jQuery('#cx_conversion_avif_percent').html(data.cached.conversion_avif_percent+"%<span class=\"cx-percent-sign\"> images</span>");
+                }
             }
             else {
                 compressx_get_stats();
