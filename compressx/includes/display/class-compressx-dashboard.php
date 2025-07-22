@@ -1712,11 +1712,11 @@ class CompressX_Dashboard
             if(isset($setting['quality']))
             {
                 $options['quality']=$setting['quality'];
-                /*if($options['quality']=="custom")
+                if($options['quality']=="custom")
                 {
                     $options['quality_webp']=isset($setting['quality_webp'])?$setting['quality_webp']: 80;
                     $options['quality_avif']=isset($setting['quality_avif'])?$setting['quality_avif']: 60;
-                }*/
+                }
 
                 CompressX_Options::update_option('compressx_quality',$options);
             }
