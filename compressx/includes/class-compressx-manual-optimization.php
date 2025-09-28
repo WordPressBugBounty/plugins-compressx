@@ -209,6 +209,30 @@ class CompressX_Manual_Optimization
 
         $image=new Compressx_Image($attachment_id,$options);
 
+        if(empty($file_path))
+        {
+            $this->WriteLog('Image:'.$attachment_id.' failed. Error: failed to get get_attached_file','notice');
+
+            $error='Image:'.$attachment_id.' failed. Error: failed to get get_attached_file';
+            CompressX_Image_Meta::update_image_failed($attachment_id,$error);
+            CompressX_Image_Meta::delete_image_progressing($attachment_id);
+            CompressX_Image_Meta::update_image_meta_status($attachment_id,'failed');
+            $ret['result']='success';
+            return $ret;
+        }
+
+        if(!file_exists($file_path))
+        {
+            $this->WriteLog('Image:'.$attachment_id.' failed. Error: file not exists '.$file_path,'notice');
+
+            $error='Image:'.$attachment_id.' failed. Error: file not exists '.$file_path;
+            CompressX_Image_Meta::update_image_failed($attachment_id,$error);
+            CompressX_Image_Meta::delete_image_progressing($attachment_id);
+            CompressX_Image_Meta::update_image_meta_status($attachment_id,'failed');
+            $ret['result']='success';
+            return $ret;
+        }
+
         $image->resize();
 
         if($image->convert())

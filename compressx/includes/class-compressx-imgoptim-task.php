@@ -479,6 +479,20 @@ class CompressX_ImgOptim_Task
             return $ret;
         }
 
+        if(!file_exists($file_path))
+        {
+            $this->WriteLog('Image:'.$image_id.' failed. Error: file not exists '.$file_path,'notice');
+
+            $this->task['failed_images']++;
+            $this->update_task();
+
+            $error='Image:'.$image_id.' failed. Error: file not exists '.$file_path;
+            CompressX_Image_Meta::update_image_failed($image_id,$error);
+
+            $ret['result']='success';
+            return $ret;
+        }
+
         if(!$this->check_file_mime_content_type($file_path))
         {
             $this->WriteLog('Image:'.$image_id.' failed. Error: mime content type not support','notice');

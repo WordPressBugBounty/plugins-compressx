@@ -136,6 +136,28 @@ class CompressX_Auto_Optimization
 
         $this->WriteLog('Start optimizing new media images id:'.$attachment_id,'notice');
 
+        $file_path = get_attached_file( $attachment_id );
+        if(empty($file_path))
+        {
+            CompressX_Image_Opt_Method::WriteLog($this->log,'Image:'.$attachment_id.' failed. Error: failed to get get_attached_file','notice');
+            $error='Image:'.$attachment_id.' failed. Error: failed to get get_attached_file';
+            CompressX_Image_Meta::update_image_failed($attachment_id,$error);
+            $ret['result']='success';
+            $ret['meta']=$metadata;
+            return $ret;
+        }
+
+        if(!file_exists($file_path))
+        {
+            CompressX_Image_Opt_Method::WriteLog($this->log,'Image:'.$attachment_id.' failed. Error: file not exists '.$file_path,'notice');
+
+            $error='Image:'.$attachment_id.' failed. Error: file not exists '.$file_path;
+            CompressX_Image_Meta::update_image_failed($attachment_id,$error);
+            $ret['result']='success';
+            $ret['meta']=$metadata;
+            return $ret;
+        }
+
         CompressX_Image_Meta::update_image_progressing($attachment_id);
 
         $image=new Compressx_Image($attachment_id,$options);

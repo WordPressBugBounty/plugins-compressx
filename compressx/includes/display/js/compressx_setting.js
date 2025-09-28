@@ -603,11 +603,15 @@ function compressx_get_optimize_task_status()
         }
         catch(err)
         {
-            jQuery('#compressx_start_bulk_optimization').css({'pointer-events': 'auto', 'opacity': '1'});
-            compressx_progress_finish(err);
+            //jQuery('#compressx_start_bulk_optimization').css({'pointer-events': 'auto', 'opacity': '1'});
+            //compressx_progress_finish(err);
 
-            jQuery('#compressx_cancel_bulk_optimization').hide();
-            jQuery('#compressx_start_bulk_optimization').show();
+            //jQuery('#compressx_cancel_bulk_optimization').hide();
+            //jQuery('#compressx_start_bulk_optimization').show();
+            setTimeout(function ()
+            {
+                compressx_get_optimize_task_status();
+            }, 1000);
         }
 
     }, function(XMLHttpRequest, textStatus, errorThrown)

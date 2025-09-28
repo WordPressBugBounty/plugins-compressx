@@ -28,8 +28,13 @@ function cx_debug_submit()
     compressx_post_request(ajax_data, function (data) {
         try {
             var jsonarray = jQuery.parseJSON(data);
-            if (jsonarray.result === "success") {
-                alert("<?php esc_html_e('Send succeeded.', 'compressx'); ?>");
+            if (jsonarray.result === "success")
+            {
+                jQuery('#compressx_send_success_text').removeClass("hidden");
+                setTimeout(function ()
+                {
+                    jQuery('#compressx_send_success_text').addClass( 'hidden' );
+                }, 3000);
             }
             else {
                 alert(jsonarray.error);
