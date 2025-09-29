@@ -4,7 +4,7 @@ Tags: convert WebP, convert AVIF, WebP, AVIF, optimization
 Requires at least: 5.8
 Tested up to: 6.8.2
 Requires PHP: 7.0
-Stable tag: 0.9.31
+Stable tag: 0.9.32
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
@@ -65,6 +65,8 @@ Yes, absolutely. Whenever you need help, start a thread on the support forum or 
 Yes, we do. Here is a [tutorial](https://compressx.io/docs/compressx-overview/) for you to quickly get started with CompressX.
 
 == Changelog ==
+= 0.9.32 =
+- Fixed: Manual image conversions from media library would fail.
 = 0.9.31 =
 - Fixed some bugs in the plugin code.
 = 0.9.30 =
@@ -181,6 +183,6 @@ Yes, we do. Here is a [tutorial](https://compressx.io/docs/compressx-overview/) 
 - Initial release. Hello world!
 
 == Upgrade Notice ==
-Latest version 0.9.31:
-= 0.9.31 =
-- Fixed some bugs in the plugin code.
+Latest version 0.9.32:
+= 0.9.32 =
+- Fixed: Manual image conversions from media library would fail.

@@ -208,7 +208,7 @@ class CompressX_Manual_Optimization
         CompressX_Image_Meta::update_image_progressing($attachment_id);
 
         $image=new Compressx_Image($attachment_id,$options);
-
+        $file_path = get_attached_file( $attachment_id );
         if(empty($file_path))
         {
             $this->WriteLog('Image:'.$attachment_id.' failed. Error: failed to get get_attached_file','notice');
