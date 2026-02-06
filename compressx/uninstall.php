@@ -22,3 +22,4 @@ delete_option("compressx_need_optimized_images");
 delete_option("compressx_dissmiss_conflict_notice");
 delete_option('compressx_rating_dismiss');
 delete_option('compressx_show_review');
+delete_option('compressx_hide_big_update');

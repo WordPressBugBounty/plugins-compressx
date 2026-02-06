@@ -1,0 +1,102 @@
+/* Custom styles for TwentyTwenty integration with CompressX */
+
+/* Ensure TwentyTwenty container fits properly */
+.twentytwenty-container {
+    position: relative !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 280px;
+    background: #ffffff !important;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+/* Ensure images maintain aspect ratio */
+.twentytwenty-container img {
+    max-width: 100% !important;
+    height: auto !important;
+    display: block;
+}
+
+/* Override any conflicting flex styles */
+.twentytwenty-container.compressx-v2-flex {
+    display: block !important;
+}
+
+/* Ensure proper overlay positioning */
+.twentytwenty-overlay {
+    background: rgba(0, 0, 0, 0) !important;
+}
+
+/* Custom handle styling to match CompressX theme */
+.twentytwenty-handle {
+    border: 3px solid #3b82f6 !important;
+    background: #ffffff !important;
+}
+
+.twentytwenty-handle:before,
+.twentytwenty-handle:after {
+    background: #3b82f6 !important;
+}
+
+/* Enhanced visibility */
+.twentytwenty-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #ffffff;
+    z-index: -1;
+}
+
+/* Improved image visibility */
+.twentytwenty-container img {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Better overlay contrast */
+.twentytwenty-overlay {
+    background: rgba(0, 0, 0, 0) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .twentytwenty-container {
+        min-height: 200px;
+    }
+
+    .twentytwenty-overlay {
+        font-size: 11px !important;
+    }
+}
+
+/* Prevent FOUC (Flash of Unstyled Content) */
+.cx-comparison-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Loading state */
+.twentytwenty-container.loading {
+    opacity: 0.7;
+}
+
+.twentytwenty-container.loading::after {
+    content: "Loading...";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #666;
+}

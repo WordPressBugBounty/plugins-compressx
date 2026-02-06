@@ -1,0 +1,118 @@
+:root {
+    --color-tech-blue: #018fd1;
+    --color-dark-yellow: orange;
+    --color-grey: #ddd;
+    --color-grey-black: #888;
+    --color-light-grey: #F8F9FA;
+    --color-light-blue: #175cff;
+    --color-light-blue-2: #104bd4;
+    --color-background: #fff;
+    --color-title: #0B163F;
+}
+
+.compressx-general-settings-body .cx-uploads-rules,
+.compressx-general-settings-body .cx-mediafolder-rules {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 1rem;
+}
+
+.compressx-general-settings-body .cx-mediafolder-rules .cx-icon-color-yellow {
+    color: var(--color-dark-yellow);
+    font-size: 1rem;
+    padding-top: 0.1rem;
+}
+
+.compressx-general-settings-body .cx-mediafolder-rules .cx-icon-color-techblue {
+    color: var(--color-tech-blue);
+    font-size: 1rem;
+    padding-top: 0.1rem;
+}
+
+.compressx-general-settings-body .cx-mediafolder-rules .cx-mediafolders,
+.compressx-general-settings-body .cx-mediafolder-rules .cx-mediafolder-included {
+    position: relative;
+    padding: 1rem 0;
+    border-radius: 10px;
+}
+
+.compressx-general-settings-body .cx-mediafolder-rules .cx-mediafolders .cx-upload-treeviewer li,
+.compressx-general-settings-body .cx-mediafolder-rules .cx-mediafolder-included .cx-mediafolder-list li {
+    position: relative;
+}
+
+.compressx-general-settings-body .cx-mediafolder-rules .cx-mediafolders .cx-upload-treeviewer .cx-remove-rule,
+.compressx-general-settings-body .cx-mediafolder-rules .cx-mediafolder-included .cx-mediafolder-list .cx-remove-rule {
+    position: absolute;
+    right: 0;
+    cursor: pointer;
+    color: var(--color-grey-black);
+    font-size: 1rem;
+    padding-top: 0.1rem;
+}
+
+.compressx-general-settings-body .cx-mediafolder-rules .cx-mediafolders .cx-upload-treeviewer,
+.compressx-general-settings-body .cx-mediafolder-rules .cx-mediafolder-included .cx-mediafolder-list {
+    margin-top: 1rem;
+    border: 1px solid var(--color-grey);
+    border-radius: 4px;
+    padding: 0 0.5rem;
+    height: 200px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.compressx-general-settings-body .cx-mediafolder-rules .cx-mediafolder-included .cx-mediafolder-list ul {
+    padding: 0;
+}
+
+.compressx-general-settings-body .cx-mediafolder-rules .cx-mediafolder-included .cx-mediafolder-list li:nth-child(odd),
+.compressx-general-settings-body .cx-mediafolder-rules .cx-mediafolders .cx-upload-treeviewer li:nth-child(odd) {
+    background-color: var(--color-light-grey);
+}
+
+.compressx-container .cx-button {
+    background-color: var(--color-light-blue);
+    border-color: var(--color-light-blue);
+}
+
+.compressx-container .cx-button:hover {
+    background-color: var(--color-light-blue-2);
+    border-color: var(--color-light-blue-2);
+    color: var(--color-background);
+}
+
+.compressx-container .cx-button:focus {
+    background-color: var(--color-light-blue-2);
+    border-color: var(--color-light-blue-2);
+    color: var(--color-background);
+}
+
+.compressx-container .cx-button-light {
+    background-color: var(--color-background);
+    border-color: var(--color-light-blue);
+    color: var(--color-light-blue);
+}
+
+.compressx-container .cx-button-light:hover {
+    background-color: var(--color-light-blue);
+    color: var(--color-background);
+}
+
+@media screen and (max-width: 768px) {
+    .compressx-general-settings-body .cx-uploads-rules,
+    .compressx-general-settings-body .cx-mediafolder-rules {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+
+@media screen and (max-width: 430px) {
+    .compressx-general-settings-body .cx-uploads-rules,
+    .compressx-general-settings-body .cx-mediafolder-rules {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}

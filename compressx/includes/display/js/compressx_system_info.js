@@ -30,6 +30,7 @@ function cx_debug_submit()
             var jsonarray = jQuery.parseJSON(data);
             if (jsonarray.result === "success")
             {
+                jQuery('#compressx_debug_comment').html("");
                 jQuery('#compressx_send_success_text').removeClass("hidden");
                 setTimeout(function ()
                 {

@@ -47,7 +47,7 @@ class CompressX_Manual_Optimization
                 $html='';
             }
 
-            if(!CompressX_Image_Meta::is_image_optimized($id))
+            if(!CompressX_Image_Meta_V2::is_image_optimized($id))
             {
                 if($this->is_image_progressing($id))
                 {
@@ -59,7 +59,7 @@ class CompressX_Manual_Optimization
 
                     if($this->is_image_processing_failed($id))
                     {
-                        $meta=CompressX_Image_Meta::get_image_meta($id);
+                        $meta=CompressX_Image_Meta_V2::get_image_meta($id);
                         foreach ($meta['size'] as $size_key => $size_data)
                         {
                             if(!empty($size_data['error']))
@@ -74,27 +74,15 @@ class CompressX_Manual_Optimization
             }
             else
             {
-                $convert_size=CompressX_Image_Meta::get_webp_converted_size($id);
-                $og_size=CompressX_Image_Meta::get_og_size($id);
+                $convert_size=CompressX_Image_Meta_V2::get_webp_converted_size($id);
+                $og_size=CompressX_Image_Meta_V2::get_og_size($id);
                 if($og_size>0)
                 {
                     if($convert_size>0)
                     {
                         $webp_percent = round(100 - ($convert_size / $og_size) * 100, 2);
                     }
-                    else if(CompressX_Image_Meta::is_webp_image($id))
-                    {
-                        $convert_size=CompressX_Image_Meta::get_compressed_size($id);
-                        if($convert_size>0)
-                        {
-                            $webp_percent = round(100 - ($convert_size / $og_size) * 100, 2);
-                        }
-                        else
-                        {
-                            $webp_percent=0;
-                        }
-                    }
-                    else if(CompressX_Image_Meta::is_avif_image($id))
+                    else if(CompressX_Image_Meta_V2::is_avif_image($id))
                     {
                         $webp_percent=0;
                     }
@@ -108,24 +96,12 @@ class CompressX_Manual_Optimization
                     $webp_percent=0;
                 }
 
-                $avif_size=CompressX_Image_Meta::get_avif_converted_size($id);
+                $avif_size=CompressX_Image_Meta_V2::get_avif_converted_size($id);
                 if($og_size>0)
                 {
                     if($avif_size>0)
                     {
                         $avif_percent = round(100 - ($avif_size / $og_size) * 100, 2);
-                    }
-                    else if(CompressX_Image_Meta::is_avif_image($id))
-                    {
-                        $avif_size=CompressX_Image_Meta::get_compressed_size($id);
-                        if($avif_size>0)
-                        {
-                            $avif_percent = round(100 - ($avif_size / $og_size) * 100, 2);
-                        }
-                        else
-                        {
-                            $avif_percent=0;
-                        }
                     }
                     else
                     {
@@ -137,7 +113,7 @@ class CompressX_Manual_Optimization
                     $avif_percent=0;
                 }
 
-                $meta=CompressX_Image_Meta::get_image_meta($id);
+                $meta=CompressX_Image_Meta_V2::get_image_meta($id);
                 $thumbnail_counts=count($meta['size']);
 
                 $html.='<ul>';
@@ -205,7 +181,7 @@ class CompressX_Manual_Optimization
         $quality_options=CompressX_Options::get_quality_option();
         $options=array_merge($general_options,$quality_options);
 
-        CompressX_Image_Meta::update_image_progressing($attachment_id);
+        CompressX_Image_Meta_V2::update_image_progressing($attachment_id);
 
         $image=new Compressx_Image($attachment_id,$options);
         $file_path = get_attached_file( $attachment_id );
@@ -214,9 +190,9 @@ class CompressX_Manual_Optimization
             $this->WriteLog('Image:'.$attachment_id.' failed. Error: failed to get get_attached_file','notice');
 
             $error='Image:'.$attachment_id.' failed. Error: failed to get get_attached_file';
-            CompressX_Image_Meta::update_image_failed($attachment_id,$error);
-            CompressX_Image_Meta::delete_image_progressing($attachment_id);
-            CompressX_Image_Meta::update_image_meta_status($attachment_id,'failed');
+            CompressX_Image_Meta_V2::update_image_failed($attachment_id,$error);
+            CompressX_Image_Meta_V2::delete_image_progressing($attachment_id);
+            CompressX_Image_Meta_V2::update_image_meta_status($attachment_id,'failed');
             $ret['result']='success';
             return $ret;
         }
@@ -226,9 +202,9 @@ class CompressX_Manual_Optimization
             $this->WriteLog('Image:'.$attachment_id.' failed. Error: file not exists '.$file_path,'notice');
 
             $error='Image:'.$attachment_id.' failed. Error: file not exists '.$file_path;
-            CompressX_Image_Meta::update_image_failed($attachment_id,$error);
-            CompressX_Image_Meta::delete_image_progressing($attachment_id);
-            CompressX_Image_Meta::update_image_meta_status($attachment_id,'failed');
+            CompressX_Image_Meta_V2::update_image_failed($attachment_id,$error);
+            CompressX_Image_Meta_V2::delete_image_progressing($attachment_id);
+            CompressX_Image_Meta_V2::update_image_meta_status($attachment_id,'failed');
             $ret['result']='success';
             return $ret;
         }
@@ -237,15 +213,15 @@ class CompressX_Manual_Optimization
 
         if($image->convert())
         {
-            CompressX_Image_Meta::delete_image_progressing($attachment_id);
-            CompressX_Image_Meta::update_image_meta_status($attachment_id,'optimized');
+            CompressX_Image_Meta_V2::delete_image_progressing($attachment_id);
+            CompressX_Image_Meta_V2::update_image_meta_status($attachment_id,'optimized');
             do_action('compressx_purge_cache');
             do_action('compressx_after_optimize_image',$attachment_id);
         }
         else
         {
-            CompressX_Image_Meta::delete_image_progressing($attachment_id);
-            CompressX_Image_Meta::update_image_meta_status($attachment_id,'failed');
+            CompressX_Image_Meta_V2::delete_image_progressing($attachment_id);
+            CompressX_Image_Meta_V2::update_image_meta_status($attachment_id,'failed');
         }
 
         $ret['result']='success';
@@ -292,7 +268,7 @@ class CompressX_Manual_Optimization
 
         foreach ($ids as $id)
         {
-            if(!CompressX_Image_Meta::is_image_optimized($id))
+            if(!CompressX_Image_Meta_V2::is_image_optimized($id))
             {
                 if($this->is_image_progressing($id))
                 {
@@ -325,7 +301,7 @@ class CompressX_Manual_Optimization
                 $html='';
             }
 
-            if(!CompressX_Image_Meta::is_image_optimized($id))
+            if(!CompressX_Image_Meta_V2::is_image_optimized($id))
             {
                 if($this->is_image_progressing($id))
                 {
@@ -344,7 +320,7 @@ class CompressX_Manual_Optimization
 
                     if($this->is_image_processing_failed($id))
                     {
-                        $meta=CompressX_Image_Meta::get_image_meta($id);
+                        $meta=CompressX_Image_Meta_V2::get_image_meta($id);
                         foreach ($meta['size'] as $size_key => $size_data)
                         {
                             if(!empty($size_data['error']))
@@ -359,27 +335,15 @@ class CompressX_Manual_Optimization
             }
             else
             {
-                $convert_size=CompressX_Image_Meta::get_webp_converted_size($id);
-                $og_size=CompressX_Image_Meta::get_og_size($id);
+                $convert_size=CompressX_Image_Meta_V2::get_webp_converted_size($id);
+                $og_size=CompressX_Image_Meta_V2::get_og_size($id);
                 if($og_size>0)
                 {
                     if($convert_size>0)
                     {
                         $webp_percent = round(100 - ($convert_size / $og_size) * 100, 2);
                     }
-                    else if(CompressX_Image_Meta::is_webp_image($id))
-                    {
-                        $convert_size=CompressX_Image_Meta::get_compressed_size($id);
-                        if($convert_size>0)
-                        {
-                            $webp_percent = round(100 - ($convert_size / $og_size) * 100, 2);
-                        }
-                        else
-                        {
-                            $webp_percent=0;
-                        }
-                    }
-                    else if(CompressX_Image_Meta::is_avif_image($id))
+                    else if(CompressX_Image_Meta_V2::is_avif_image($id))
                     {
                         $webp_percent=0;
                     }
@@ -393,24 +357,12 @@ class CompressX_Manual_Optimization
                     $webp_percent=0;
                 }
 
-                $avif_size=CompressX_Image_Meta::get_avif_converted_size($id);
+                $avif_size=CompressX_Image_Meta_V2::get_avif_converted_size($id);
                 if($og_size>0)
                 {
                     if($avif_size>0)
                     {
                         $avif_percent = round(100 - ($avif_size / $og_size) * 100, 2);
-                    }
-                    else if(CompressX_Image_Meta::is_avif_image($id))
-                    {
-                        $avif_size=CompressX_Image_Meta::get_compressed_size($id);
-                        if($avif_size>0)
-                        {
-                            $avif_percent = round(100 - ($avif_size / $og_size) * 100, 2);
-                        }
-                        else
-                        {
-                            $avif_percent=0;
-                        }
                     }
                     else
                     {
@@ -422,7 +374,7 @@ class CompressX_Manual_Optimization
                     $avif_percent=0;
                 }
 
-                $meta=CompressX_Image_Meta::get_image_meta($id);
+                $meta=CompressX_Image_Meta_V2::get_image_meta($id);
                 $thumbnail_counts=count($meta['size']);
 
                 $html.='<ul>';
@@ -454,7 +406,7 @@ class CompressX_Manual_Optimization
 
     public function is_image_processing_failed($post_id)
     {
-        $status=CompressX_Image_Meta::get_image_meta_status($post_id);
+        $status=CompressX_Image_Meta_V2::get_image_meta_status($post_id);
 
         if(empty($status))
         {
@@ -475,7 +427,7 @@ class CompressX_Manual_Optimization
 
     public function is_image_progressing($post_id)
     {
-        $progressing=CompressX_Image_Meta::get_image_progressing($post_id);
+        $progressing=CompressX_Image_Meta_V2::get_image_progressing($post_id);
 
         if(empty($progressing))
         {

@@ -844,10 +844,17 @@ function compressx_save_others()
             if (jsonarray.result === 'success')
             {
                 jQuery('#compressx_save_others_text').removeClass("hidden");
-                setTimeout(function ()
+                if (jsonarray.redirect_url)
                 {
-                    jQuery('#compressx_save_others_text').addClass( 'hidden' );
-                }, 3000);
+                    location.reload();
+                }
+                else
+                {
+                    setTimeout(function ()
+                    {
+                        jQuery('#compressx_save_others_text').addClass( 'hidden' );
+                    }, 3000);
+                }
             }
 
         }

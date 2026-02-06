@@ -42,16 +42,16 @@ class CompressX_Image_Meta
 
     public static function update_images_meta_value($image_id,$key,$value)
     {
-        $image_optimize_meta =CompressX_Image_Meta::get_image_meta($image_id);
+        $image_optimize_meta =self::get_image_meta($image_id);
         $image_optimize_meta[$key]=$value;
-        CompressX_Image_Meta::update_images_meta($image_id,$image_optimize_meta);
+        self::update_images_meta($image_id,$image_optimize_meta);
     }
 
     public static function update_image_meta_size($image_id,$size_key,$size_meta)
     {
-        $image_optimize_meta =CompressX_Image_Meta::get_image_meta($image_id);
+        $image_optimize_meta =self::get_image_meta($image_id);
         $image_optimize_meta['size'][$size_key]=$size_meta;
-        CompressX_Image_Meta::update_images_meta($image_id,$image_optimize_meta);
+        self::update_images_meta($image_id,$image_optimize_meta);
     }
 
     public static function update_images_meta($image_id,$meta)
@@ -169,7 +169,7 @@ class CompressX_Image_Meta
 
     public static function update_image_meta_status($image_id,$status)
     {
-        if(CompressX_Image_Meta::has_image_meta($image_id))
+        if(self::has_image_meta($image_id))
         {
             $meta=get_post_meta( $image_id, 'compressx_image_meta', true );
             $meta['status']=$status;
@@ -501,6 +501,50 @@ class CompressX_Image_Meta
         }
     }
 
+    public static function get_global_stats_ex()
+    {
+        $update=get_transient( 'compressx_set_global_stats' );
+        $stats=CompressX_Options::get_option('compressx_global_stats_ex',array());
+        if(empty($stats)||empty($update)||!isset($stat['converted_percent']))
+        {
+            $stats=array();
+            $stats['converted_percent']=0;
+
+            //$webp_images_count=CompressX_Image_Method::get_max_webp_image_count();
+            $images_count=CompressX_Image_Method::get_max_image_count();
+
+            global $wpdb;
+            $result=$wpdb->get_results( "SELECT DISTINCT `post_id` FROM $wpdb->postmeta WHERE `meta_key`=\"compressx_image_meta_status\" AND `meta_value`=\"optimized\" ",ARRAY_N);
+            if($result && sizeof($result)>0)
+            {
+                $converted_images=sizeof($result);
+            }
+            else
+            {
+                $converted_images=0;
+            }
+
+            //
+            if($images_count>0)
+            {
+                $stats['converted_percent'] = ($converted_images / $images_count ) * 100;
+                $stats['converted_percent'] = round( $stats['converted_percent'], 2 );
+            }
+            else
+            {
+                $stats['converted_percent']=0;
+            }
+
+            delete_transient('compressx_set_global_stats');
+            CompressX_Options::update_option('compressx_global_stats_ex',$stats);
+            return $stats;
+        }
+        else
+        {
+            return $stats;
+        }
+    }
+
     public static function get_failed_images_count()
     {
         global $wpdb;
@@ -523,7 +567,7 @@ class CompressX_Image_Meta
 
     public static function is_image_optimized($image_id)
     {
-        if(CompressX_Image_Meta::get_image_meta_status($image_id)==='optimized')
+        if(self::get_image_meta_status($image_id)==='optimized')
         {
             return true;
         }
@@ -571,7 +615,7 @@ class CompressX_Image_Meta
         $image_optimize_meta['size']['og']['status']='failed';
         $image_optimize_meta['size']['og']['error']=$error;
 
-        CompressX_Image_Meta::update_image_meta_status($image_id,'failed');
-        CompressX_Image_Meta::update_images_meta($image_id,$image_optimize_meta);
+        self::update_image_meta_status($image_id,'failed');
+        self::update_images_meta($image_id,$image_optimize_meta);
     }
 }

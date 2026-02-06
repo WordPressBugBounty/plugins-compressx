@@ -251,7 +251,6 @@ class CompressX_Webp_Rewrite
 
         $options=CompressX_Options::get_option('compressx_general_settings',array());
         $disable_cache_control=isset($options['disable_cache_control'])?$options['disable_cache_control']:false;
-
         if(!$disable_cache_control)
         {
             $line[]='</IfModule>';

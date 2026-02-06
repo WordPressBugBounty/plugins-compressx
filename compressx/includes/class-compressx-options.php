@@ -255,6 +255,11 @@ class CompressX_Options
 
     public static function get_webp_quality($options)
     {
+        if(!isset($options['quality']))
+        {
+            return 80;
+        }
+
         if($options['quality']=="custom")
         {
             $quality=isset($options['quality_webp'])?$options['quality_webp']: 80;
@@ -289,6 +294,11 @@ class CompressX_Options
 
     public static function get_avif_quality($options)
     {
+        if(!isset($options['quality']))
+        {
+            return 60;
+        }
+
         if($options['quality']=="custom")
         {
             $quality=isset($options['quality_avif'])?$options['quality_avif']: 60;
@@ -347,5 +357,16 @@ class CompressX_Options
         ];
 
         return $list;
+    }
+
+    public static function get_interface_version()
+    {
+        $options = self::get_option('compressx_general_settings', array());
+        if(empty($options))
+        {
+            return "v2";
+        }
+
+        return isset($options['interface_version']) ? $options['interface_version'] : 'v2';
     }
 }

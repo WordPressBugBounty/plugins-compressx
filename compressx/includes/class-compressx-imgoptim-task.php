@@ -26,9 +26,12 @@ class CompressX_ImgOptim_Task
     {
         $this->task=array();
 
-        $this->task['log']=uniqid('cx-');
-        $this->log=new CompressX_Log();
-        $this->log->OpenLogFile();
+        $offset=get_option('gmt_offset');
+        $localtime = time() + $offset * 60 * 60;
+        $this->task['log']=uniqid('compressx_').'_'.gmdate('Ymd',$localtime).'_log.txt';
+
+        $this->log=CompressX_Log_Ex::get_instance();
+        $this->log->CreateLogFile($this->task['log']);
 
         $this->init_options();
 
@@ -38,6 +41,7 @@ class CompressX_ImgOptim_Task
         if(!$this->get_need_optimize_images())
         {
             $ret['result']='failed';
+            $ret['no_unoptimized_images']=true;
             $ret['error']=__('No unoptimized images found.','compressx');
             $this->update_task();
             return $ret;
@@ -76,17 +80,35 @@ class CompressX_ImgOptim_Task
         $this->task['options']['exclude']=CompressX_Options::get_excludes();
     }
 
+    public function OpenLog()
+    {
+        $this->log=CompressX_Log_Ex::get_instance();
+        $this->log->OpenLogFile($this->task['log']);
+    }
+
     public function WriteLog($log,$type)
     {
-        if (is_a($this->log, 'CompressX_Log'))
+        if (is_a($this->log, 'CompressX_Log_Ex'))
         {
             $this->log->WriteLog($log,$type);
         }
         else
         {
-            $this->log=new CompressX_Log();
-            $this->log->OpenLogFile();
+            $this->log=CompressX_Log_Ex::get_instance();
+            $this->log->OpenLogFile($this->task['log']);
             $this->log->WriteLog($log,$type);
+        }
+    }
+
+    public function get_log_file()
+    {
+        if(isset($this->task['log']))
+        {
+            return $this->task['log'];
+        }
+        else
+        {
+            return "";
         }
     }
 
@@ -305,6 +327,8 @@ class CompressX_ImgOptim_Task
 
     public function do_optimize_image()
     {
+        $this->OpenLog();
+
         if($this->check_timeout())
         {
             $this->WriteLog('Optimizing image failed. Error:task timeout','error');
@@ -370,7 +394,7 @@ class CompressX_ImgOptim_Task
             {
                 if($this->task['options']['force'])
                 {
-                    CompressX_Image_Meta::generate_images_meta($image_id,$this->task['options']);
+                    CompressX_Image_Meta_V2::generate_images_meta($image_id,$this->task['options']);
                 }
 
                 $this->WriteLog('Start optimizing images: id:'.$image_id,'notice');
@@ -431,7 +455,7 @@ class CompressX_ImgOptim_Task
             $this->task['last_update_time']=time();
             $this->task['failed_images']++;
 
-            CompressX_Image_Meta::update_image_meta_status($image_id,'failed');
+            CompressX_Image_Meta_V2::update_image_meta_status($image_id,'failed');
 
             $this->update_task();
 
@@ -446,16 +470,6 @@ class CompressX_ImgOptim_Task
 
     public function optimize_image($image_id)
     {
-        if (is_a($this->log, 'CompressX_Log'))
-        {
-            //
-        }
-        else
-        {
-            $this->log=new CompressX_Log();
-            $this->log->OpenLogFile();
-        }
-
         $this->task['current_image']=$image_id;
         $file_path = get_attached_file( $image_id );
         $abs_root=CompressX_Image_Method::transfer_path(ABSPATH);
@@ -473,7 +487,7 @@ class CompressX_ImgOptim_Task
             $this->update_task();
 
             $error='Image:'.$image_id.' failed. Error: failed to get get_attached_file';
-            CompressX_Image_Meta::update_image_failed($image_id,$error);
+            CompressX_Image_Meta_V2::update_image_failed($image_id,$error);
 
             $ret['result']='success';
             return $ret;
@@ -487,7 +501,7 @@ class CompressX_ImgOptim_Task
             $this->update_task();
 
             $error='Image:'.$image_id.' failed. Error: file not exists '.$file_path;
-            CompressX_Image_Meta::update_image_failed($image_id,$error);
+            CompressX_Image_Meta_V2::update_image_failed($image_id,$error);
 
             $ret['result']='success';
             return $ret;
@@ -501,13 +515,13 @@ class CompressX_ImgOptim_Task
 
             $this->task['failed_images']++;
             $this->update_task();
-            CompressX_Image_Meta::update_image_failed($image_id,$error);
+            CompressX_Image_Meta_V2::update_image_failed($image_id,$error);
 
             $ret['result']='success';
             return $ret;
         }
 
-        CompressX_Image_Meta::update_image_progressing($image_id);
+        CompressX_Image_Meta_V2::update_image_progressing($image_id);
 
         $image->resize();
 
@@ -515,15 +529,15 @@ class CompressX_ImgOptim_Task
         {
             $this->task['opt_images']++;
             $this->update_task();
-            CompressX_Image_Meta::update_image_meta_status($image_id,'optimized');
+            CompressX_Image_Meta_V2::update_image_meta_status($image_id,'optimized');
         }
         else
         {
             $this->task['failed_images']++;
             $this->update_task();
-            CompressX_Image_Meta::update_image_meta_status($image_id,'failed');
+            CompressX_Image_Meta_V2::update_image_meta_status($image_id,'failed');
         }
-        CompressX_Image_Meta::delete_image_progressing($image_id);
+        CompressX_Image_Meta_V2::delete_image_progressing($image_id);
 
         $ret['result']='success';
         return $ret;
@@ -611,20 +625,25 @@ class CompressX_ImgOptim_Task
             $sub_percent=0;
         }
 
+
         if(!empty($this->task['current_file']))
         {
             $ret['sub_log']=sprintf(
-            /* translators: %1$d: $sub task processed images, %2$d: $sub task total images*/
+            //translators: %1$d: $sub task processed images, %2$d: $sub task total images
                 __('Current Subtask: %1$d/%2$d | Processing:%3$s' ,'compressx'),
-                $sub_optimized_images,$sub_total,$this->task['current_file']);
+                $sub_optimized_images,$sub_total,basename($this->task['current_file']));
         }
         else
         {
             $ret['sub_log']=sprintf(
-            /* translators: %1$d: $sub task processed images, %2$d: $sub task total images*/
                 __('Current Subtask: %1$d/%2$d ' ,'compressx'),
                 $sub_optimized_images,$sub_total);
         }
+
+        $ret['sub_log_ex']=sprintf(
+        /* translators: %1$d: $sub task processed images, %2$d: $sub task total images*/
+            __('%1$d / %2$d' ,'compressx'),
+            $sub_optimized_images,$sub_total);
 
         $ret['percent']= $sub_percent;
         //$ret['sub_log']='Current Subtask: '.$sub_optimized_images.'/'.$sub_total;
@@ -674,6 +693,8 @@ class CompressX_ImgOptim_Task
 
                 if($ret['show_review']==1)
                 {
+                    CompressX_Options::update_option('compressx_show_review', time());
+
                     delete_transient('compressx_set_global_stats');
                     $size=CompressX_Image_Method::get_opt_folder_size();
                     $ret['opt_size']=size_format($size,2);
@@ -743,6 +764,43 @@ class CompressX_ImgOptim_Task
         $ret['test']=$this->task;
         return $ret;
     }
+
+    public function get_task_progress_ex()
+    {
+        $ret = $this->get_task_progress();
+
+        if ($ret['result'] !== 'success') {
+            return $ret;
+        }
+
+        $total     = intval($ret['total_images']);
+        $optimized = intval($ret['optimized_images']);
+        $failed    = intval($this->task['failed_images']);
+        $skipped   = intval($this->task['skipped_images']);
+
+        $remaining = max(0, $total - $optimized - $failed - $skipped);
+
+        $ret["progress_text"] = sprintf(
+            __('%1$d / %2$d images optimized', 'compressx'),
+            $optimized,
+            $total
+        );
+
+        $ret["progress_percent"] =intval(
+            $total > 0 ? round(($optimized / $total) * 100, 2) : 0);
+
+        $ret["sub_progress_text"] = $ret["sub_log_ex"];
+
+        $ret["sub_progress_percent"] = intval($ret["percent"]);
+
+        $ret["optimized"] = $optimized;
+        $ret["errors"]    = $failed;
+        $ret["remaining"] = $remaining;
+
+        return $ret;
+    }
+
+
 
     public function check_timeout()
     {

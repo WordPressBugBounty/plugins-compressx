@@ -92,15 +92,6 @@ class CompressX_Addons
                     </div>
                     <div class="cx-addons" style="position: relative;">
                         <div class="cx-addons-icon-block">
-                            <span class="dashicons dashicons-admin-appearance compressx-icon-style"></span>
-                        </div>
-                        <div>
-                            <h5>Advanced Exclude Rules</h5>
-                            <span>Automatically delete original JPG/PNG thumbnails after converting them to WebP or AVIF to free up disk space.</span>
-                        </div>
-                    </div>
-                    <div class="cx-addons" style="position: relative;">
-                        <div class="cx-addons-icon-block">
                             <span class="dashicons dashicons-cover-image compressx-icon-style"></span>
                         </div>
                         <div>

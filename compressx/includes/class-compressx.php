@@ -17,12 +17,13 @@ class CompressX
     {
         include_once COMPRESSX_DIR . '/includes/method/class-compressx-image-method.php';
         include_once COMPRESSX_DIR . '/includes/method/class-compressx-image-opt-method.php';
-        include_once COMPRESSX_DIR . '/deprecated/class-compressx-image-opt-method-deprecated.php';
+        //include_once COMPRESSX_DIR . '/deprecated/class-compressx-image-opt-method-deprecated.php';
     }
 
     public function load_meta()
     {
-        include_once COMPRESSX_DIR . '/includes/meta/class-compressx-image-meta.php';
+        //include_once COMPRESSX_DIR . '/includes/meta/class-compressx-image-meta.php';
+        include_once COMPRESSX_DIR . '/includes/meta/class-compressx-image-meta-v2.php';
         include_once COMPRESSX_DIR . '/includes/meta/class-compressx-custom-image-meta.php';
     }
 
@@ -41,6 +42,9 @@ class CompressX
         new CompressX_Picture_Load();
         include_once COMPRESSX_DIR . '/includes/class-compressx-stats-manager.php';
         CompressX_Stats_Manager::init();
+
+        // Load Task Manager V2 System
+        //$this->load_task_system_v2();
     }
 
     public function load_hooks()
@@ -53,6 +57,7 @@ class CompressX
         add_action( 'wp_ajax_compressx_dissmiss_conflict_notice', array( $this, 'dissmiss_conflict_notice' ), 20 );
         add_action('compressx_purge_cache_event',array( $this,'purge_cache_event'));
         add_action('compressx_purge_cache',array( $this,'purge_cache'));
+        add_action('compressx_after_optimize_image', array($this, 'update_latest_image'),10,2);
     }
 
     public function load_admin()
@@ -95,6 +100,7 @@ class CompressX
         else
         {
             $screen_ids[]='toplevel_page_'.COMPRESSX_SLUG;
+            $screen_ids[]='compressx_page_settings-compressx';
             $screen_ids[]='compressx_page_info-compressx';
             $screen_ids[]='compressx_page_logs-compressx';
             $screen_ids[]='compressx_page_cdn-compressx';
@@ -270,6 +276,17 @@ class CompressX
     public function purge_cache()
     {
         $options=CompressX_Options::get_option('compressx_general_settings',array());
+
+        if(isset($options['cf_cdn']['auto_purge_cache_after_manual'])&&$options['cf_cdn']['auto_purge_cache_after_manual'])
+        {
+            $timestamp =wp_next_scheduled('compressx_purge_cache_event');
+            if($timestamp===false)
+            {
+                wp_schedule_single_event(time()+300,'compressx_purge_cache_event');
+            }
+            return;
+        }
+
         if(isset($options['cf_cdn']['auto_purge_cache'])&&$options['cf_cdn']['auto_purge_cache'])
         {
             include_once COMPRESSX_DIR . '/includes/class-compressx-cloudflare-cdn.php';
@@ -277,5 +294,10 @@ class CompressX
             $cdn=new CompressX_CloudFlare_CDN($setting);
             $cdn->purge_cache();
         }
+    }
+
+    public function update_latest_image($image_id)
+    {
+        CompressX_Options::update_option('compressx_latest_bulk_image',$image_id);
     }
 }

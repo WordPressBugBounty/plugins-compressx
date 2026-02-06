@@ -141,7 +141,7 @@ class CompressX_Auto_Optimization
         {
             CompressX_Image_Opt_Method::WriteLog($this->log,'Image:'.$attachment_id.' failed. Error: failed to get get_attached_file','notice');
             $error='Image:'.$attachment_id.' failed. Error: failed to get get_attached_file';
-            CompressX_Image_Meta::update_image_failed($attachment_id,$error);
+            CompressX_Image_Meta_V2::update_image_failed($attachment_id,$error);
             $ret['result']='success';
             $ret['meta']=$metadata;
             return $ret;
@@ -152,13 +152,13 @@ class CompressX_Auto_Optimization
             CompressX_Image_Opt_Method::WriteLog($this->log,'Image:'.$attachment_id.' failed. Error: file not exists '.$file_path,'notice');
 
             $error='Image:'.$attachment_id.' failed. Error: file not exists '.$file_path;
-            CompressX_Image_Meta::update_image_failed($attachment_id,$error);
+            CompressX_Image_Meta_V2::update_image_failed($attachment_id,$error);
             $ret['result']='success';
             $ret['meta']=$metadata;
             return $ret;
         }
 
-        CompressX_Image_Meta::update_image_progressing($attachment_id);
+        CompressX_Image_Meta_V2::update_image_progressing($attachment_id);
 
         $image=new Compressx_Image($attachment_id,$options);
 
@@ -170,16 +170,16 @@ class CompressX_Auto_Optimization
 
         if($image->convert())
         {
-            CompressX_Image_Meta::update_image_meta_status($attachment_id,'optimized');
+            CompressX_Image_Meta_V2::update_image_meta_status($attachment_id,'optimized');
             do_action('compressx_uploading_add_watermark',$attachment_id);
             do_action('compressx_after_optimize_image',$attachment_id);
         }
         else
         {
-            CompressX_Image_Meta::update_image_meta_status($attachment_id,'failed');
+            CompressX_Image_Meta_V2::update_image_meta_status($attachment_id,'failed');
         }
 
-        CompressX_Image_Meta::delete_image_progressing($attachment_id);
+        CompressX_Image_Meta_V2::delete_image_progressing($attachment_id);
 
         $ret['result']='success';
         $ret['meta']=$metadata;

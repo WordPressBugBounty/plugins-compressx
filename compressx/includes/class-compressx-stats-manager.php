@@ -39,6 +39,7 @@ class CompressX_Stats_Manager
 
         update_option(self::PROGRESS_KEY, [
             'offset' => 0,
+            '_legacy_offset'=>0,
             'accumulated' => [],
             'state' => 'wait',
         ]);
@@ -59,11 +60,11 @@ class CompressX_Stats_Manager
         $progress['state'] = 'running';
         update_option(self::PROGRESS_KEY, $progress);
 
-        self::process_batch(self::BATCH_SIZE, $progress['offset'], $progress['accumulated']);
+        //self::process_batch(self::BATCH_SIZE, $progress['offset'], $progress['accumulated']);
+        self::process_batch(self::BATCH_SIZE, $progress['offset'], $progress['_legacy_offset'],$progress['accumulated']);
 
         wp_send_json_success(['status' => 'processing']);
     }
-
 
     public static function ajax_get()
     {
@@ -86,7 +87,7 @@ class CompressX_Stats_Manager
         wp_send_json_success(['status' => 'not_started']);
     }
 
-    public static function process_batch($batch_size, $offset, $accumulated)
+    public static function process_batch($batch_size, $offset,$legacy_offset, $accumulated)
     {
         global $wpdb;
 
@@ -101,89 +102,70 @@ class CompressX_Stats_Manager
             'webp_total' => 0,
             'avif_total' => 0,
         ]);
-
-        while (true) {
-            $results = $wpdb->get_results($wpdb->prepare(
-                "SELECT post_id, meta_value FROM $wpdb->postmeta WHERE meta_key = %s LIMIT %d OFFSET %d",
-                self::META_KEY, $batch_size, $offset
-            ), ARRAY_A);
+        CompressX_Image_Meta_V2::ensure_table();
+        $meta_table = CompressX_Image_Meta_V2::table_name();
+        while (true)
+        {
+            $results = $wpdb->get_results($wpdb->prepare("
+    SELECT m.attachment_id,
+           m.status,
+           m.og_file_size,
+           m.webp_converted,
+           m.avif_converted,
+           m.webp_converted_size,
+           m.avif_converted_size
+    FROM {$meta_table} m
+    INNER JOIN {$wpdb->posts} p
+        ON m.attachment_id = p.ID
+    WHERE p.post_type = 'attachment'
+    ORDER BY m.id ASC
+    LIMIT %d OFFSET %d
+", $batch_size, $offset), ARRAY_A);
 
             $count_this_batch = count($results);
             if ($count_this_batch === 0) break;
 
-            foreach ($results as $row) {
-                $meta = maybe_unserialize($row['meta_value']);
-                if (!is_array($meta)) continue;
-                $original = isset($meta['og_file_size']) ? (int)$meta['og_file_size'] : 0;
-
-                if(isset($meta['webp_converted']))
+            foreach ($results as $row)
+            {
+                $status = $row['status'] ?? '';
+                if ($status === 'skip')
                 {
-                    if (!empty($meta['webp_converted']) && $meta['webp_converted'] == 1)
-                    {
-                        $webp = isset($meta['webp_converted_size']) ? (int)$meta['webp_converted_size'] : 0;
-                        $data['converted_webp']++;
-                        if ($original > 0 && $webp > 0 && $webp <= $original)
-                        {
-                            $data['original_total_webp'] += $original;
-                            $data['webp_total'] += $webp;
-                        }
-                    }
-                }
-                else
-                {
-                    $post_id=$row['post_id'];
-                    if(CompressX_Image_Meta::get_image_meta_webp_converted($post_id))
-                    {
-                        $webp = CompressX_Image_Meta::get_webp_converted_size($post_id);
-                        $data['converted_webp']++;
-                        if ($original > 0 && $webp > 0 && $webp <= $original)
-                        {
-                            $data['original_total_webp'] += $original;
-                            $data['webp_total'] += $webp;
-                        }
-                    }
-
-                    wp_cache_delete($post_id, 'post_meta' );
+                    continue;
                 }
 
-                if(isset($meta['avif_converted']))
-                {
-                    if (!empty($meta['avif_converted']) && $meta['avif_converted'] == 1)
-                    {
-                        $avif = isset($meta['avif_converted_size']) ? (int)$meta['avif_converted_size'] : 0;
-                        $data['converted_avif']++;
-                        if ($original > 0 && $avif > 0 && $avif <= $original) {
+                $original = (int)($row['og_file_size'] ?? 0);
 
-                            $data['original_total_avif'] += $original;
-                            $data['avif_total'] += $avif;
-                        }
+                if (!empty($row['webp_converted']))
+                {
+                    $webp = (int)($row['webp_converted_size'] ?? 0);
+                    $data['converted_webp']++;
+                    if ($original > 0 && $webp > 0 && $webp <= $original)
+                    {
+                        $data['original_total_webp'] += $original;
+                        $data['webp_total'] += $webp;
                     }
                 }
-                else
+
+                if (!empty($row['avif_converted']))
                 {
-                    $post_id=$row['post_id'];
-                    if(CompressX_Image_Meta::get_image_meta_avif_converted($post_id))
+                    $avif = (int)($row['avif_converted_size'] ?? 0);
+                    $data['converted_avif']++;
+                    if ($original > 0 && $avif > 0 && $avif <= $original)
                     {
-                        $avif = CompressX_Image_Meta::get_avif_converted_size($post_id);
-                        $data['converted_avif']++;
-                        if ($original > 0 && $avif > 0 && $avif <= $original) {
-
-                            $data['original_total_avif'] += $original;
-                            $data['avif_total'] += $avif;
-                        }
+                        $data['original_total_avif'] += $original;
+                        $data['avif_total'] += $avif;
                     }
-
-                    wp_cache_delete($post_id, 'post_meta' );
                 }
-
 
                 $data['total_count']++;
             }
 
             $offset += $batch_size;
-            if ((time() - $start_time) >= self::MAX_DURATION) {
+            if ((time() - $start_time) >= self::MAX_DURATION)
+            {
                 update_option(self::PROGRESS_KEY, [
                     'offset' => $offset,
+                    '_legacy_offset'=> $legacy_offset,
                     'accumulated' => $data,
                     'state' => 'wait',
                 ]);
@@ -191,7 +173,87 @@ class CompressX_Stats_Manager
             }
         }
 
-        delete_option(self::PROGRESS_KEY);
+        while (true)
+        {
+            $legacy_results = $wpdb->get_results($wpdb->prepare("
+            SELECT pm.post_id, pm.meta_value
+            FROM {$wpdb->postmeta} pm
+            INNER JOIN {$wpdb->posts} p
+                ON pm.post_id = p.ID
+            LEFT JOIN {$meta_table} m
+                ON m.attachment_id = pm.post_id
+            WHERE pm.meta_key = %s
+              AND p.post_type = 'attachment'
+              AND m.attachment_id IS NULL
+            ORDER BY pm.post_id ASC
+            LIMIT %d OFFSET %d
+        ", self::META_KEY, $batch_size, $legacy_offset), ARRAY_A);
+
+            $count_this_batch = count($legacy_results);
+            if ($count_this_batch === 0) {
+                break;
+            }
+
+            foreach ($legacy_results as $row)
+            {
+                $image_id = (int)$row['post_id'];
+                $meta = maybe_unserialize($row['meta_value']);
+                if (!is_array($meta)) {
+                    continue;
+                }
+
+                CompressX_Image_Meta_V2::upgrade_image_meta($image_id);
+
+                $status = $meta['status'] ?? '';
+                if ($status === 'skip')
+                {
+                    continue;
+                }
+
+                $original = isset($meta['og_file_size']) ? (int)$meta['og_file_size'] : 0;
+
+                if (!empty($meta['webp_converted']) && (int)$meta['webp_converted'] === 1)
+                {
+                    $webp = isset($meta['webp_converted_size']) ? (int)$meta['webp_converted_size'] : 0;
+                    $data['converted_webp']++;
+                    if ($original > 0 && $webp > 0 && $webp <= $original)
+                    {
+                        $data['original_total_webp'] += $original;
+                        $data['webp_total'] += $webp;
+                    }
+                }
+
+                if (!empty($meta['avif_converted']) && (int)$meta['avif_converted'] === 1)
+                {
+                    $avif = isset($meta['avif_converted_size']) ? (int)$meta['avif_converted_size'] : 0;
+                    $data['converted_avif']++;
+                    if ($original > 0 && $avif > 0 && $avif <= $original)
+                    {
+                        $data['original_total_avif'] += $original;
+                        $data['avif_total'] += $avif;
+                    }
+                }
+
+                $data['total_count']++;
+            }
+
+            $legacy_offset += $batch_size;
+
+            if ((time() - $start_time) >= self::MAX_DURATION)
+            {
+                update_option(self::PROGRESS_KEY, [
+                    'offset' => $offset,
+                    '_legacy_offset' =>$legacy_offset,
+                    'accumulated' => $data,
+                    'state' => 'wait',
+                    'phase' => 'legacy',
+                ]);
+                return;
+            }
+        }
+
+
+        CompressX_Options::delete_option(self::PROGRESS_KEY);
 
         $webp_saved = $data['original_total_webp'] - $data['webp_total'];
         $avif_saved = $data['original_total_avif'] - $data['avif_total'];
@@ -216,12 +278,13 @@ class CompressX_Stats_Manager
             'saved_avif_size' => $avif_saved,
             'webp_total' => $data['webp_total'],
             'avif_total' => $data['avif_total'],
+            'webp_total_fomat' => size_format($data['webp_total'],2),
+            'avif_total_fomat' => size_format($data['avif_total'],2),
             'original_total_webp' => $data['original_total_webp'],
             'original_total_avif' => $data['original_total_avif'],
             'calculated_at' => time(),
         ];
 
-        update_option(self::OPTION_KEY, $final);
         set_transient(self::TRANSIENT_KEY, $final, MINUTE_IN_SECONDS * 10);
     }
 

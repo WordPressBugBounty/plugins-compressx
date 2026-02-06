@@ -2,13 +2,13 @@
 Contributors: compressxio
 Tags: convert WebP, convert AVIF, WebP, AVIF, optimization
 Requires at least: 5.8
-Tested up to: 6.8.2
+Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 0.9.32
+Stable tag: 0.9.34
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
-Local image optimizer. AVIF & WebP converter.
+AVIF & WebP converter. Local image optimization
 
 == Description ==
 CompressX is a free, lightweight and simple Webp & AVIF conversion and compression plugin for WordPress websites. It helps you to easily convert JPG and PNG images to WebP and AVIF formats, and compress WebP and AVIF images. The AVIF and WebP conversion is performed locally on the web server.
@@ -65,6 +65,15 @@ Yes, absolutely. Whenever you need help, start a thread on the support forum or 
 Yes, we do. Here is a [tutorial](https://compressx.io/docs/compressx-overview/) for you to quickly get started with CompressX.
 
 == Changelog ==
+= 0.9.34 =
+- Added a custom database table for saving CompressX image data.
+- Fixed some bugs in the plugin code.
+- Optimized plugin UI and core code.
+= 0.9.33 =
+- Major update to the plugin user interface.
+- Fixed some bugs in the plugin code.
+- Successfully tested with PHP 8.5.
+- Successfully tested with WordPress 6.9.
 = 0.9.32 =
 - Fixed: Manual image conversions from media library would fail.
 = 0.9.31 =
@@ -183,6 +192,8 @@ Yes, we do. Here is a [tutorial](https://compressx.io/docs/compressx-overview/) 
 - Initial release. Hello world!
 
 == Upgrade Notice ==
-Latest version 0.9.32:
-= 0.9.32 =
-- Fixed: Manual image conversions from media library would fail.
+Latest version 0.9.34:
+= 0.9.34 =
+- Added a custom database table for saving CompressX image data.
+- Fixed some bugs in the plugin code.
+- Optimized plugin UI and core code.

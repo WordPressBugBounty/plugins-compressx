@@ -78,6 +78,7 @@ class CompressX_System_Info
                         </div>
                         <div style="padding:10px 10px;">
                             <input id="compressx_debug_submit" class="button-primary" type="submit" value="<?php esc_attr_e( 'Send Debug Information to Us', 'compressx' ); ?>" />
+                            <span style="padding:0 0.2rem;"></span>
                             <span id="compressx_send_success_text" class="success hidden" aria-hidden="true" style="color:#007017"><?php esc_html_e('Send succeeded.','compressx')?></span>
                         </div>
                         <div style="clear:both;"></div>

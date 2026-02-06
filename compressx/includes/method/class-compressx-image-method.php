@@ -257,7 +257,7 @@ class CompressX_Image_Method
                     }
                     else if($type=='webp')
                     {
-                        if(CompressX_Image_Meta::get_image_meta_compressed($image->ID)==0)
+                        if(CompressX_Image_Meta_V2::get_image_meta_compressed($image->ID)==0)
                         {
                             $need_opt=true;
                         }
@@ -275,7 +275,7 @@ class CompressX_Image_Method
                     }
                     else
                     {
-                        if(CompressX_Image_Meta::get_image_meta_compressed($image->ID)==0)
+                        if(CompressX_Image_Meta_V2::get_image_meta_compressed($image->ID)==0)
                         {
                             $need_opt=true;
                         }
@@ -506,7 +506,7 @@ class CompressX_Image_Method
 
     public static function need_convert_to_webp($post_id,$exclude_regex_folder)
     {
-        if(!CompressX_Image_Meta::get_image_meta_webp_converted($post_id))
+        if(!CompressX_Image_Meta_V2::get_image_meta_webp_converted($post_id))
         {
             if(!CompressX_Image_Method::exclude_path($post_id,$exclude_regex_folder))
             {
@@ -525,7 +525,7 @@ class CompressX_Image_Method
 
     public static function need_convert_to_avif($post_id,$exclude_regex_folder)
     {
-        if(!CompressX_Image_Meta::get_image_meta_avif_converted($post_id))
+        if(!CompressX_Image_Meta_V2::get_image_meta_avif_converted($post_id))
         {
             if(!CompressX_Image_Method::exclude_path($post_id,$exclude_regex_folder))
             {
@@ -655,6 +655,7 @@ class CompressX_Image_Method
         }
 
         delete_transient('compressx_set_global_stats');
+        CompressX_Image_Meta_V2::delete_image_meta($image_id);
     }
 
     public static function get_output_path($og_path)

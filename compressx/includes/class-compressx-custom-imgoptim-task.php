@@ -27,13 +27,12 @@ class CompressX_Custom_ImgOptim_Task
     {
         $this->task=array();
 
-        $this->task['options']['force']=$force;
-
         $this->task['log']=uniqid('cx-');
         $this->log=new CompressX_Log();
         $this->log->CreateLogFile();
 
         $this->init_options();
+        $this->task['options']['force']=$force;
 
         $this->task['images']=$this->get_need_optimize_images();
 
@@ -382,6 +381,10 @@ class CompressX_Custom_ImgOptim_Task
 
                 if($ret['show_review']==1)
                 {
+                    if (CompressX_Options::get_option('compressx_show_review', false) === false)
+                    {
+                        CompressX_Options::update_option('compressx_show_review', time());
+                    }
                     delete_transient('compressx_set_global_stats');
                     $size=CompressX_Image_Method::get_opt_folder_size();
                     $ret['opt_size']=size_format($size,2);

@@ -156,11 +156,11 @@ class CompressX_Picture_Load
 
         $attributes = array_diff_key( $image['attributes'], $to_remove );
 
-        $output = '<picture' . $this->picture_build_attributes( $attributes ) . ">\n";
+        $output = '<picture' . $this->picture_build_attributes( $attributes ) . ">";
         $output .= $this->build_source_tag_ex( $image );
 
         $output .= $this->build_img_tag( $image );
-        $output .= "</picture>\n";
+        $output .= "</picture>";
 
         return $output;
     }
@@ -304,7 +304,7 @@ class CompressX_Picture_Load
                 continue;
             }
 
-            $source .= '<source' . $this->build_attributes( $attributes ) . "/>\n";
+            $source .= '<source' . $this->build_attributes( $attributes ) . "/>";
         }
 
         return $source;
@@ -364,7 +364,7 @@ class CompressX_Picture_Load
             }
         }
 
-        return '<source' . $this->build_attributes( $attributes ) . "/>\n";
+        return '<source' . $this->build_attributes( $attributes ) . "/>";
     }
 
     protected function build_img_tag( $image )
@@ -382,7 +382,7 @@ class CompressX_Picture_Load
 
         $attributes = array_diff_key( $image['attributes'], $to_remove );
 
-        return '<img' . $this->build_attributes( $attributes ) . "/>\n";
+        return '<img' . $this->build_attributes( $attributes ) . "/>";
     }
 
     public function get_attribute($image)

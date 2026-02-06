@@ -15,8 +15,8 @@ class CompressX_Custom_Media_Lib
 
         //wp_prepare_attachment_for_js
 
-        add_action( 'restrict_manage_posts', array($this,'add_dropdown') );
-        add_action( 'pre_get_posts', array( $this, 'filter_posts' ) );
+        //add_action( 'restrict_manage_posts', array($this,'add_dropdown') );
+        //add_action( 'pre_get_posts', array( $this, 'filter_posts' ) );
     }
 
     public function optimize_columns($defaults)
@@ -42,10 +42,10 @@ class CompressX_Custom_Media_Lib
             return __('Not support','compressx');
         }
 
-        $meta=CompressX_Image_Meta::get_image_meta($id);
+        $meta=CompressX_Image_Meta_V2::get_image_meta($id);
         $html='<div class="cx-media-item" data-id="'.$id.'">';
 
-        if(!CompressX_Image_Meta::is_image_optimized($id))
+        if(!CompressX_Image_Meta_V2::is_image_optimized($id))
         {
             if($this->is_image_progressing($id))
             {
@@ -70,27 +70,15 @@ class CompressX_Custom_Media_Lib
         }
         else
         {
-            $convert_size=CompressX_Image_Meta::get_webp_converted_size($id);
-            $og_size=CompressX_Image_Meta::get_og_size($id);
+            $convert_size=CompressX_Image_Meta_V2::get_webp_converted_size($id);
+            $og_size=CompressX_Image_Meta_V2::get_og_size($id);
             if($og_size>0)
             {
                 if($convert_size>0)
                 {
                     $webp_percent = round(100 - ($convert_size / $og_size) * 100, 2);
                 }
-                else if(CompressX_Image_Meta::is_webp_image($id))
-                {
-                    $convert_size=CompressX_Image_Meta::get_compressed_size($id);
-                    if($convert_size>0)
-                    {
-                        $webp_percent = round(100 - ($convert_size / $og_size) * 100, 2);
-                    }
-                    else
-                    {
-                        $webp_percent=0;
-                    }
-                }
-                else if(CompressX_Image_Meta::is_avif_image($id))
+                else if(CompressX_Image_Meta_V2::is_avif_image($id))
                 {
                     $webp_percent=0;
                 }
@@ -104,24 +92,12 @@ class CompressX_Custom_Media_Lib
                 $webp_percent=0;
             }
 
-            $avif_size=CompressX_Image_Meta::get_avif_converted_size($id);
+            $avif_size=CompressX_Image_Meta_V2::get_avif_converted_size($id);
             if($og_size>0)
             {
                 if($avif_size>0)
                 {
                     $avif_percent = round(100 - ($avif_size / $og_size) * 100, 2);
-                }
-                else if(CompressX_Image_Meta::is_avif_image($id))
-                {
-                    $avif_size=CompressX_Image_Meta::get_compressed_size($id);
-                    if($avif_size>0)
-                    {
-                        $avif_percent = round(100 - ($avif_size / $og_size) * 100, 2);
-                    }
-                    else
-                    {
-                        $avif_percent=0;
-                    }
                 }
                 else
                 {
@@ -133,7 +109,7 @@ class CompressX_Custom_Media_Lib
                 $avif_percent=0;
             }
 
-            $meta=CompressX_Image_Meta::get_image_meta($id);
+            $meta=CompressX_Image_Meta_V2::get_image_meta($id);
             $thumbnail_counts=count($meta['size']);
 
             $html.='<ul>';
@@ -261,7 +237,7 @@ class CompressX_Custom_Media_Lib
 
     public function is_image_progressing($post_id)
     {
-        $progressing=CompressX_Image_Meta::get_image_progressing($post_id);
+        $progressing=CompressX_Image_Meta_V2::get_image_progressing($post_id);
 
         if(empty($progressing))
         {
@@ -283,7 +259,7 @@ class CompressX_Custom_Media_Lib
 
     public function is_image_processing_failed($post_id)
     {
-        $status=CompressX_Image_Meta::get_image_meta_status($post_id);
+        $status=CompressX_Image_Meta_V2::get_image_meta_status($post_id);
 
         if(empty($status))
         {
@@ -317,7 +293,7 @@ class CompressX_Custom_Media_Lib
         {
             echo '<div class="misc-pub-section misc-pub-cx" data-id="' . esc_attr($post->ID) . '"><h4>' . esc_html__('CompressX','compressx') . '</h4>';
 
-            if (!CompressX_Image_Meta::is_image_optimized($post->ID)) {
+            if (!CompressX_Image_Meta_V2::is_image_optimized($post->ID)) {
                 if ($this->is_image_progressing($post->ID)) {
                     echo "<a  class='cx-media-progressing button' data-id='" . esc_attr($post->ID) . "'>" . esc_html__('Converting...','compressx') . "</a>";
                 } else {
@@ -325,8 +301,8 @@ class CompressX_Custom_Media_Lib
                 }
             } else {
 
-                $convert_size=CompressX_Image_Meta::get_webp_converted_size($post->ID);
-                $og_size=CompressX_Image_Meta::get_og_size($post->ID);
+                $convert_size=CompressX_Image_Meta_V2::get_webp_converted_size($post->ID);
+                $og_size=CompressX_Image_Meta_V2::get_og_size($post->ID);
                 if($og_size>0&&$convert_size>0)
                 {
                     $webp_percent = round(100 - ($convert_size / $og_size) * 100, 2);
@@ -336,7 +312,7 @@ class CompressX_Custom_Media_Lib
                     $webp_percent=0;
                 }
 
-                $avif_size=CompressX_Image_Meta::get_avif_converted_size($post->ID);
+                $avif_size=CompressX_Image_Meta_V2::get_avif_converted_size($post->ID);
                 if($og_size>0&&$avif_size>0)
                 {
                     $avif_percent = round(100 - ($avif_size / $og_size) * 100, 2);
@@ -346,7 +322,7 @@ class CompressX_Custom_Media_Lib
                     $avif_percent=0;
                 }
 
-                $meta=CompressX_Image_Meta::get_image_meta($post->ID);
+                $meta=CompressX_Image_Meta_V2::get_image_meta($post->ID);
                 $thumbnail_counts=count($meta['size']);
 
                 echo '<ul>';
@@ -391,7 +367,7 @@ class CompressX_Custom_Media_Lib
         {
             $html='<div class="cx-media-attachment" data-id="'.$attachment->ID.'">';
 
-            if(!CompressX_Image_Meta::is_image_optimized($attachment->ID))
+            if(!CompressX_Image_Meta_V2::is_image_optimized($attachment->ID))
             {
                 if($this->is_image_progressing($attachment->ID))
                 {
@@ -404,8 +380,8 @@ class CompressX_Custom_Media_Lib
             }
             else
             {
-                $convert_size=CompressX_Image_Meta::get_webp_converted_size($attachment->ID);
-                $og_size=CompressX_Image_Meta::get_og_size($attachment->ID);
+                $convert_size=CompressX_Image_Meta_V2::get_webp_converted_size($attachment->ID);
+                $og_size=CompressX_Image_Meta_V2::get_og_size($attachment->ID);
                 if($og_size>0&&$convert_size>0)
                 {
                     $webp_percent = round(100 - ($convert_size / $og_size) * 100, 2);
@@ -415,7 +391,7 @@ class CompressX_Custom_Media_Lib
                     $webp_percent=0;
                 }
 
-                $avif_size=CompressX_Image_Meta::get_avif_converted_size($attachment->ID);
+                $avif_size=CompressX_Image_Meta_V2::get_avif_converted_size($attachment->ID);
                 if($og_size>0&&$avif_size>0)
                 {
                     $avif_percent = round(100 - ($avif_size / $og_size) * 100, 2);
@@ -425,7 +401,7 @@ class CompressX_Custom_Media_Lib
                     $avif_percent=0;
                 }
 
-                $meta=CompressX_Image_Meta::get_image_meta($attachment->ID);
+                $meta=CompressX_Image_Meta_V2::get_image_meta($attachment->ID);
                 $thumbnail_counts=count($meta['size']);
 
                 $html.='<ul>';
