@@ -8,28 +8,36 @@ window.compressx = window.compressx || {};
         lock:false,
         init:function()
         {
-            $( document ).on( 'click', '.cx-media-item a.cx-media', this.optimize_image );
-            $( document ).on( 'click', '.cx-media-item a.cx-media-delete', this.restore_image);
-            $( document ).on( 'click', '.misc-pub-cx a.cx-media-delete', this.restore_image_edit);
-            $( document ).on( 'click', '.misc-pub-cx a.cx-media', this.optimize_image_edit);
-            $( document ).on( 'click', '.cx-media-attachment a.cx-media', this.optimize_image_attachment);
-            $( document ).on( 'click', '.cx-media-attachment a.cx-media-delete', this.restore_image_attachment);
-            $( document ).on( 'click', '.thumbnail', this.get_attachment_progress);
+            $( document ).on( 'click', '.cx-media-item a.cx-media', this.handle_action_button);
+            $( document ).on( 'click', '.misc-pub-cx a.cx-media', this.handle_action_button_edit);
+            $( document ).on( 'click', '.cx-media-attachment a.cx-media', this.handle_action_button_attachment);
             w.compressx.media.get_progress();
         },
-        optimize_image:function ()
+        handle_action_button:function ()
         {
             if(w.compressx.media.islockbtn())
             {
                 return ;
             }
+
+            var $row = $(this).closest('.cx-media-item');
+            var $select = $row.find('.cx-media-selected');
+            var action = $select.val();
+
+            if(action==="")
+            {
+                return;
+            }
+
             var id=$( this ).data( 'id' );
-            $( this ).html("Converting...");
+            $( this ).html("Progressing...");
             $( this ).removeClass('cx-media');
             w.compressx.media.lockbtn(true);
 
+            var ajax_action=w.compressx.media.get_ajax_action(action);
+
             var ajax_data = {
-                'action': 'compressx_opt_single_image',
+                'action': ajax_action,
                 'id':id
             };
             compressx_post_request(ajax_data, function(data)
@@ -41,19 +49,30 @@ window.compressx = window.compressx || {};
                 w.compressx.media.get_progress();
             });
         },
-        optimize_image_edit:function()
+        handle_action_button_edit:function()
         {
             if(w.compressx.media.islockbtn())
             {
                 return ;
             }
+
+            var $row = $(this).closest('.misc-pub-cx');
+            var $select = $row.find('.cx-media-selected');
+            var action = $select.val();
+
+            if(action==="")
+            {
+                return;
+            }
+
             var id=$( this ).data( 'id' );
             $( this ).html("Converting...");
             $( this ).removeClass('cx-media');
             w.compressx.media.lockbtn(true);
 
+            var ajax_action=w.compressx.media.get_ajax_action(action);
             var ajax_data = {
-                'action': 'compressx_opt_single_image',
+                'action': ajax_action,
                 'id':id
             };
             compressx_post_request(ajax_data, function(data)
@@ -65,19 +84,30 @@ window.compressx = window.compressx || {};
                 w.compressx.media.get_progress('edit');
             });
         },
-        optimize_image_attachment:function()
+        handle_action_button_attachment:function()
         {
             if(w.compressx.media.islockbtn())
             {
                 return ;
             }
+
+            var $row = $(this).closest('.cx-media-attachment');
+            var $select = $row.find('.cx-media-selected');
+            var action = $select.val();
+
+            if(action==="")
+            {
+                return;
+            }
+
             var id=$( this ).data( 'id' );
             $( this ).html("Converting...");
             $( this ).removeClass('cx-media');
             w.compressx.media.lockbtn(true);
 
+            var ajax_action=w.compressx.media.get_ajax_action(action);
             var ajax_data = {
-                'action': 'compressx_opt_single_image',
+                'action': ajax_action,
                 'id':id
             };
 
@@ -90,25 +120,12 @@ window.compressx = window.compressx || {};
                 w.compressx.media.get_progress('attachment');
             });
         },
-        optimize_timeout_image:function (page='media')
-        {
-            var ajax_data = {
-                'action': 'compressx_opt_image',
-            };
-            compressx_post_request(ajax_data, function(data)
-            {
-                setTimeout(function ()
-                {
-                    w.compressx.media.get_progress(page);
-                }, 1000);
-
-            }, function(XMLHttpRequest, textStatus, errorThrown)
-            {
-                setTimeout(function ()
-                {
-                    w.compressx.media.get_progress(page);
-                }, 1000);
-            });
+        get_ajax_action: function(action) {
+            switch (action) {
+                case 'convert': return 'compressx_opt_single_image';
+                case 'delete': return 'compressx_delete_single_image';
+                default: return '';
+            }
         },
         get_progress:function(page='media')
         {
@@ -196,7 +213,10 @@ window.compressx = window.compressx || {};
 
             }, function(XMLHttpRequest, textStatus, errorThrown)
             {
-                w.compressx.media.get_progress(page);
+                setTimeout(function ()
+                {
+                    w.compressx.media.get_progress(page);
+                }, 1000);
             });
         },
         update:function (jsonarray,page='media')
@@ -247,102 +267,6 @@ window.compressx = window.compressx || {};
         islockbtn:function ()
         {
             return w.compressx.media.lock;
-        },
-        restore_image:function()
-        {
-            if(w.compressx.media.islockbtn())
-            {
-                return ;
-            }
-            w.compressx.media.lockbtn(true);
-            var id=$( this ).data( 'id' );
-
-            $( this ).addClass("button-disabled");
-
-            var ajax_data = {
-                'action': 'compressx_delete_single_image',
-                'id':id
-            };
-            compressx_post_request(ajax_data, function(data)
-            {
-                w.compressx.media.lockbtn(false);
-                var jsonarray = jQuery.parseJSON(data);
-                w.compressx.media.update(jsonarray);
-
-            }, function(XMLHttpRequest, textStatus, errorThrown)
-            {
-                w.compressx.media.lockbtn(false);
-                var error_message = compressx_output_ajaxerror('restore image', textStatus, errorThrown);
-                alert(error_message);
-            });
-        },
-        restore_image_edit:function ()
-        {
-            if(w.compressx.media.islockbtn())
-            {
-                return ;
-            }
-            w.compressx.media.lockbtn(true);
-            var id=$( this ).data( 'id' );
-
-            $( this ).addClass("button-disabled");
-
-            var ajax_data = {
-                'action': 'compressx_delete_single_image',
-                'id':id,
-                'page':'edit'
-            };
-            compressx_post_request(ajax_data, function(data)
-            {
-                w.compressx.media.lockbtn(false);
-                var jsonarray = jQuery.parseJSON(data);
-                w.compressx.media.update(jsonarray,'edit');
-
-            }, function(XMLHttpRequest, textStatus, errorThrown)
-            {
-                w.compressx.media.lockbtn(false);
-                var error_message = compressx_output_ajaxerror('restore image', textStatus, errorThrown);
-                alert(error_message);
-            });
-        },
-        restore_image_attachment:function ()
-        {
-            if(w.compressx.media.islockbtn())
-            {
-                return ;
-            }
-            w.compressx.media.lockbtn(true);
-            var id=$( this ).data( 'id' );
-
-            $( this ).addClass("button-disabled");
-
-            var ajax_data = {
-                'action': 'compressx_delete_single_image',
-                'id':id,
-                'page':'attachment'
-            };
-
-            compressx_post_request(ajax_data, function(data)
-            {
-                w.compressx.media.lockbtn(false);
-                var jsonarray = jQuery.parseJSON(data);
-                w.compressx.media.update(jsonarray,'attachment');
-
-            }, function(XMLHttpRequest, textStatus, errorThrown)
-            {
-                w.compressx.media.lockbtn(false);
-                var error_message = compressx_output_ajaxerror('restore image attachment', textStatus, errorThrown);
-                alert(error_message);
-            });
-        },
-        get_attachment_progress:function ()
-        {
-            $(this).find('.cx-media-attachment').each(function()
-            {
-                var id=$(this).data( 'id' );
-                alert(id);
-            });
-
         }
     };
     w.compressx.media.init();

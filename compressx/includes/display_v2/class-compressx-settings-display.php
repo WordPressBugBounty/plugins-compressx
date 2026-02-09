@@ -794,7 +794,7 @@ class CompressX_Settings_Display
     public function save_settings()
     {
         global $compressx;
-        $compressx->ajax_check_security('compressx-can-use-thumbnail-settings');
+        $compressx->ajax_check_security();
 
         if (isset($_POST['settings']) && !empty($_POST['settings']))
         {

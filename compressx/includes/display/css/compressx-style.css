@@ -285,7 +285,7 @@ a {
 }
 .compressx-header-block{
     display:grid;
-    grid-template-columns: 3fr 1fr;
+    grid-template-columns: 5fr 2fr;
     gap:1rem;
 }
 .compressx-header-custom-block{
@@ -952,7 +952,7 @@ a {
 }
 .compressx-table-3-cols-header{
     display: grid;
-    grid-template-columns: 2fr 1fr 3fr;
+    grid-template-columns: 2fr 1fr 1fr;
     gap: 1rem;
     border-top: 1px solid var(--color-grey);
     border-bottom: 1px solid var(--color-grey);
@@ -961,7 +961,7 @@ a {
 }
 .compressx-table-3-cols-body{
     display: grid;
-    grid-template-columns: 2fr 1fr 3fr;
+    grid-template-columns: 2fr 1fr 1fr;
     gap: 1rem;
     border-bottom: 1px solid var(--color-dark-grey);
     padding: 1rem 0;
@@ -969,7 +969,7 @@ a {
 }
 .compressx-table-3-cols-body:hover{
     display: grid;
-    grid-template-columns: 2fr 1fr 3fr;
+    grid-template-columns: 2fr 1fr 1fr;
     gap: 1rem;
     border-bottom: 1px solid var(--color-dark-grey);
     padding: 1rem 0;
@@ -978,12 +978,52 @@ a {
 }
 .compressx-table-3-cols-footer{
     display: grid;
-    grid-template-columns: 2fr 1fr 3fr;
+    grid-template-columns: 2fr 1fr 1fr;
     gap: 1rem;
     border-top: 1px solid var(--color-grey);
     border-bottom: 1px solid var(--color-grey);
     background-color:var(--color-light-grey);
     padding: 0.5rem;
+}
+.compressx-table-2-cols-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--color-grey);
+    border-bottom: 1px solid var(--color-grey);
+    background-color:var(--color-light-grey);
+    padding: 0.5rem;
+}
+.compressx-table-2-cols-body{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--color-dark-grey);
+    padding: 1rem 0;
+    padding-left: 0.5rem;
+}
+.compressx-table-2-cols-body:hover{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--color-dark-grey);
+    padding: 1rem 0;
+    background-color: var(--color-notification);
+    padding-left: 0.5rem;
+}
+.compressx-table-2-cols-footer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--color-grey);
+    border-bottom: 1px solid var(--color-grey);
+    background-color:var(--color-light-grey);
+    padding: 0.5rem;
+}
+.compressx-table-row{
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
 }
 /*=============================Compressx Bulk Optimization========================================*/
 

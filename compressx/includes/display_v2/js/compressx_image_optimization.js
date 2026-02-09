@@ -70,6 +70,17 @@ jQuery('#cx_convert_to_webp').click(function()
             jQuery('#cx_convert_to_webp').prop('checked', true);
         }
     }
+    else
+    {
+        if(jQuery('#cx_convert_to_webp').prop('checked'))
+        {
+            jQuery('#cx_convert_to_webp').parent('label').addClass('compressx-v2-bg-white');
+        }
+        else
+        {
+            jQuery('#cx_convert_to_webp').parent('label').removeClass('compressx-v2-bg-white');
+        }
+    }
 });
 
 jQuery('#cx_convert_to_avif').click(function()
@@ -112,10 +123,30 @@ jQuery('#cx_convert_to_avif').click(function()
             jQuery('#cx_convert_to_avif').prop('checked', true);
         }
     }
+    else
+    {
+        if(jQuery('#cx_convert_to_avif').prop('checked'))
+        {
+            jQuery('#cx_convert_to_avif').parent('label').addClass('compressx-v2-bg-white');
+        }
+        else
+        {
+            jQuery('#cx_convert_to_avif').parent('label').removeClass('compressx-v2-bg-white');
+        }
+    }
 });
 
 jQuery('#cx_converter_method_gd').click(function()
 {
+    if(jQuery('#cx_converter_method_gd').prop('checked'))
+    {
+        jQuery('#cx_converter_method_gd').parent('label').addClass('compressx-v2-bg-white');
+    }
+    else
+    {
+        jQuery('#cx_converter_method_gd').parent('label').removeClass('compressx-v2-bg-white');
+    }
+
     if(compressx_alert.support_gd_webp)
     {
         jQuery('#cx_convert_to_webp').prop('disabled', false);
@@ -149,6 +180,15 @@ jQuery('#cx_converter_method_gd').click(function()
 
 jQuery('#cx_converter_method_imagick').click(function()
 {
+    if(jQuery('#cx_converter_method_imagick').prop('checked'))
+    {
+        jQuery('#cx_converter_method_imagick').parent('label').addClass('compressx-v2-bg-white');
+    }
+    else
+    {
+        jQuery('#cx_converter_method_imagick').parent('label').removeClass('compressx-v2-bg-white');
+    }
+
     if(compressx_alert.support_imagick_webp)
     {
         jQuery('#cx_convert_to_webp').prop('disabled', false);

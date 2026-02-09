@@ -172,16 +172,25 @@ function updateComparisonData(imageData) {
         jQuery('#cx-v2-original-size').text(imageData.original_size);
     }
 
-    if (imageData.webp_url && !imageData.webp_disabled) {
+    if (imageData.webp_url && !imageData.webp_disabled)
+    {
         jQuery('#cx-v2-webp-size').text(imageData.webp_size || '--');
         jQuery('#cx-v2-webp-savings').text(imageData.webp_savings || '');
     }
+    else {
+        jQuery('#cx-v2-webp-size').text('--');
+        jQuery('#cx-v2-webp-savings').text('');
+    }
 
-    if (imageData.avif_url && !imageData.avif_disabled) {
+    if (imageData.avif_url && !imageData.avif_disabled)
+    {
         jQuery('#cx-v2-avif-size').text(imageData.avif_size || '--');
         jQuery('#cx-v2-avif-savings').text(imageData.avif_savings || '');
     }
-
+    else {
+        jQuery('#cx-v2-avif-size').text('--');
+        jQuery('#cx-v2-avif-savings').text('');
+    }
     // Determine appropriate comparison mode based on available formats
     var hasWebP = imageData.webp_url && !imageData.webp_disabled;
     var hasAVIF = imageData.avif_url && !imageData.avif_disabled;

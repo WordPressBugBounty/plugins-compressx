@@ -872,6 +872,26 @@ class CompressX_Image_Meta_V2
         }
     }
 
+    public static function has_optimized_file($image_id)
+    {
+        $webp_converted= self::get_image_meta_webp_converted($image_id);
+        if($webp_converted)
+        {
+            return true;
+        }
+
+        $avif_converted= self::get_image_meta_avif_converted($image_id);
+
+        if($avif_converted)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public static function is_webp_image($image_id)
     {
         $file_path = get_attached_file($image_id);

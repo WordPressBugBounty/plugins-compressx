@@ -13,6 +13,8 @@ class CompressX_Custom_Media_Lib
         add_action( 'attachment_submitbox_misc_actions',  array( $this,'submitbox') );
         add_filter( 'wp_prepare_attachment_for_js', array($this,'attachment_fields_to_edit'), 10, 2 );
 
+        add_action('wp_ajax_compressx_get_opt_single_image_progress', array($this, 'get_opt_single_image_progress'));
+
         //wp_prepare_attachment_for_js
 
         //add_action( 'restrict_manage_posts', array($this,'add_dropdown') );
@@ -29,7 +31,7 @@ class CompressX_Custom_Media_Lib
     {
         if ( 'compressx' === $column_name )
         {
-            echo wp_kses_post( $this->optimize_action_columns( $id ) );
+            echo $this->optimize_action_columns( $id );
         }
     }
 
@@ -42,197 +44,193 @@ class CompressX_Custom_Media_Lib
             return __('Not support','compressx');
         }
 
-        $meta=CompressX_Image_Meta_V2::get_image_meta($id);
-        $html='<div class="cx-media-item" data-id="'.$id.'">';
+        $html=$this->output_item($id);
+        return $html;
+    }
 
-        if(!CompressX_Image_Meta_V2::is_image_optimized($id))
+    public function submitbox()
+    {
+        global $post;
+        $id=$post->ID;
+
+        $allowed_mime_types = CompressX_Image_Method::supported_mime_types_ex();
+
+        if ( ! wp_attachment_is_image( $post->ID ) || ! in_array( get_post_mime_type( $post->ID ),$allowed_mime_types ) )
         {
-            if($this->is_image_progressing($id))
-            {
-                $html.="<a  class='cx-media-progressing button' data-id='".esc_attr($id)."'>".__('Converting...','compressx')."</a>";
-            }
+            echo  esc_html__('Not support','compressx');
+            return;
+        }
+
+        if($this->is_skipped($id))
+        {
+            echo  esc_html__('Skipped','compressx');
+            return;
+        }
+
+        $html=$this->output_item_edit($id);
+        echo $html;
+    }
+
+    public function attachment_fields_to_edit(array $response, \WP_Post $attachment)
+    {
+        $source_post_id = (string) isset( $_REQUEST['post_id'])?$_REQUEST['post_id']:'';
+        if ( $source_post_id !== '0' )
+        {
+            return $response;
+        }
+
+        $allowed_mime_types = CompressX_Image_Method::supported_mime_types_ex();
+
+        if ( ! wp_attachment_is_image( $attachment->ID ) || ! in_array( get_post_mime_type( $attachment->ID ),$allowed_mime_types ) )
+        {
+            return $response;
+        }
+
+        $html=$this->output_item_attachment($attachment->ID);
+        $response['compat']['meta'] .=$html;
+
+        return $response;
+    }
+
+    public function output_item($id)
+    {
+        if($this->is_skipped($id))
+        {
+            return __('Skipped','compressx');
+        }
+
+        $html='<div class="cx-media-item" data-id="'.$id.'">';
+        $html.='<ul>';
+        $html.=$this->output_item_detail($id);
+        $html.=$this->output_item_action($id);
+        $html.='</ul>';
+        $html.='</div>';
+        return $html;
+    }
+
+    public function output_item_edit($id)
+    {
+        if($this->is_skipped($id))
+        {
+            return __('Skipped','compressx');
+        }
+
+        $html='<div class="misc-pub-section misc-pub-cx" data-id="'.$id.'"><h4>' . esc_html__('CompressX','compressx') . '</h4>';
+        $html.='<ul>';
+        $html.=$this->output_item_detail($id);
+        $html.=$this->output_item_action($id);
+        $html.='</ul>';
+        $html.='</div>';
+        return $html;
+    }
+
+    public function output_item_attachment($id)
+    {
+        $html='<div class="cx-media-attachment" data-id="'.$id.'"><h4>' . esc_html__('CompressX','compressx') . '</h4>';
+        $html.='<ul>';
+        $html.=$this->output_item_detail($id);
+        $html.=$this->output_item_action($id);
+        $html.='</ul>';
+        $html.='</div>';
+        return $html;
+    }
+
+    public function output_item_detail($id)
+    {
+        $html='';
+        $og_size=CompressX_Image_Meta_V2::get_og_size($id);
+        if(empty($og_size))
+        {
+            $file_path = get_attached_file( $id );
+            if(file_exists($file_path))
+                $og_size=filesize($file_path);
             else
-            {
-                $html.="<a  class='cx-media button' data-id='".esc_attr($id)."'>".__('Convert','compressx')."</a>";
-                if($this->is_image_processing_failed($id))
-                {
-                    foreach ($meta['size'] as $size_key => $size_data)
-                    {
-                        if(!empty($size_data['error']))
-                        {
-                            $html.='<p style="border-bottom:1px solid #D2D3D6;margin-top: 12px;"></p>';
-                            $html.="<span>".esc_html($size_data['error'])."</span>";
-                            break;
-                        }
-                    }
-                }
-            }
+                $og_size=0;
+        }
+
+        $html.='<li><span>Original : </span><strong>'.size_format($og_size,2).'</strong></li>';
+
+        $webp_size=CompressX_Image_Meta_V2::get_webp_converted_size($id);
+        if($webp_size>0&&$og_size>$webp_size)
+        {
+            $webp_percent = round(100 - ($webp_size / $og_size) * 100, 2);
         }
         else
         {
-            $convert_size=CompressX_Image_Meta_V2::get_webp_converted_size($id);
-            $og_size=CompressX_Image_Meta_V2::get_og_size($id);
-            if($og_size>0)
-            {
-                if($convert_size>0)
-                {
-                    $webp_percent = round(100 - ($convert_size / $og_size) * 100, 2);
-                }
-                else if(CompressX_Image_Meta_V2::is_avif_image($id))
-                {
-                    $webp_percent=0;
-                }
-                else
-                {
-                    $webp_percent=0;
-                }
-            }
-            else
-            {
-                $webp_percent=0;
-            }
-
-            $avif_size=CompressX_Image_Meta_V2::get_avif_converted_size($id);
-            if($og_size>0)
-            {
-                if($avif_size>0)
-                {
-                    $avif_percent = round(100 - ($avif_size / $og_size) * 100, 2);
-                }
-                else
-                {
-                    $avif_percent=0;
-                }
-            }
-            else
-            {
-                $avif_percent=0;
-            }
-
-            $meta=CompressX_Image_Meta_V2::get_image_meta($id);
-            $thumbnail_counts=count($meta['size']);
-
-            $html.='<ul>';
-            $html.= '<li><span>'.__('Original','compressx').' : </span><strong>'.size_format($og_size,2).'</strong></li>';
-            $html.= '<li><span>'.__('Webp','compressx').' : </span><strong>'.size_format($convert_size,2).'</strong><span> '.'Saved'.' : </span><strong>'.$webp_percent.'%</strong></li>';
-            $html.= '<li><span>'.__('AVIF','compressx').' : </span><strong>'.size_format($avif_size,2).'</strong><span> '.'Saved'.' : </span><strong>'.$avif_percent.'%</strong></li>';
-            $html.= '<li><span>'.__('Thumbnails generated','compressx').' : </span><strong>'.$thumbnail_counts.'</strong></li>';
-            $html.="<li><a class='cx-media-delete button' data-id='".esc_attr($id)."'>".__('Delete','compressx')."</a>
-<span class='compressx-dashicons-help compressx-tooltip'>
-                                    <a href='#'><span class='dashicons dashicons-editor-help' style='padding-top: 3px;'></span></a>
-                                    <div class='compressx-bottom'>
-                                        <!-- The content you need -->
-                                        <p>
-                                            <span>".__('Delete the WebP and AVIF images generated by CompressX.','compressx')."</span><br>
-                                        </p>
-                                        <i></i> <!-- do not delete this line -->
-                                    </div>
-                                </span>
-                                </li>";
-            $html.='</ul>';
+            $webp_percent=0;
         }
 
-        $html.='</div>';
+        $html.='<li><span>Webp : <strong>'.size_format($webp_size,2).'</strong> Saved : <strong>'.$webp_percent.'%</strong></span></li>';
 
+        $avif_size=CompressX_Image_Meta_V2::get_avif_converted_size($id);
+
+        if($avif_size>0&&$og_size>$avif_size)
+        {
+            $avif_percent = round(100 - ($avif_size / $og_size) * 100, 2);
+        }
+        else
+        {
+            $avif_percent=0;
+        }
+
+        $html.='<li><span>AVIF : <strong>'.size_format($avif_size,2).'</strong> Saved : <strong>'.$avif_percent.'%</strong></span></li>';
+
+        $meta=CompressX_Image_Meta_V2::get_image_meta($id);
+        if(isset($meta['size'])&&!empty($meta['size']))
+        {
+            $thumbnail_counts=count($meta['size']);
+        }
+        else
+        {
+            $thumbnail_counts=0;
+        }
+        $html.='<li><span>Thumbnails generated : </span><strong>'.$thumbnail_counts.'</strong></li>';
 
         return $html;
     }
 
-    public function add_dropdown()
+    public function output_item_action($id)
     {
-        $scr = get_current_screen();
-
-        if ( 'upload' !== $scr->base )
+        $html='<li>';
+        $html.='<select class="cx-media-selected">';
+        $html.='<option value="">Select Action</option>';
+        if(CompressX_Image_Meta_V2::is_image_optimized($id))
         {
-            return;
+            $html.='<option value="delete">Delete</option>';
+        }
+        else
+        {
+            $html.='<option value="convert">Convert</option>';
+            if(CompressX_Image_Meta_V2::has_optimized_file($id))
+            {
+                $html.='<option value="delete">Delete</option>';
+            }
         }
 
-        $filter = filter_input( INPUT_GET, 'compressx-filter', FILTER_SANITIZE_SPECIAL_CHARS );
+        $html.='</select>';
+        if($this->is_image_progressing($id))
+        {
+            $html.='<a class="cx-media button-disabled button" data-id="'.esc_attr($id).'">Progressing</a>';
+        }
+        else
+        {
+            $html.='<a class="cx-media button" data-id="'.esc_attr($id).'">Apply</a>';
+        }
 
-        ?>
-        <label for="compressx_filter" class="screen-reader-text">
-            <?php esc_html_e( 'CompressX Filter', 'compressx' ); ?>
-        </label>
-        <select class="compressx-filters" name="compressx-filter" id="compressx_filter">
-            <option value="" <?php selected( $filter, '' ); ?>><?php esc_html_e( 'CompressX: All images', 'compressx' ); ?></option>
-            <option value="optimized" <?php selected( $filter, 'optimized' ); ?>><?php esc_html_e( 'CompressX: Optimized', 'compressx' ); ?></option>
-            <option value="unoptimized" <?php selected( $filter, 'unoptimized' ); ?>><?php esc_html_e( 'CompressX: Unoptimized', 'compressx' ); ?></option>
-            <option value="failed_optimized" <?php selected( $filter, 'failed_optimized' ); ?>><?php esc_html_e( 'CompressX: Optimization Failed', 'compressx' ); ?></option>
-        </select>
-        <?php
+        $html.='</li>';
+        return $html;
     }
 
-    public function filter_posts($query)
+    public function is_skipped($image_id)
     {
-        global $current_screen;
-
-        // Filter only media screen.
-        if (! is_admin() || ( ! empty( $current_screen ) && 'upload' !== $current_screen->base ) || 'attachment' !== $query->get( 'post_type' )
-        )
+        if(CompressX_Image_Meta_V2::get_image_meta_status($image_id)==='skip')
         {
-            return $query;
+            return true;
         }
-
-        $filter = filter_input( INPUT_GET, 'compressx-filter', FILTER_SANITIZE_SPECIAL_CHARS );
-
-        if ( 'optimized' === $filter )
+        else
         {
-            $query->set( 'meta_query', $this->query_optimized() );
-            return $query;
+            return false;
         }
-        else if ( 'unoptimized' === $filter )
-        {
-            $query->set( 'meta_query', $this->query_unoptimized() );
-            return $query;
-        }
-        else if ( 'failed_optimized' === $filter )
-        {
-            $query->set( 'meta_query', $this->query_failed_optimized() );
-            return $query;
-        }
-
-        return $query;
-    }
-
-    public function query_optimized()
-    {
-        $meta_query =  array(
-            array(
-                'key'     => 'compressx_image_meta_status',
-                'value' => 'optimized',
-            ),
-        );
-
-        return $meta_query;
-    }
-
-    public function query_unoptimized()
-    {
-        $meta_query =  array(
-            'relation' => 'OR',
-            array(
-                'key'     => 'compressx_image_meta_status',
-                'value' => 'pending',
-            ),
-            array(
-                'key'     => 'compressx_image_meta_status',
-                'compare' => 'NOT EXISTS',
-            ),
-        );
-
-        return $meta_query;
-    }
-
-    public function query_failed_optimized()
-    {
-        $meta_query =  array(
-            array(
-                'key'     => 'compressx_image_meta_status',
-                'value' => 'failed',
-            ),
-        );
-
-        return $meta_query;
     }
 
     public function is_image_progressing($post_id)
@@ -257,164 +255,70 @@ class CompressX_Custom_Media_Lib
         }
     }
 
-    public function is_image_processing_failed($post_id)
+    public function get_opt_single_image_progress()
     {
-        $status=CompressX_Image_Meta_V2::get_image_meta_status($post_id);
+        global $compressx;
+        $compressx->ajax_check_security('compressx-can-convert');
 
-        if(empty($status))
+        if(!isset($_POST['ids'])||!is_string($_POST['ids']))
         {
-            return false;
+            die();
+        }
+
+        $ids=sanitize_text_field($_POST['ids']);
+        $ids=json_decode($ids,true);
+
+        $running=false;
+
+        if(isset($_POST['page']))
+        {
+            $page=sanitize_text_field($_POST['page']);
         }
         else
         {
-            if($status=='failed')
+            $page='media';
+        }
+
+        foreach ($ids as $id)
+        {
+            if(!CompressX_Image_Meta_V2::is_image_optimized($id))
             {
-                return true;
+                if($this->is_image_progressing($id))
+                {
+                    $running=true;
+                    break;
+                }
+            }
+        }
+
+        $ret['result']='success';
+        if($running)
+        {
+            $ret['continue']=1;
+            $ret['finished']=0;
+        }
+        else
+        {
+            $ret['continue']=0;
+            $ret['finished']=1;
+        }
+
+        foreach ($ids as $id)
+        {
+            if($page=='edit')
+            {
+                $html=$this->output_item_edit($id);
             }
             else
             {
-                return false;
-            }
-        }
-    }
-
-    public function submitbox()
-    {
-        global $post;
-        $html='';
-
-        $allowed_mime_types = CompressX_Image_Opt_Method::supported_mime_types_ex();
-
-        if ( ! wp_attachment_is_image( $post->ID ) || ! in_array( get_post_mime_type( $post->ID ),$allowed_mime_types ) )
-        {
-            echo  esc_html__('Not support','compressx');
-        }
-        else
-        {
-            echo '<div class="misc-pub-section misc-pub-cx" data-id="' . esc_attr($post->ID) . '"><h4>' . esc_html__('CompressX','compressx') . '</h4>';
-
-            if (!CompressX_Image_Meta_V2::is_image_optimized($post->ID)) {
-                if ($this->is_image_progressing($post->ID)) {
-                    echo "<a  class='cx-media-progressing button' data-id='" . esc_attr($post->ID) . "'>" . esc_html__('Converting...','compressx') . "</a>";
-                } else {
-                    echo "<a  class='cx-media button' data-id='" . esc_attr($post->ID) . "'>" . esc_html__('Convert','compressx') . "</a>";
-                }
-            } else {
-
-                $convert_size=CompressX_Image_Meta_V2::get_webp_converted_size($post->ID);
-                $og_size=CompressX_Image_Meta_V2::get_og_size($post->ID);
-                if($og_size>0&&$convert_size>0)
-                {
-                    $webp_percent = round(100 - ($convert_size / $og_size) * 100, 2);
-                }
-                else
-                {
-                    $webp_percent=0;
-                }
-
-                $avif_size=CompressX_Image_Meta_V2::get_avif_converted_size($post->ID);
-                if($og_size>0&&$avif_size>0)
-                {
-                    $avif_percent = round(100 - ($avif_size / $og_size) * 100, 2);
-                }
-                else
-                {
-                    $avif_percent=0;
-                }
-
-                $meta=CompressX_Image_Meta_V2::get_image_meta($post->ID);
-                $thumbnail_counts=count($meta['size']);
-
-                echo '<ul>';
-                echo '<li><span>' . esc_html__('Original','compressx') . ' : </span><strong>' . esc_html(size_format($og_size, 2)) . '</strong></li>';
-                echo '<li><span>' . esc_html__('Webp','compressx') . ' : </span><strong>' . esc_html(size_format($convert_size,2)) . '</strong><span> '.'Saved'.' : </span><strong>'.esc_html($webp_percent).'%</strong></li>';
-                echo '<li><span>' . esc_html__('AVIF','compressx'). ' : </span><strong>' . esc_html(size_format($avif_size,2)) . '</strong><span> '.'Saved'.' : </span><strong>'.esc_html($avif_percent).'%</strong></li>';
-                echo '<li><span>'.esc_html__('Thumbnails generated','compressx').' : </span><strong>'.esc_html($thumbnail_counts).'</strong></li>';
-                echo "<li><a class='cx-media-delete button' data-id='" . esc_attr($post->ID) . "'>". esc_html__('Delete','compressx') ."</a>
-<span class='compressx-dashicons-help compressx-tooltip'>
-                                    <a href='#'><span class='dashicons dashicons-editor-help' style='padding-top: 3px;'></span></a>
-                                    <div class='compressx-bottom'>
-                                        <!-- The content you need -->
-                                        <p>
-                                            <span>". esc_html__('Delete the WebP and AVIF images generated by CompressX.','compressx') ."</span><br>
-                                        </p>
-                                        <i></i> <!-- do not delete this line -->
-                                    </div>
-                                </span>
-</li>";
-                echo '</ul>';
+                $html=$this->output_item($id);
             }
 
-            echo '</div>';
-        }
-    }
-
-    public function attachment_fields_to_edit(array $response, \WP_Post $attachment)
-    {
-        $source_post_id = (string) isset( $_REQUEST['post_id'])?$_REQUEST['post_id']:'';
-        if ( $source_post_id !== '0' )
-        {
-            return $response;
+            $ret[$id]['html']=$html;
         }
 
-        $allowed_mime_types = CompressX_Image_Opt_Method::supported_mime_types_ex();
+        echo wp_json_encode($ret);
 
-        if ( ! wp_attachment_is_image( $attachment->ID ) || ! in_array( get_post_mime_type( $attachment->ID ),$allowed_mime_types ) )
-        {
-            $html= 'Not support';
-        }
-        else
-        {
-            $html='<div class="cx-media-attachment" data-id="'.$attachment->ID.'">';
-
-            if(!CompressX_Image_Meta_V2::is_image_optimized($attachment->ID))
-            {
-                if($this->is_image_progressing($attachment->ID))
-                {
-                    $html.= "<a  class='cx-media cx-media-progressing button' data-id='{$attachment->ID}'>".__('Converting...','compressx')."</a>";
-                }
-                else
-                {
-                    $html.= "<a  class='cx-media button' data-id='{$attachment->ID}'>".__('Convert','compressx')."</a>";
-                }
-            }
-            else
-            {
-                $convert_size=CompressX_Image_Meta_V2::get_webp_converted_size($attachment->ID);
-                $og_size=CompressX_Image_Meta_V2::get_og_size($attachment->ID);
-                if($og_size>0&&$convert_size>0)
-                {
-                    $webp_percent = round(100 - ($convert_size / $og_size) * 100, 2);
-                }
-                else
-                {
-                    $webp_percent=0;
-                }
-
-                $avif_size=CompressX_Image_Meta_V2::get_avif_converted_size($attachment->ID);
-                if($og_size>0&&$avif_size>0)
-                {
-                    $avif_percent = round(100 - ($avif_size / $og_size) * 100, 2);
-                }
-                else
-                {
-                    $avif_percent=0;
-                }
-
-                $meta=CompressX_Image_Meta_V2::get_image_meta($attachment->ID);
-                $thumbnail_counts=count($meta['size']);
-
-                $html.='<ul>';
-                $html.= '<li><span>'.__('Original','compressx').' : </span><strong>'.size_format($og_size,2).'</strong></li>';
-                $html.= '<li><span>'.__('Webp','compressx').' : </span><strong>'.size_format($convert_size,2).'</strong><span> '.'Saved'.' : </span><strong>'.$webp_percent.'%</strong></li>';
-                $html.= '<li><span>'.__('AVIF','compressx').' : </span><strong>'.size_format($avif_size,2).'</strong><span> '.'Saved'.' : </span><strong>'.$avif_percent.'%</strong></li>';
-                $html.= '<li><span>'.__('Thumbnails generated','compressx').' : </span><strong>'.$thumbnail_counts.'</strong></li>';
-                $html.="<li><a class='cx-media-delete button' data-id='".esc_attr($attachment->ID)."'>".__('Delete','compressx')."</a></li>";
-            }
-            $html.='</div>';
-        }
-
-        $response['compat']['meta'] .=$html;
-        return $response;
+        die();
     }
 }

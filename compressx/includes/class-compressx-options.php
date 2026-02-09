@@ -361,12 +361,14 @@ class CompressX_Options
 
     public static function get_interface_version()
     {
+        return "v2";
+        /*
         $options = self::get_option('compressx_general_settings', array());
         if(empty($options))
         {
             return "v2";
         }
 
-        return isset($options['interface_version']) ? $options['interface_version'] : 'v2';
+        return isset($options['interface_version']) ? $options['interface_version'] : 'v2';*/
     }
 }

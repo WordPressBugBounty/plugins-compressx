@@ -400,8 +400,42 @@ class CompressX_Image_Optimization_Display
             $avif_support = false;
         }
 
-        //$webp_supported = CompressX_Image_Opt_Method::is_current_support_webp();
-        //$avif_supported = CompressX_Image_Opt_Method::is_current_support_avif();
+        if($converter_method=='gd')
+        {
+            $gd_selected="compressx-v2-bg-white";
+        }
+        else
+        {
+            $gd_selected="";
+        }
+
+        if($converter_method=="imagick")
+        {
+            $imagick_selected="compressx-v2-bg-white";
+        }
+        else
+        {
+            $imagick_selected="";
+        }
+
+        if($convert_to_webp)
+        {
+            $convert_to_webp_selected="compressx-v2-bg-white";
+        }
+        else
+        {
+            $convert_to_webp_selected="";
+        }
+
+        if($convert_to_avif)
+        {
+            $convert_to_avif_selected="compressx-v2-bg-white";
+        }
+        else
+        {
+            $convert_to_avif_selected="";
+        }
+
         ?>
         <section class="compressx-v2-bg-[#F9FDF6] compressx-v2-p-4 compressx-v2-rounded compressx-v2-border compressx-v2-mb-6">
             <h2 class="compressx-v2-text-lg compressx-v2-font-medium compressx-v2-mb-4"><?php esc_html_e('Global & Output Formats', 'compressx') ?></h2>
@@ -452,7 +486,7 @@ class CompressX_Image_Optimization_Display
                     </div>
 
                     <div class="compressx-v2-flex compressx-v2-gap-3">
-                        <label class="compressx-v2-flex-1 compressx-v2-border compressx-v2-rounded compressx-v2-p-3 compressx-v2-cursor-pointer compressx-v2-flex compressx-v2-items-center compressx-v2-gap-2 hover:compressx-v2-border-blue-500">
+                        <label class="<?php echo esc_attr($gd_selected)?> compressx-v2-flex-1 compressx-v2-border compressx-v2-rounded compressx-v2-p-3 compressx-v2-cursor-pointer compressx-v2-flex compressx-v2-items-center compressx-v2-gap-2 hover:compressx-v2-border-blue-500">
                             <input id="cx_converter_method_gd" type="radio" name="cx-v2-library" value="gd" <?php checked($converter_method, 'gd') ?> <?php echo !$is_support_gd ? 'disabled' : '' ?>>
                             <div>
                                 <p class="compressx-v2-font-medium compressx-v2-text-sm"><?php esc_html_e('GD', 'compressx') ?></p>
@@ -462,7 +496,7 @@ class CompressX_Image_Optimization_Display
                             </div>
                         </label>
 
-                        <label class="compressx-v2-flex-1 compressx-v2-border compressx-v2-rounded compressx-v2-p-3 compressx-v2-cursor-pointer compressx-v2-flex compressx-v2-items-center compressx-v2-gap-2 hover:compressx-v2-border-blue-500">
+                        <label class="<?php echo esc_attr($imagick_selected)?> compressx-v2-flex-1 compressx-v2-border compressx-v2-rounded compressx-v2-p-3 compressx-v2-cursor-pointer compressx-v2-flex compressx-v2-items-center compressx-v2-gap-2 hover:compressx-v2-border-blue-500">
                             <input id="cx_converter_method_imagick" type="radio" name="cx-v2-library" value="imagick" <?php checked($converter_method, 'imagick') ?> <?php echo !$is_support_imagick ? 'disabled' : '' ?>>
                             <div>
                                 <p class="compressx-v2-font-medium compressx-v2-text-sm"><?php esc_html_e('Imagick', 'compressx') ?></p>
@@ -486,14 +520,14 @@ class CompressX_Image_Optimization_Display
                         ?>
                     </h3>
                     <div class="compressx-v2-flex compressx-v2-gap-3">
-                        <label class="compressx-v2-flex-1 compressx-v2-border compressx-v2-rounded compressx-v2-p-3 compressx-v2-cursor-pointer hover:compressx-v2-border-blue-500">
+                        <label class="<?php echo esc_attr($convert_to_webp_selected)?> compressx-v2-flex-1 compressx-v2-border compressx-v2-rounded compressx-v2-p-3 compressx-v2-cursor-pointer hover:compressx-v2-border-blue-500">
                             <input id="cx_convert_to_webp" type="checkbox" <?php echo $convert_to_webp ? 'checked' : '' ?> <?php echo !$webp_support ? 'disabled' : '' ?> class="compressx-v2-mb-1">
                             <span class="compressx-v2-font-medium compressx-v2-text-sm"><?php esc_html_e('WebP', 'compressx') ?></span>
                             <p id="cx_webp_status" class="compressx-v2-text-xs <?php echo $webp_support ? 'compressx-v2-text-green-600' : 'compressx-v2-text-red-600' ?>">
                                 <?php echo $webp_support ? esc_html__('Supported', 'compressx') : esc_html__('Unsupported', 'compressx') ?>
                             </p>
                         </label>
-                        <label class="compressx-v2-flex-1 compressx-v2-border compressx-v2-rounded compressx-v2-p-3 compressx-v2-cursor-pointer hover:compressx-v2-border-blue-500">
+                        <label class="<?php echo esc_attr($convert_to_avif_selected)?> compressx-v2-flex-1 compressx-v2-border compressx-v2-rounded compressx-v2-p-3 compressx-v2-cursor-pointer hover:compressx-v2-border-blue-500">
                             <input id="cx_convert_to_avif" type="checkbox" <?php echo $convert_to_avif ? 'checked' : '' ?> <?php echo !$avif_support ? 'disabled' : '' ?> class="compressx-v2-mb-1">
                             <span class="compressx-v2-font-medium compressx-v2-text-sm"><?php esc_html_e('AVIF', 'compressx') ?></span>
                             <p id="cx_avif_status" class="compressx-v2-text-xs <?php echo $avif_support ? 'compressx-v2-text-green-600' : 'compressx-v2-text-red-600' ?>">
@@ -604,7 +638,7 @@ class CompressX_Image_Optimization_Display
                                             </div>
                                             <div>
                                             Re-generate modern formats (WebP/AVIF) anytime. This won’t touch your original image.
-                                            <a href="#" class="compressx-v2-text-sky-300 hover:compressx-v2-underline">Learn more...</a>
+                                            <a href="https://compressx.io/docs/image-quality-preset-general-vs-smart-compression/" class="compressx-v2-text-sky-300 hover:compressx-v2-underline">Learn more...</a>
                                             </div>
                                         </div>
                                         </div>
@@ -987,7 +1021,7 @@ class CompressX_Image_Optimization_Display
                                         Tip
                                     </div>
                                     <div>
-                                        Higher values apply stronger compression across all image sizes and reduce quality more noticeably.
+                                        Lower values apply stronger compression to further reduce file sizes.
                                     </div>
                                 </div>
                             </div>
@@ -1045,7 +1079,7 @@ class CompressX_Image_Optimization_Display
                                         Tip
                                     </div>
                                     <div>
-                                        Higher values apply stronger compression across all image sizes and reduce quality more noticeably.
+                                        Lower values apply stronger compression to further reduce file sizes.
                                     </div>
                                 </div>
                             </div>
@@ -1587,31 +1621,6 @@ class CompressX_Image_Optimization_Display
             <h2 class="compressx-v2-text-lg compressx-v2-font-medium compressx-v2-mb-4"><?php esc_html_e('General Settings', 'compressx') ?></h2>
 
             <div class="compressx-v2-space-y-5">
-
-                <!-- Change Style -->
-                <div class="compressx-v2-flex compressx-v2-items-center compressx-v2-gap-3">
-                    <label class="compressx-v2-w-56 compressx-v2-text-sm compressx-v2-font-medium">
-                        <?php esc_html_e('Change Style', 'compressx') ?>
-
-                        <?php
-                        $this->output_tooltip(
-                            'cx-v2-tip-interface-version',
-                            esc_html__('Switch between the new CompressX interface and the previous layout. Use the old style if you experience any display issues.', 'compressx')
-                        );
-                        ?>
-                    </label>
-                    <div class="compressx-v2-flex compressx-v2-gap-6 compressx-v2-text-sm">
-                        <label class="compressx-v2-inline-flex compressx-v2-items-center compressx-v2-gap-2">
-                            <input id="cx-v2-interface-v2" type="radio" name="cx-v2-interface-version" value="v2" <?php checked($interface_version, 'v2') ?>>
-                            <span><?php esc_html_e('New Style', 'compressx') ?></span>
-                        </label>
-                        <label class="compressx-v2-inline-flex compressx-v2-items-center compressx-v2-gap-2">
-                            <input id="cx-v2-interface-v1" type="radio" name="cx-v2-interface-version" value="v1" <?php checked($interface_version, 'v1') ?>>
-                            <span><?php esc_html_e('Old Style', 'compressx') ?></span>
-                        </label>
-                    </div>
-                </div>
-
                 <!-- Browser compatibility -->
                 <div class="compressx-v2-flex compressx-v2-items-start compressx-v2-gap-3">
                     <label class="compressx-v2-w-56 compressx-v2-text-sm compressx-v2-font-medium"><?php esc_html_e('Browser compatibility', 'compressx') ?>
@@ -2002,13 +2011,14 @@ class CompressX_Image_Optimization_Display
 
             $interface_version_changed=false;
 
+            /*
             if (isset($setting['interface_version'])) {
                 $old_interface_version = isset($options['interface_version']) ? $options['interface_version'] : 'v1';
                 if ($old_interface_version !== $setting['interface_version']) {
                     $interface_version_changed = true;
                 }
                 $options['interface_version'] = $setting['interface_version'];
-            }
+            }*/
 
             $reset_rewrite=false;
             if (isset($setting['image_load'])) {
