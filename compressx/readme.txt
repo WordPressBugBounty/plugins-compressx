@@ -8,7 +8,7 @@ Stable tag: 0.9.35
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
-AVIF & WebP converter with media replace. Local image optimization.
+AVIF & WebP converter with built-in media replace for local image optimization.
 
 == Description ==
 CompressX is a free, lightweight and simple Webp & AVIF conversion and compression plugin for WordPress websites. It helps you to easily convert JPG and PNG images to WebP and AVIF formats, and compress WebP and AVIF images. The AVIF and WebP conversion is performed locally on the web server.
