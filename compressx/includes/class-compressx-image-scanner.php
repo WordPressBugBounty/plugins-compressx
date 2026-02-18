@@ -84,8 +84,7 @@ class CompressX_Image_Scanner
 
         $ret = array(
             'result'   => 'success',
-            'progress' => sprintf(
-                __('Full scan completed: %1$d images found, scanned up to ID %2$d of %3$d (%4$s%%)', 'compressx'),
+            'progress' => sprintf('Full scan completed: %1$d images found, scanned up to ID %2$d of %3$d (%4$s%%)',
                 $need_optimize_images,
                 $scanned_attachments,
                 $total_attachments,
@@ -143,8 +142,7 @@ class CompressX_Image_Scanner
     SELECT MAX(ID) FROM {$wpdb->posts} WHERE post_type='attachment'
 ");
         $progress = min(100, round(($last_id / $max_image_id) * 100, 2));
-        $ret['progress'] = sprintf(
-            __('Scanning up to ID %1$d of %2$d, Found %3$d (%4$s%%)', 'compressx'),
+        $ret['progress'] = sprintf('Scanning up to ID %1$d of %2$d, Found %3$d (%4$s%%)',
             $last_id, $max_image_id, $need_optimize_images, $progress
         );
 
@@ -204,7 +202,7 @@ class CompressX_Image_Scanner
         $need_optimize_images = self::get_need_optimize_images_count($force);
 
         $progress_text = sprintf(
-            __('%1$d / %2$d scanned', 'compressx'),
+            '%1$d / %2$d scanned',
             $scanned_attachments,
             $total_attachments
         );
@@ -269,7 +267,9 @@ class CompressX_Image_Scanner
         WHERE $status_filter
     ";
 
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         $query = $wpdb->prepare($outer_query, $args);
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         $result = $wpdb->get_results($query, OBJECT_K);
 
         if (empty($result)) {
@@ -338,155 +338,6 @@ class CompressX_Image_Scanner
         ];
     }
 
-    public static function scan_unoptimized_images_ex($force)
-    {
-        $convert_to_webp=CompressX_Image_Method::get_convert_to_webp();
-        $convert_to_avif=CompressX_Image_Method::get_convert_to_avif();
-
-        $last_id = 0;
-        $page=1000;
-        while (true)
-        {
-            $result = self::scan_unoptimized_image_by_cursor($page, $last_id, $convert_to_webp, $convert_to_avif, $force);
-
-            if (empty($result['last_id']))
-            {
-                break;
-            }
-
-            $last_id = $result['last_id'];
-        }
-
-        $need_optimize_images=self::get_need_optimize_images_count($force);
-        $ret['result']='success';
-        $ret['count']=$need_optimize_images;
-
-        return $ret;
-    }
-
-    public static function scan_unoptimized_image($limit,$offset,$convert_to_webp,$convert_to_avif,$force)
-    {
-        if(!$convert_to_webp&&!$convert_to_avif)
-        {
-            return;
-        }
-
-        global $wpdb;
-
-        $mime_types = array(
-            "image/jpg",
-            "image/jpeg",
-            "image/png",
-            "image/webp",
-            "image/avif"
-        );
-
-        $placeholders = implode(',', array_fill(0, count($mime_types), '%s'));
-
-        if ($limit <= 0) {
-            $limit = 300; //
-        }
-        if ($offset < 0) {
-            $offset = 0;
-        }
-
-        $subquery = "
-        SELECT ID
-        FROM {$wpdb->posts}
-        WHERE post_type = 'attachment'
-          AND post_mime_type IN ($placeholders)
-        ORDER BY ID ASC
-        LIMIT %d OFFSET %d
-    ";
-        $args = array_merge($mime_types, [$limit, $offset]);
-
-        if ($force)
-        {
-            $status_filter = "1=1";
-        }
-        else
-        {
-            $status_filter = "(pm.meta_value IS NULL OR pm.meta_value NOT IN ('pending', 'skip'))";
-        }
-
-        $outer_query = "
-        SELECT p.ID
-        FROM ($subquery) p
-        LEFT JOIN {$wpdb->postmeta} pm 
-          ON p.ID = pm.post_id AND pm.meta_key = 'compressx_image_meta_status'
-        WHERE $status_filter
-    ";
-
-        $query = $wpdb->prepare($outer_query, $args);
-        $result = $wpdb->get_results($query, OBJECT_K);
-
-        if(!empty($result))
-        {
-            foreach ( $result as $image )
-            {
-                wp_cache_delete( $image->ID, 'post_meta' );
-
-                if(CompressX_Image_Meta_V2::is_image_optimized($image->ID))
-                {
-                    continue;
-                }
-                else
-                {
-                    if(self::should_skip($image->ID))
-                    {
-                        CompressX_Image_Meta_V2::update_image_meta_status($image->ID,'skip');
-                        continue;
-                    }
-
-                    $need_opt=false;
-                    $file_path = get_attached_file($image->ID);
-                    $type=pathinfo($file_path, PATHINFO_EXTENSION);
-
-                    if($convert_to_webp)
-                    {
-                        if($type!='webp'&&$type!='avif')
-                        {
-                            if(!CompressX_Image_Meta_V2::get_image_meta_webp_converted($image->ID))
-                            {
-                                $need_opt=true;
-                            }
-                        }
-                        else if($type=='webp')
-                        {
-                            if(!CompressX_Image_Meta_V2::get_image_meta_compressed($image->ID))
-                            {
-                                $need_opt=true;
-                            }
-                        }
-                    }
-
-                    if($convert_to_avif)
-                    {
-                        if($type!='avif')
-                        {
-                            if(!CompressX_Image_Meta_V2::get_image_meta_avif_converted($image->ID))
-                            {
-                                $need_opt=true;
-                            }
-                        }
-                        else
-                        {
-                            if(!CompressX_Image_Meta_V2::get_image_meta_compressed($image->ID))
-                            {
-                                $need_opt=true;
-                            }
-                        }
-                    }
-
-                    if($need_opt)
-                    {
-                        CompressX_Image_Meta_V2::update_image_meta_status($image->ID,'pending');
-                    }
-                }
-            }
-        }
-    }
-
     public static function should_skip($image_id)
     {
         if ( ! self::check_sellvia_environment() )
@@ -509,23 +360,21 @@ class CompressX_Image_Scanner
     {
         global $wpdb;
 
-        $meta_table=CompressX_Image_Meta_V2::table_name();
+        $meta_table = CompressX_Image_Meta_V2::table_name();
 
-        if ( $force ) {
-            $query = "
-            SELECT COUNT(attachment_id )
-            FROM {$meta_table}
-            WHERE status IN ('pending', 'optimized', 'failed')
-        ";
+        if ($force) {
+            $statuses = ['pending', 'optimized', 'failed'];
         } else {
-            $query = "
-            SELECT COUNT(attachment_id )
-            FROM {$meta_table}
-            WHERE status IN ('pending','failed')
-        ";;
+            $statuses = ['pending', 'failed'];
         }
 
-        return (int) $wpdb->get_var($query);
+        $placeholders = implode(',', array_fill(0, count($statuses), '%s'));
+
+        return (int) $wpdb->get_var($wpdb->prepare("
+        SELECT COUNT(attachment_id)
+        FROM {$meta_table}
+        WHERE status IN ($placeholders)
+    ", $statuses));
     }
 
     public static function get_need_optimize_images_by_cursor($last_id = 0, $limit = 200, $force = false)
@@ -534,25 +383,27 @@ class CompressX_Image_Scanner
 
         $meta_table=CompressX_Image_Meta_V2::table_name();
 
-        if ($force) {
-            $status_condition = "pm.status IN ('pending', 'optimized', 'failed')";
-        } else {
-            $status_condition = "pm.status IN ('pending', 'failed')";
-        }
-
-        //$status_condition = $force
-        //    ? "pm.meta_value IN ('pending', 'optimized')"
-        //    : "pm.meta_value = 'pending'";
-
-        $query = $wpdb->prepare("
+        if ($force)
+        {
+            return $wpdb->get_col($wpdb->prepare("
         SELECT pm.attachment_id 
         FROM {$meta_table} pm
-        WHERE $status_condition
+        WHERE pm.status IN ('pending', 'optimized', 'failed')
           AND pm.attachment_id  > %d
         ORDER BY pm.attachment_id  ASC
         LIMIT %d
-    ",  $last_id, $limit);
-
-        return $wpdb->get_col($query);
+    ",  $last_id, $limit));
+        }
+        else
+        {
+            return $wpdb->get_col($wpdb->prepare("
+        SELECT pm.attachment_id 
+        FROM {$meta_table} pm
+        WHERE pm.status IN ('pending', 'failed')
+          AND pm.attachment_id  > %d
+        ORDER BY pm.attachment_id  ASC
+        LIMIT %d
+    ",  $last_id, $limit));
+        }
     }
 }

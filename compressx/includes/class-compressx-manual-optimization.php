@@ -138,13 +138,13 @@ class CompressX_Manual_Optimization
             $ret[$id]['html']=$html;
             $ret['result']='success';
 
-            echo json_encode($ret);
+            echo wp_json_encode($ret);
         }
         catch (Exception $error)
         {
             $message = 'An exception has occurred. class: '.get_class($error).';msg: '.$error->getMessage().';code: '.$error->getCode().';line: '.$error->getLine().';in_file: '.$error->getFile().';';
-            error_log($message);
-            echo json_encode(array('result'=>'failed','error'=>$message));
+            //error_log($message);
+            echo wp_json_encode(array('result'=>'failed','error'=>$message));
         }
         die();
     }

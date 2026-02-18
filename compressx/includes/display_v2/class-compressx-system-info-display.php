@@ -225,13 +225,13 @@ class CompressX_System_Info_Display
                                 if($is_active=='Active')
                                 {
                                     ?>
-                                    <span class="compressx-v2-bg-green-100 compressx-v2-text-green-700 compressx-v2-text-xs compressx-v2-px-2 compressx-v2-rounded"><?php esc_html_e($is_active, 'compressx'); ?></span>
+                                    <span class="compressx-v2-bg-green-100 compressx-v2-text-green-700 compressx-v2-text-xs compressx-v2-px-2 compressx-v2-rounded"><?php echo esc_html($is_active); ?></span>
                                     <?php
                                 }
                                 else
                                 {
                                     ?>
-                                    <span class="compressx-v2-bg-red-100 compressx-v2-text-red-700 compressx-v2-text-xs compressx-v2-px-2 compressx-v2-rounded"><?php esc_html_e($is_active, 'compressx'); ?></span>
+                                    <span class="compressx-v2-bg-red-100 compressx-v2-text-red-700 compressx-v2-text-xs compressx-v2-px-2 compressx-v2-rounded"><?php echo esc_html($is_active); ?></span>
                                     <?php
                                 }
                                 ?>
@@ -631,7 +631,7 @@ class CompressX_System_Info_Display
             }
         } catch (Exception $error) {
             $message = 'An exception has occurred. class: ' . get_class($error) . ';msg: ' . $error->getMessage() . ';code: ' . $error->getCode() . ';line: ' . $error->getLine() . ';in_file: ' . $error->getFile() . ';';
-            error_log($message);
+            //error_log($message);
             echo wp_json_encode(array('result' => 'failed', 'error' => $message));
         }
         die();
@@ -674,7 +674,7 @@ class CompressX_System_Info_Display
             readfile($path);
         } catch (Exception $error) {
             $message = 'An exception has occurred. class: ' . get_class($error) . ';msg: ' . $error->getMessage() . ';code: ' . $error->getCode() . ';line: ' . $error->getLine() . ';in_file: ' . $error->getFile() . ';';
-            error_log($message);
+            //error_log($message);
         }
         exit;
     }
@@ -717,7 +717,7 @@ class CompressX_System_Info_Display
             }
         } catch (Exception $error) {
             $message = 'An exception has occurred. class: ' . get_class($error) . ';msg: ' . $error->getMessage() . ';code: ' . $error->getCode() . ';line: ' . $error->getLine() . ';in_file: ' . $error->getFile() . ';';
-            error_log($message);
+            //error_log($message);
             echo wp_json_encode(array('result' => 'failed', 'error' => $message));
         }
         die();
@@ -752,7 +752,7 @@ class CompressX_System_Info_Display
             $ret['result'] = 'success';
         } catch (Exception $error) {
             $message = 'An exception has occurred. class: ' . get_class($error) . ';msg: ' . $error->getMessage() . ';code: ' . $error->getCode() . ';line: ' . $error->getLine() . ';in_file: ' . $error->getFile() . ';';
-            error_log($message);
+            //error_log($message);
             $ret['result'] = 'failed';
             $ret['error'] = $message;
         }
@@ -879,7 +879,7 @@ class CompressX_System_Info_Display
         $debug_info['setting']['output_format_webp'] = $output_format_webp;
         $debug_info['setting']['output_format_avif'] = $output_format_avif;
         $debug_info['setting']['converter_method'] = $converter_method;
-        $debug_info['setting'] = json_encode($debug_info['setting']);
+        $debug_info['setting'] = wp_json_encode($debug_info['setting']);
 
         return $debug_info;
     }
@@ -915,8 +915,7 @@ class CompressX_System_Info_Display
             $backup_path = "compressx";
             $path = WP_CONTENT_DIR . DIRECTORY_SEPARATOR . $backup_path . DIRECTORY_SEPARATOR . 'compressx_debug.zip';
             if (!is_dir(WP_CONTENT_DIR . DIRECTORY_SEPARATOR . $backup_path)) {
-                // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_mkdir -- Creating protected directory for debug package
-                @mkdir(WP_CONTENT_DIR . DIRECTORY_SEPARATOR . $backup_path, 0777, true);
+                wp_mkdir_p(WP_CONTENT_DIR . DIRECTORY_SEPARATOR . $backup_path);
                 // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- Creating protection files
                 @fopen(WP_CONTENT_DIR . DIRECTORY_SEPARATOR . $backup_path . DIRECTORY_SEPARATOR . 'index.html', 'x');
                 // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- Creating htaccess protection file
@@ -977,7 +976,7 @@ class CompressX_System_Info_Display
             @wp_delete_file($path);
         } catch (Exception $error) {
             $message = 'An exception has occurred. class: ' . get_class($error) . ';msg: ' . $error->getMessage() . ';code: ' . $error->getCode() . ';line: ' . $error->getLine() . ';in_file: ' . $error->getFile() . ';';
-            error_log($message);
+            //error_log($message);
             echo wp_json_encode(array('result' => 'failed', 'error' => $message));
             die();
         }
@@ -1012,7 +1011,7 @@ class CompressX_System_Info_Display
             die();
         } catch (Exception $error) {
             $message = 'An exception has occurred. class: ' . get_class($error) . ';msg: ' . $error->getMessage() . ';code: ' . $error->getCode() . ';line: ' . $error->getLine() . ';in_file: ' . $error->getFile() . ';';
-            error_log($message);
+            //error_log($message);
             echo wp_json_encode(array('result' => 'failed', 'error' => $message));
             die();
         }
@@ -1032,8 +1031,7 @@ class CompressX_System_Info_Display
         $backup_path = "compressx";
         $path = WP_CONTENT_DIR . DIRECTORY_SEPARATOR . $backup_path . DIRECTORY_SEPARATOR . 'compressx_debug.zip';
         if (!is_dir(WP_CONTENT_DIR . DIRECTORY_SEPARATOR . $backup_path)) {
-            // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_mkdir -- Creating protected directory for debug package
-            @mkdir(WP_CONTENT_DIR . DIRECTORY_SEPARATOR . $backup_path, 0777, true);
+            wp_mkdir_p(WP_CONTENT_DIR . DIRECTORY_SEPARATOR . $backup_path);
             // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- Creating protection files
             @fopen(WP_CONTENT_DIR . DIRECTORY_SEPARATOR . $backup_path . DIRECTORY_SEPARATOR . 'index.html', 'x');
             // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- Creating htaccess protection file

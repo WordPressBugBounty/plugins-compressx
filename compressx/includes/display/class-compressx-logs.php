@@ -6,12 +6,12 @@ class CompressX_Logs
     public function __construct()
     {
 
-        add_action('wp_ajax_compressx_open_log',array( $this,'open_log'));
-        add_action('wp_ajax_compressx_download_log', array($this, 'download_log'));
-        add_action('wp_ajax_compressx_delete_log', array($this, 'delete_log'));
-        add_action('wp_ajax_compressx_delete_all_log', array($this, 'delete_all_log'));
+        //add_action('wp_ajax_compressx_open_log',array( $this,'open_log'));
+        //add_action('wp_ajax_compressx_download_log', array($this, 'download_log'));
+        //add_action('wp_ajax_compressx_delete_log', array($this, 'delete_log'));
+        //add_action('wp_ajax_compressx_delete_all_log', array($this, 'delete_all_log'));
         //
-        add_action('wp_ajax_compressx_get_logs_list', array($this, 'get_logs_list'));
+        //add_action('wp_ajax_compressx_get_logs_list', array($this, 'get_logs_list'));
     }
 
     public function display()
@@ -58,11 +58,11 @@ class CompressX_Logs
                         </div>
                         <div id="cx_log_list" class="cx-table-overflow">
                             <?php
-                            $list=$this->get_log_list();
-                            $log_list=new CompressX_Log_List();
-                            $log_list->set_log_list($list);
-                            $log_list->prepare_items();
-                            $log_list->display();
+                            //$list=$this->get_log_list();
+                            //$log_list=new CompressX_Log_List();
+                            //$log_list->set_log_list($list);
+                            //$log_list->prepare_items();
+                            //$log_list->display();
                             ?>
                         </div>
                     </article>
@@ -91,6 +91,7 @@ class CompressX_Logs
         <?php
     }
 
+    /* not use anymore
     public function get_log_list()
     {
         $log_list=array();
@@ -635,6 +636,7 @@ class CompressX_Logs
         }
         die();
     }
+    */
 
 
 }

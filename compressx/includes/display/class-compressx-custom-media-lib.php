@@ -99,7 +99,7 @@ class CompressX_Custom_Media_Lib
             return __('Skipped','compressx');
         }
 
-        $html='<div class="cx-media-item" data-id="'.$id.'">';
+        $html='<div class="cx-media-item" data-id="'.esc_attr($id).'">';
         $html.='<ul>';
         $html.=$this->output_item_detail($id);
         $html.=$this->output_item_action($id);
@@ -115,7 +115,7 @@ class CompressX_Custom_Media_Lib
             return __('Skipped','compressx');
         }
 
-        $html='<div class="misc-pub-section misc-pub-cx" data-id="'.$id.'"><h4>' . esc_html__('CompressX','compressx') . '</h4>';
+        $html='<div class="misc-pub-section misc-pub-cx" data-id="'.esc_attr($id).'"><h4>' . esc_html__('CompressX','compressx') . '</h4>';
         $html.='<ul>';
         $html.=$this->output_item_detail($id);
         $html.=$this->output_item_action($id);
@@ -126,7 +126,7 @@ class CompressX_Custom_Media_Lib
 
     public function output_item_attachment($id)
     {
-        $html='<div class="cx-media-attachment" data-id="'.$id.'"><h4>' . esc_html__('CompressX','compressx') . '</h4>';
+        $html='<div class="cx-media-attachment" data-id="'.esc_attr($id).'"><h4>' . esc_html__('CompressX','compressx') . '</h4>';
         $html.='<ul>';
         $html.=$this->output_item_detail($id);
         $html.=$this->output_item_action($id);
@@ -148,7 +148,7 @@ class CompressX_Custom_Media_Lib
                 $og_size=0;
         }
 
-        $html.='<li><span>Original : </span><strong>'.size_format($og_size,2).'</strong></li>';
+        $html.='<li><span>Original : </span><strong>'.esc_html(size_format($og_size,2)).'</strong></li>';
 
         $webp_size=CompressX_Image_Meta_V2::get_webp_converted_size($id);
         if($webp_size>0&&$og_size>$webp_size)
@@ -160,7 +160,7 @@ class CompressX_Custom_Media_Lib
             $webp_percent=0;
         }
 
-        $html.='<li><span>Webp : <strong>'.size_format($webp_size,2).'</strong> Saved : <strong>'.$webp_percent.'%</strong></span></li>';
+        $html.='<li><span>Webp : <strong>'.esc_html(size_format($webp_size,2)).'</strong> Saved : <strong>'.esc_html($webp_percent).'%</strong></span></li>';
 
         $avif_size=CompressX_Image_Meta_V2::get_avif_converted_size($id);
 
@@ -173,7 +173,7 @@ class CompressX_Custom_Media_Lib
             $avif_percent=0;
         }
 
-        $html.='<li><span>AVIF : <strong>'.size_format($avif_size,2).'</strong> Saved : <strong>'.$avif_percent.'%</strong></span></li>';
+        $html.='<li><span>AVIF : <strong>'.esc_html(size_format($avif_size,2)).'</strong> Saved : <strong>'.esc_html($avif_percent).'%</strong></span></li>';
 
         $meta=CompressX_Image_Meta_V2::get_image_meta($id);
         if(isset($meta['size'])&&!empty($meta['size']))
@@ -184,7 +184,7 @@ class CompressX_Custom_Media_Lib
         {
             $thumbnail_counts=0;
         }
-        $html.='<li><span>Thumbnails generated : </span><strong>'.$thumbnail_counts.'</strong></li>';
+        $html.='<li><span>Thumbnails generated : </span><strong>'.esc_html($thumbnail_counts).'</strong></li>';
 
         return $html;
     }

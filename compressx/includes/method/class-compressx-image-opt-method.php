@@ -68,7 +68,7 @@ class CompressX_Image_Opt_Method
 
                 if(filesize($out)==0)
                 {
-                    @unlink($out);
+                    @wp_delete_file($out);
                     $ret['result']='failed';
                     $ret['error']='imagewebp failed';
                     return $ret;
@@ -100,7 +100,7 @@ class CompressX_Image_Opt_Method
 
                 if(filesize($out)==0)
                 {
-                    @unlink($out);
+                    @wp_delete_file($out);
                     $ret['result']='failed';
                     $ret['error']='Converted image is 0 KB and has been deleted. This usually happens because your AVIF library is not working properly. Please check the AVIF library.';
                     return $ret;
@@ -305,7 +305,7 @@ class CompressX_Image_Opt_Method
                 {
                     if (filesize($out)==0)
                     {
-                        @unlink($out);
+                        @wp_delete_file($out);
                         $ret['result']='failed';
                         $ret['error']='imagewebp failed';
                         return $ret;
@@ -348,7 +348,7 @@ class CompressX_Image_Opt_Method
                             {
                                 if (filesize($out)==0)
                                 {
-                                    @unlink($out);
+                                    @wp_delete_file($out);
                                     $ret['result']='failed';
                                     $ret['error']='imagewebp failed';
                                     return $ret;
@@ -392,7 +392,7 @@ class CompressX_Image_Opt_Method
 
                 if(filesize($out)==0)
                 {
-                    @unlink($out);
+                    @wp_delete_file($out);
                     $ret['result']='failed';
                     $ret['error']='imagewebp failed';
                     return $ret;
@@ -582,7 +582,7 @@ class CompressX_Image_Opt_Method
                 {
                     if (filesize($out)==0)
                     {
-                        @unlink($out);
+                        @wp_delete_file($out);
                         $ret['result']='failed';
                         $ret['error']='Converted image is 0 KB and has been deleted. This usually happens because your AVIF library is not working properly. Please check the AVIF library.';
                         return $ret;
@@ -625,7 +625,7 @@ class CompressX_Image_Opt_Method
                             {
                                 if (filesize($out)==0)
                                 {
-                                    @unlink($out);
+                                    @wp_delete_file($out);
                                     $ret['result']='failed';
                                     $ret['error']='Converted image is 0 KB and has been deleted. This usually happens because your AVIF library is not working properly. Please check the AVIF library.';
                                     return $ret;
@@ -683,7 +683,7 @@ class CompressX_Image_Opt_Method
                 {
                     if (filesize($out)==0)
                     {
-                        @unlink($out);
+                        @wp_delete_file($out);
                         $ret['result']='failed';
                         $ret['error']='Converted image is 0 KB and has been deleted. This usually happens because your AVIF library is not working properly. Please check the AVIF library.';
                         return $ret;
@@ -706,7 +706,7 @@ class CompressX_Image_Opt_Method
 
                 if(filesize($out)==0)
                 {
-                    @unlink($out);
+                    @wp_delete_file($out);
                     $ret['result']='failed';
                     $ret['error']='Converted image is 0 KB and has been deleted. This usually happens because your AVIF library is not working properly. Please check the AVIF library.';
                     return $ret;
@@ -1650,7 +1650,7 @@ class CompressX_Image_Opt_Method
 
         if(!file_exists($real_path))
         {
-            @mkdir($real_path,0777,true);
+            wp_mkdir_p($real_path);
         }
 
         return $real_path.'/'.basename($og_path);

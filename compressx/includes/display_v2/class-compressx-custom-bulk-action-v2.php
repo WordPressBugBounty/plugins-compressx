@@ -280,7 +280,7 @@ class CompressX_Custom_Bulk_Action_V2
         }
         catch (Exception $error) {
             $message = 'An exception has occurred. class: '.get_class($error).';msg: '.$error->getMessage().';code: '.$error->getCode().';line: '.$error->getLine().';in_file: '.$error->getFile().';';
-            error_log($message);
+            //error_log($message);
             echo wp_json_encode(array('result'=>'failed','error'=>$message));
         }
         die();
@@ -551,8 +551,7 @@ class CompressX_Custom_Bulk_Action_V2
 
         $ret['result']='success';
         $ret['progress']=sprintf(
-        /* translators: %1$d: Scanning images*/
-            __('Scanning: %1$d Found | View Log' ,'compressx'),
+            'Scanning: %1$d Found | View Log',
             sizeof($images));
         $ret['finished']=true;
         $ret['test']=$includes;

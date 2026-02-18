@@ -6,10 +6,11 @@ class CompressX_Media_Replace_Display
     public $attachment_id;
     public function __construct()
     {
-        add_filter('media_row_actions', array($this,'add_row_action'), 10, 2);
+
         add_action('wp_ajax_compressx_save_media_replace_setting', array($this, 'save_settings'));
         add_action('wp_ajax_compressx_replace_media', array($this, 'replace_media'));
-        //
+
+        add_filter('media_row_actions', array($this,'add_row_action'), 10, 2);
         add_action('add_meta_boxes_attachment',array($this,'add_meta_boxes'), 10);
         add_filter('attachment_fields_to_edit',array($this,'attachment_editor'), 10,2);
         //
@@ -28,7 +29,7 @@ class CompressX_Media_Replace_Display
             'page' => 'media-replace-compressx',
             'attachment_id' => $post_id,
         ), $url);
-        $actions['compressx_media_replace']="<a href='$url' aria-label='CompressX Replace Media' rel='permalink'>CompressX Replace Media</a>";
+        $actions['compressx_media_replace']="<a href='$url' aria-label='Replace Media' rel='permalink'>Replace Media</a>";
 
         return $actions;
     }
@@ -50,7 +51,7 @@ class CompressX_Media_Replace_Display
 
         add_meta_box(
             'compressx-media-replace-box',
-            __('CompressX Replace Media', 'compressx'),
+            __('Replace Media', 'compressx'),
             array($this,'render_media_replace_metabox'),
             'attachment',
             'side',
@@ -101,6 +102,18 @@ class CompressX_Media_Replace_Display
             }
         }
 
+        if (wp_doing_ajax())
+        {
+            $ref = wp_get_referer();
+            if (!$ref && !empty($_SERVER['HTTP_REFERER'])) {
+                $ref = $_SERVER['HTTP_REFERER'];
+            }
+
+            if (!$ref || strpos($ref, 'upload.php') === false) {
+                return $form_fields;
+            }
+        }
+
         $url = add_query_arg(
             array(
                 'page'          => 'media-replace-compressx',
@@ -112,7 +125,7 @@ class CompressX_Media_Replace_Display
         $url = wp_nonce_url($url, 'compressx_media_replace');
 
         $form_fields['compressx-media-replace'] = array(
-            'label' => __('CompressX Replace Media', 'compressx'),
+            'label' => __('Replace Media', 'compressx'),
             'input' => 'html',
             'html'  => '<a class="button button-secondary" href="' . esc_url($url) . '">' .
                 esc_html__('Upload a new file', 'compressx') .
@@ -644,7 +657,7 @@ class CompressX_Media_Replace_Display
 
             CompressX_Options::update_option('compressx_media_replace',$options);
             $ret['result']='success';
-            echo json_encode($ret);
+            echo wp_json_encode($ret);
             die();
         }
         else
@@ -719,7 +732,7 @@ class CompressX_Media_Replace_Display
             }
         }
 
-        echo json_encode($ret);
+        echo wp_json_encode($ret);
 
         die();
     }
@@ -818,23 +831,62 @@ class CompressX_Media_Replace_Display
 
     }
 
-    public function get_compressx_tmp_folder($uploads)
-    {
-        $path = WP_CONTENT_DIR . '/compressx';
-        $url  = content_url('/compressx');
+    public function get_compressx_tmp_folder( $uploads ) {
 
-        if (!is_dir($path)) {
-            wp_mkdir_p($path);
-            @file_put_contents($path . '/index.html', '');
-            // Apache
-            @file_put_contents($path . '/.htaccess', "deny from all\n");
+        $path = WP_CONTENT_DIR . '/compressx';
+        $url  = content_url( '/compressx' );
+
+        // Ensure directory exists.
+        if ( ! is_dir( $path ) ) {
+            wp_mkdir_p( $path );
         }
 
-        $uploads['path']   = $path;
-        $uploads['url']    = $url;
+        // Init WP_Filesystem.
+        global $wp_filesystem;
+        if ( empty( $wp_filesystem ) ) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+            WP_Filesystem();
+        }
 
-        $uploads['subdir'] = '';
+        // If WP_Filesystem is not available, fallback to original uploads.
+        if ( empty( $wp_filesystem ) ) {
+            return $uploads;
+        }
 
+        // Create empty index.html (prevent directory listing).
+        $index_file = $path . '/index.html';
+        if ( ! $wp_filesystem->exists( $index_file ) ) {
+            $wp_filesystem->put_contents( $index_file, '', FS_CHMOD_FILE );
+        }
+
+        // .htaccess content (no heredoc).
+        $root_htaccess = "# CompressX - block public access by default\n\n"
+            . "<IfModule mod_authz_core.c>\n"
+            . "  Require all denied\n"
+            . "</IfModule>\n"
+            . "<IfModule !mod_authz_core.c>\n"
+            . "  Deny from all\n"
+            . "</IfModule>\n";
+
+        $root_ht_file = $path . '/.htaccess';
+
+        $current = '';
+        if ( $wp_filesystem->exists( $root_ht_file ) ) {
+            $current = $wp_filesystem->get_contents( $root_ht_file );
+            if ( false === $current ) {
+                $current = '';
+            }
+        }
+
+        // Write .htaccess only if changed.
+        if ( $current !== $root_htaccess ) {
+            $wp_filesystem->put_contents( $root_ht_file, $root_htaccess, FS_CHMOD_FILE );
+        }
+
+        // Override uploads paths.
+        $uploads['path']    = $path;
+        $uploads['url']     = $url;
+        $uploads['subdir']  = '';
         $uploads['basedir'] = $path;
         $uploads['baseurl'] = $url;
 

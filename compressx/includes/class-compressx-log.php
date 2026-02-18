@@ -11,6 +11,23 @@ class CompressX_Log
         $this->log_file_handle=false;
     }
 
+    public function fopen($filename,$mode)
+    {
+        return @fopen($filename,$mode);
+    }
+
+    public function fwrite($handle,$text)
+    {
+        if($handle)
+        {
+            return @fwrite($handle,$text );
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public function CreateLogFile($file_name='')
     {
         if(empty($file_name))
@@ -21,8 +38,7 @@ class CompressX_Log
         }
 
         $this->log_file=$this->GetSaveLogFolder().$file_name;
-
-        $this->log_file_handle = fopen($this->log_file, 'a');
+        $this->log_file_handle = $this->fopen($this->log_file, 'a');
         if($this->log_file_handle===false)
         {
             return false;
@@ -30,7 +46,7 @@ class CompressX_Log
         $text="====================================================\n";
         $time =gmdate("Y-m-d H:i:s",time());
         $text.='open log file: '.$time."\n";
-        fwrite($this->log_file_handle,$text);
+        $this->fwrite($this->log_file_handle,$text);
         return $this->log_file;
     }
 
@@ -45,7 +61,7 @@ class CompressX_Log
 
         $this->log_file=$this->GetSaveLogFolder().$file_name;
 
-        $this->log_file_handle = fopen($this->log_file, 'a');
+        $this->log_file_handle = $this->fopen($this->log_file, 'a');
 
         return $this->log_file;
     }
@@ -56,7 +72,7 @@ class CompressX_Log
         {
             $time =gmdate("Y-m-d H:i:s",time());
             $text='['.$time.']'.'['.$type.']'.$log."\n";
-            fwrite($this->log_file_handle,$text );
+            $this->fwrite($this->log_file_handle,$text );
         }
     }
 
@@ -79,28 +95,19 @@ class CompressX_Log
         return $text;
     }
 
-    public function CloseFile()
-    {
-        if ($this->log_file_handle)
-        {
-            fclose($this->log_file_handle);
-            $this->log_file_handle=false;
-        }
-    }
-
     public function GetSaveLogFolder()
     {
         $path=WP_CONTENT_DIR.'/compressx/'.'log';
 
         if(!is_dir($path))
         {
-            @mkdir($path,0777,true);
-            @fopen($path.DIRECTORY_SEPARATOR.'index.html', 'x');
-            $tempfile=@fopen($path.DIRECTORY_SEPARATOR.'.htaccess', 'x');
+            wp_mkdir_p($path);
+            $this->fopen($path.DIRECTORY_SEPARATOR.'index.html', 'x');
+            $tempfile=$this->fopen($path.DIRECTORY_SEPARATOR.'.htaccess', 'x');
             if($tempfile)
             {
                 $text="deny from all";
-                fwrite($tempfile,$text );
+                $this->fwrite($tempfile,$text );
             }
         }
 
@@ -150,6 +157,23 @@ class CompressX_Log_Ex
         return self::$instance;
     }
 
+    public function fopen($filename,$mode)
+    {
+        return @fopen($filename,$mode);
+    }
+
+    public function fwrite($handle,$text)
+    {
+        if($handle)
+        {
+            return @fwrite($handle,$text );
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public function CreateLogFile($file_name = '')
     {
         if ($this->log_file_handle && !empty($this->log_file)) {
@@ -163,7 +187,7 @@ class CompressX_Log_Ex
         }
 
         $this->log_file = $this->GetSaveLogFolder() . $file_name;
-        $this->log_file_handle = fopen($this->log_file, 'a');
+        $this->log_file_handle = $this->fopen($this->log_file, 'a');
 
         if ($this->log_file_handle === false) {
             return false;
@@ -182,7 +206,7 @@ class CompressX_Log_Ex
         }
 
         $this->log_file = $this->GetSaveLogFolder() . $file_name;
-        $this->log_file_handle = fopen($this->log_file, 'a');
+        $this->log_file_handle = $this->fopen($this->log_file, 'a');
 
         return $this->log_file;
     }
@@ -192,7 +216,7 @@ class CompressX_Log_Ex
         $this->log_file = $this->GetSaveLogFolder() . $file_name;
 
         if (!$this->log_file_handle) {
-            $this->log_file_handle = fopen($this->log_file, 'a');
+            $this->log_file_handle = $this->fopen($this->log_file, 'a');
             $this->write_open_header();
         }
         return $this->log_file;
@@ -207,7 +231,7 @@ class CompressX_Log_Ex
         $time = gmdate("Y-m-d H:i:s", time());
         $text = '[' . $time . '][' . $type . '] ' . $log . "\n";
 
-        fwrite($this->log_file_handle, $text);
+        $this->fwrite($this->log_file_handle, $text);
     }
 
     public function GetlastLog()
@@ -237,7 +261,7 @@ class CompressX_Log_Ex
             ];
         }
 
-        $fp = fopen($file, 'r');
+        $fp = $this->fopen($file, 'r');
         if (!$fp) {
             return [
                 'result'  => 'success',
@@ -265,20 +289,12 @@ class CompressX_Log_Ex
         ];
     }
 
-    public function CloseFile()
-    {
-        if ($this->log_file_handle) {
-            fclose($this->log_file_handle);
-            $this->log_file_handle = false;
-        }
-    }
-
     public function GetSaveLogFolder()
     {
         $path = WP_CONTENT_DIR . '/compressx/log';
 
         if (!is_dir($path)) {
-            @mkdir($path, 0777, true);
+            wp_mkdir_p($path);
             @file_put_contents($path . '/index.html', '');
             @file_put_contents($path . '/.htaccess', "deny from all");
         }
@@ -295,7 +311,7 @@ class CompressX_Log_Ex
 
         if (!empty($this->log_file))
         {
-            $this->log_file_handle = fopen($this->log_file, 'a');
+            $this->log_file_handle = $this->fopen($this->log_file, 'a');
             return (bool)$this->log_file_handle;
         }
 
@@ -308,7 +324,7 @@ class CompressX_Log_Ex
         $text  = "====================================================\n";
         $time  = gmdate("Y-m-d H:i:s", time());
         $text .= "open log file: {$time}\n";
-        fwrite($this->log_file_handle, $text);
+        $this->fwrite($this->log_file_handle, $text);
     }
 
     public function get_logs()
@@ -556,7 +572,17 @@ class CompressX_Log_List extends WP_List_Table
     {
         list( $columns, $hidden, $sortable, $primary ) = $this->get_column_info();
 
-        $current_url = set_url_scheme( 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
+        if(isset($_SERVER['HTTP_HOST']))
+            $HTTP_HOST=sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST']));
+        else
+            $HTTP_HOST="";
+
+        if(isset($_SERVER['REQUEST_URI']))
+            $REQUEST_URI=sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI']));
+        else
+            $REQUEST_URI="";
+
+        $current_url = set_url_scheme( 'http://' .$HTTP_HOST . $REQUEST_URI );
         $current_url = remove_query_arg( 'paged', $current_url );
 
         // When users click on a column header to sort by other columns.
@@ -580,8 +606,7 @@ class CompressX_Log_List extends WP_List_Table
             $columns['cb']     = '<input id="cb-select-all-' . $cb_counter . '" type="checkbox" />
 			<label for="cb-select-all-' . $cb_counter . '">' .
                 '<span class="screen-reader-text">' .
-                /* translators: Hidden accessibility text. */
-                __( 'Select All' ) .
+                'Select All' .
                 '</span>' .
                 '</label>';
             ++$cb_counter;
@@ -649,10 +674,8 @@ class CompressX_Log_List extends WP_List_Table
                     $class[] = 'sortable';
                     $class[] = 'desc' === $order ? 'asc' : 'desc';
 
-                    /* translators: Hidden accessibility text. */
-                    $asc_text = __( 'Sort ascending.' );
-                    /* translators: Hidden accessibility text. */
-                    $desc_text  = __( 'Sort descending.' );
+                    $asc_text = 'Sort ascending.' ;
+                    $desc_text  = 'Sort descending.';
                     $order_text = 'asc' === $order ? $asc_text : $desc_text;
                 }
 
@@ -686,7 +709,7 @@ class CompressX_Log_List extends WP_List_Table
                 $class = "class='" . implode( ' ', $class ) . "'";
             }
 
-            echo "<$tag $scope $id $class $aria_sort_attr $abbr_attr>$column_display_name</$tag>";
+            echo wp_kses_post("<$tag $scope $id $class $aria_sort_attr $abbr_attr>$column_display_name</$tag>");
         }
     }
 
@@ -942,7 +965,7 @@ class CompressX_Log_List_V2 extends WP_List_Table
 			<label for="cb-select-all-' . $cb_counter . '">' .
                 '<span class="screen-reader-text">' .
                 /* translators: Hidden accessibility text. */
-                __( 'Select All' ) .
+                'Select All' .
                 '</span>' .
                 '</label>';
             ++$cb_counter;
@@ -1011,9 +1034,9 @@ class CompressX_Log_List_V2 extends WP_List_Table
                     $class[] = 'desc' === $order ? 'asc' : 'desc';
 
                     /* translators: Hidden accessibility text. */
-                    $asc_text = __( 'Sort ascending.' );
+                    $asc_text = 'Sort ascending.';
                     /* translators: Hidden accessibility text. */
-                    $desc_text  = __( 'Sort descending.' );
+                    $desc_text  = 'Sort descending.';
                     $order_text = 'asc' === $order ? $asc_text : $desc_text;
                 }
 
@@ -1050,7 +1073,7 @@ class CompressX_Log_List_V2 extends WP_List_Table
                 $class = "class='" . implode( ' ', $class ) . "'";
             }
 
-            echo "<$tag $scope $id $class $aria_sort_attr $abbr_attr>$column_display_name</$tag>";
+            echo wp_kses_post("<$tag $scope $id $class $aria_sort_attr $abbr_attr>$column_display_name</$tag>");
         }
     }
 

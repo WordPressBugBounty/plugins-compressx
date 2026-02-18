@@ -601,9 +601,8 @@ class CompressX_Image_Meta_V2
 
         $sql = "SELECT {$column} FROM {$table} WHERE blog_id=%d AND attachment_id=%d LIMIT 1";
         $blog_id = self::get_blog_id();
-        $value = $wpdb->get_var(
-            $wpdb->prepare($sql, $blog_id, $image_id)
-        );
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+        $value = $wpdb->get_var($wpdb->prepare($sql, $blog_id, $image_id));
 
         return $value;
     }

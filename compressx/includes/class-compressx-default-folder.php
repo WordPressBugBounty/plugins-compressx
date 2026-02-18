@@ -14,14 +14,14 @@ class CompressX_default_folder
 
         if(!is_dir($root_path))
         {
-            @mkdir($root_path);
+            wp_mkdir_p($root_path);
         }
 
         $uploads_folder=WP_CONTENT_DIR."/compressx-nextgen/uploads";
 
         if(!is_dir($uploads_folder))
         {
-            @mkdir($uploads_folder);
+            wp_mkdir_p($uploads_folder);
         }
 
         $this->create_htaccess();

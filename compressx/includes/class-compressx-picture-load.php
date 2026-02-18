@@ -65,7 +65,7 @@ class CompressX_Picture_Load
     {
         ob_start( [ $this, 'replace_picture_tag' ] );
     }
-
+    
     public function replace_picture_tag($content)
     {
         $images = $this->get_images( $content );
@@ -308,63 +308,6 @@ class CompressX_Picture_Load
         }
 
         return $source;
-    }
-
-    protected function build_source_tag( $image )
-    {
-        $srcset_source = ! empty( $image['srcset']['srcset_attr'] ) ? $image['srcset']['srcset_attr'] : $image['src']['src_attr'] . 'set';
-
-        $attributes    = array(
-            'type'         => 'image/webp',
-            $srcset_source => array(),
-        );
-
-        if ( ! empty( $image['srcset']['srcs'] ) )
-        {
-            foreach ( $image['srcset']['srcs'] as $srcset )
-            {
-                if (! empty( $srcset['webp_url'] ) )
-                {
-                    $attributes[ $srcset_source ][] = $srcset['webp_url'] . ' ' . $srcset['descriptor'];
-                }
-
-            }
-        }
-
-        if ( empty( $attributes[ $srcset_source ] ) )
-        {
-            $attributes[ $srcset_source ][] = $image['src']['webp_url'];
-        }
-
-        $attributes[ $srcset_source ] = implode( ', ', $attributes[ $srcset_source ] );
-
-        $data_srcset=array( 'data-lazy-srcset', 'data-srcset', 'srcset');
-
-        foreach ($data_srcset as $srcset_attr )
-        {
-            if ( ! empty( $image['attributes'][ $srcset_attr ] ) && $srcset_attr !== $srcset_source )
-            {
-                $attributes[ $srcset_attr ] = $image['attributes'][ $srcset_attr ];
-            }
-        }
-
-        if ( 'srcset' !== $srcset_source && empty( $attributes['srcset'] ) && ! empty( $image['attributes']['src'] ) )
-        {
-            // Lazyload: the "src" attr should contain a placeholder (a data image or a blank.gif ).
-            $attributes['srcset'] = $image['attributes']['src'];
-        }
-
-        $data_sizes=array( 'data-lazy-sizes', 'data-sizes', 'sizes');
-
-        foreach ( $data_sizes as $sizes_attr )
-        {
-            if ( ! empty( $image['attributes'][ $sizes_attr ] ) )
-            {
-                $attributes[ $sizes_attr ] = $image['attributes'][ $sizes_attr ];
-            }
-        }
-
-        return '<source' . $this->build_attributes( $attributes ) . "/>";
     }
 
     protected function build_img_tag( $image )

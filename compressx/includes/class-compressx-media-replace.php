@@ -80,7 +80,7 @@ class CompressX_Media_Replace
             update_attached_file($attachment_id, $original_file_path);
         }
 
-        @unlink($replace_path);
+        wp_delete_file($replace_path);
         $ret['result']='success';
         return $ret;
     }
@@ -93,12 +93,50 @@ class CompressX_Media_Replace
         ]);
     }
 
+    protected function rename( $source, $destination )
+    {
+
+        if ( ! file_exists( $source ) ) {
+            return false;
+        }
+
+        global $wp_filesystem;
+
+        if ( empty( $wp_filesystem ) ) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+            WP_Filesystem();
+        }
+
+        if ( empty( $wp_filesystem ) ) {
+            return false;
+        }
+
+        return $wp_filesystem->move( $source, $destination, true );
+    }
+
+    protected function is_writable( $dir ) {
+
+        global $wp_filesystem;
+
+        if ( empty( $wp_filesystem ) ) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+            WP_Filesystem();
+        }
+
+        if ( empty( $wp_filesystem ) ) {
+            return false;
+        }
+
+        return $wp_filesystem->is_writable( $dir );
+    }
+
     protected function replace_original_image($original_file_path, $replace_path)
     {
         $ret = ['result' => 'failed'];
 
         $dir = dirname($original_file_path);
-        if (!is_dir($dir) || !is_writable($dir)) {
+        if (!is_dir($dir) || !$this->is_writable($dir))
+        {
             $ret['error'] = 'Original directory not writable';
             return $ret;
         }
@@ -114,36 +152,36 @@ class CompressX_Media_Replace
         // 1) move replace file into same directory first (atomic rename needs same FS)
         $new_temp = trailingslashit($dir) . basename($original_file_path) . '.__new_' . wp_generate_password(6, false, false);
 
-        if (!@rename($replace_path, $new_temp))
+        if (!$this->rename($replace_path, $new_temp))
         {
             if (!@copy($replace_path, $new_temp))
             {
                 $ret['error'] = 'Failed to move replace file into target directory';
                 return $ret;
             }
-            @unlink($replace_path);
+            @wp_delete_file($replace_path);
         }
 
         // 2) old -> bak
         $bak = trailingslashit($dir) . basename($original_file_path) . '.__bak_' . gmdate('Ymd_His');
-        if (!@rename($original_file_path, $bak))
+        if (!$this->rename($original_file_path, $bak))
         {
-            @unlink($new_temp);
+            @wp_delete_file($new_temp);
             $ret['error'] = 'Failed to create bak file (rename old -> bak failed)';
             return $ret;
         }
 
         // 3) new_temp -> old
-        if (!@rename($new_temp, $original_file_path))
+        if (!$this->rename($new_temp, $original_file_path))
         {
             // rollback immediately
-            @rename($bak, $original_file_path);
-            @unlink($new_temp);
+            $this->rename($bak, $original_file_path);
+            @wp_delete_file($new_temp);
             $ret['error'] = 'Failed to replace original file (rename new -> old failed)';
             return $ret;
         }
 
-        @unlink($bak);
+        @wp_delete_file($bak);
 
         $ret['result'] = 'success';
         return $ret;
@@ -368,7 +406,7 @@ class CompressX_Media_Replace
                 $file = $dir . wp_basename($data['file']);
                 if (file_exists($file))
                 {
-                    @unlink($file);
+                    @wp_delete_file($file);
                 }
             }
         }
@@ -379,7 +417,7 @@ class CompressX_Media_Replace
             $scaled = $pathinfo['dirname'] . '/' . $pathinfo['filename'] . '-scaled.' . ($pathinfo['extension'] ?? '');
             if (!empty($pathinfo['extension']) && file_exists($scaled))
             {
-                @unlink($scaled);
+                @wp_delete_file($scaled);
             }
         }
 

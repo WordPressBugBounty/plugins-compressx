@@ -108,7 +108,7 @@ class CompressX_Advanced_Compression_Level_Display
                                     </div>
                                     <div>
                                     <span class="compressx-compression-level-items">
-                                        <?php echo $item['description']; ?>
+                                        <?php echo esc_html($item['description']); ?>
                                     </span>
                                     </div>
                                 </div>
@@ -155,7 +155,7 @@ class CompressX_Advanced_Compression_Level_Display
                                     </div>
                                     <div>
                                     <span class="compressx-compression-level-items">
-                                        <?php echo $item['description']; ?>
+                                        <?php echo esc_html($item['description']); ?>
                                     </span>
                                     </div>
                                 </div>

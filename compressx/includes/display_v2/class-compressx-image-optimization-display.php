@@ -149,7 +149,7 @@ class CompressX_Image_Optimization_Display
         </section>
         <script>
             jQuery('#cx_rating_btn').click(function() {
-                window.open('https://wordpress.org/support/plugin/compressx/reviews/?filter=5#new-post', '_blank');
+                window.open('https://wordpress.org/support/plugin/compressx/reviews', '_blank');
 
                 jQuery('#cx_rating_box').hide();
                 var ajax_data = {
@@ -449,7 +449,7 @@ class CompressX_Image_Optimization_Display
                                 compressx-v2-w-11 compressx-v2-h-6
                                 compressx-v2-bg-gray-300 compressx-v2-rounded compressx-v2-transition-colors
                                 compressx-v2-border compressx-v2-border-gray-300"
-                                    role="switch" aria-checked="<?php echo $is_auto_checked ?>" id="cx_enable_auto_optimize" data-checked="<?php echo $data_is_auto?>">
+                                    role="switch" aria-checked="<?php echo esc_attr($is_auto_checked) ?>" id="cx_enable_auto_optimize" data-checked="<?php echo esc_attr($data_is_auto)?>">
                             <span class="compressx-v2-w-4 compressx-v2-h-4 compressx-v2-bg-white
                                         compressx-v2-rounded compressx-v2-transition-all
                                         compressx-v2-mx-0.5"></span>
@@ -619,31 +619,6 @@ class CompressX_Image_Optimization_Display
                                 <span class="compressx-v2-text-gray-500">Lossless:</span> WebP <span class="compressx-v2-font-semibold compressx-v2-text-gray-700">99</span>,AVIF <span class="compressx-v2-font-semibold compressx-v2-text-gray-700">99</span>.
                                 <span class="compressx-v2-text-gray-500">Default:</span> WebP <span class="compressx-v2-font-semibold compressx-v2-text-gray-700">80</span>,
                                 AVIF <span class="compressx-v2-font-semibold compressx-v2-text-gray-700">60</span>.
-                            </span>
-                            <span class="compressx-v2-relative compressx-v2-inline-flex compressx-v2-items-center compressx-v2-group">
-                                    <!-- Trigger Button -->
-                                    <button type="button" class="compressx-v2-inline-flex compressx-v2-items-center compressx-v2-justify-center compressx-v2-h-6 compressx-v2-w-6 compressx-v2-rounded compressx-v2-border compressx-v2-border-slate-300 compressx-v2-bg-white hover:compressx-v2-bg-slate-50 compressx-v2-text-slate-600 hover:compressx-v2-text-slate-800 compressx-v2-shadow-sm focus:compressx-v2-outline-none focus:compressx-v2-ring-2 focus:compressx-v2-ring-sky-400" aria-describedby="cxp-tip-1">
-                                        <span class="compressx-v2-font-semibold compressx-v2-text-xs">i</span>
-                                    </button>
-                                <!-- Tooltip -->
-                                    <div id="cxp-tip-1" role="tooltip" class="compressx-v2-absolute compressx-v2-z-50 compressx-v2-bottom-full compressx-v2-left-1/2 -compressx-v2-translate-x-1/2 compressx-v2-mb-2
-                                        compressx-v2-hidden group-hover:compressx-v2-block group-focus-within:compressx-v2-block
-                                        compressx-v2-min-w-64 compressx-v2-max-w-96 compressx-v2-rounded compressx-v2-bg-slate-900/95 compressx-v2-text-white compressx-v2-text-xs compressx-v2-leading-5 compressx-v2-px-3 compressx-v2-py-3
-                                        compressx-v2-shadow-xl compressx-v2-ring-1 compressx-v2-ring-black/10">
-                                        <div class="compressx-v2-flex compressx-v2-gap-2 compressx-v2-items-start">
-                                        <span class="compressx-v2-mt-0.5 compressx-v2-inline-block compressx-v2-h-1.5 compressx-v2-w-1.5 compressx-v2-rounded compressx-v2-bg-emerald-400"></span>
-                                        <div>
-                                            <div class="compressx-v2-font-medium compressx-v2-text-[11px] compressx-v2-tracking-wide compressx-v2-text-emerald-300 compressx-v2-mb-0.5">
-                                            Tip
-                                            </div>
-                                            <div>
-                                            Re-generate modern formats (WebP/AVIF) anytime. This won’t touch your original image.
-                                            <a href="https://compressx.io/docs/image-quality-preset-general-vs-smart-compression/" class="compressx-v2-text-sky-300 hover:compressx-v2-underline">Learn more...</a>
-                                            </div>
-                                        </div>
-                                        </div>
-                                        <div class="compressx-v2-absolute compressx-v2-left-1/2 -compressx-v2-translate-x-1/2 compressx-v2-top-full compressx-v2-h-2 compressx-v2-w-2 compressx-v2-rotate-45 compressx-v2-bg-slate-900/95"></div>
-                                    </div>
                             </span>
                         </div>
                     </div>

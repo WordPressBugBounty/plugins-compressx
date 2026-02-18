@@ -664,7 +664,7 @@ class CompressX_Settings_Display
             echo wp_json_encode($ret);
         } catch (Exception $error) {
             $message = 'An exception has occurred. class: ' . get_class($error) . ';msg: ' . $error->getMessage() . ';code: ' . $error->getCode() . ';line: ' . $error->getLine() . ';in_file: ' . $error->getFile() . ';';
-            error_log($message);
+            //error_log($message);
             echo wp_json_encode(array('result' => 'failed', 'error' => $message));
         }
         die();
@@ -969,23 +969,24 @@ class CompressX_Settings_Display
         $dir->create_uploads_dir();
     }
 
-    public function deleteDir($dirPath)
+    public function deleteDir( $dirPath )
     {
-        if (! is_dir($dirPath)) {
-            throw new InvalidArgumentException(esc_html("$dirPath must be a directory"));
+        if ( ! is_dir( $dirPath ) ) {
+            return false;
         }
-        if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
-            $dirPath .= '/';
+
+        global $wp_filesystem;
+        if ( empty( $wp_filesystem ) ) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+            WP_Filesystem();
         }
-        $files = glob($dirPath . '*', GLOB_MARK);
-        foreach ($files as $file) {
-            if (is_dir($file)) {
-                $this->deleteDir($file);
-            } else {
-                wp_delete_file($file);
-            }
+
+        if ( empty( $wp_filesystem ) ) {
+            return false;
         }
-        @rmdir($dirPath);
+
+        // Recursive delete.
+        return $wp_filesystem->rmdir( $dirPath, true );
     }
 
     private function get_custom_children_count($path)

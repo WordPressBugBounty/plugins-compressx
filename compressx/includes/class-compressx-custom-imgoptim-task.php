@@ -338,8 +338,7 @@ class CompressX_Custom_ImgOptim_Task
         $percent= intval(($ret['optimized_images']/$ret['total_images'])*100);
 
         $ret['log']=sprintf(
-        /* translators: %1$d: total images, %2$d: processed images, %3$d: total images, %4$d: Processed percent */
-            __('%1$d images found | Processed:%2$d/%3$d (%4$d%%)' ,'compressx'),
+            '%1$d images found | Processed:%2$d/%3$d (%4$d%%)',
         $ret['total_images'],$ret['optimized_images'],$ret['total_images'],$percent);
 
         if(isset($this->task['status']))

@@ -5,8 +5,8 @@ class CompressX_System_Info
 {
     public function __construct()
     {
-        add_action('wp_ajax_compressx_create_debug_package',array( $this,'create_debug_package'));
-        add_action('wp_ajax_compressx_send_debug_info',array( $this,'send_debug_info'));
+        //add_action('wp_ajax_compressx_create_debug_package',array( $this,'create_debug_package'));
+        //add_action('wp_ajax_compressx_send_debug_info',array( $this,'send_debug_info'));
 
         //
     }
@@ -24,20 +24,6 @@ class CompressX_System_Info
                 ?>
             </div>
         </div>
-        <script>
-            <?php
-            if(isset($_REQUEST['check_environment']))
-            {
-                ?>
-            jQuery(document).ready(function ($)
-            {
-                var top = jQuery("#compressx_download_debug_info").offset().top-jQuery("#compressx_download_debug_info").height();
-                jQuery('html, body').animate({scrollTop:top}, 'slow');
-            });
-                <?php
-            }
-            ?>
-        </script>
         <?php
     }
 
@@ -96,7 +82,7 @@ class CompressX_System_Info
             <div class="compressx-container compressx-section ">
                 <div class="compressx-bulk-log" style="padding-bottom: 0;">
                     <?php
-                    $this->output_debug_info();
+                    //$this->output_debug_info();
                     ?>
                 </div>
             </div>
@@ -104,6 +90,7 @@ class CompressX_System_Info
         <?php
     }
 
+    /*not ues any more
     public function output_debug_info()
     {
         ?>
@@ -258,7 +245,7 @@ class CompressX_System_Info
         $debug_info['setting']['output_format_webp']=$output_format_webp;
         $debug_info['setting']['output_format_avif']=$output_format_avif;
         $debug_info['setting']['converter_method']=$converter_method;
-        $debug_info['setting']=json_encode($debug_info['setting']);
+        $debug_info['setting']=wp_json_encode($debug_info['setting']);
         return $debug_info;
     }
 
@@ -449,7 +436,7 @@ class CompressX_System_Info
             $path = WP_CONTENT_DIR . DIRECTORY_SEPARATOR . $backup_path . DIRECTORY_SEPARATOR . 'compressx_debug.zip';
             if(!is_dir(WP_CONTENT_DIR.DIRECTORY_SEPARATOR.$backup_path))
             {
-                @mkdir(WP_CONTENT_DIR.DIRECTORY_SEPARATOR.$backup_path,0777,true);
+                wp_mkdir_p(WP_CONTENT_DIR.DIRECTORY_SEPARATOR.$backup_path);
                 @fopen(WP_CONTENT_DIR.DIRECTORY_SEPARATOR.$backup_path.DIRECTORY_SEPARATOR.'index.html', 'x');
                 $tempfile=@fopen(WP_CONTENT_DIR.DIRECTORY_SEPARATOR.$backup_path.DIRECTORY_SEPARATOR.'.htaccess', 'x');
                 if($tempfile)
@@ -574,7 +561,7 @@ class CompressX_System_Info
         $path = WP_CONTENT_DIR . DIRECTORY_SEPARATOR . $backup_path . DIRECTORY_SEPARATOR . 'compressx_debug.zip';
         if(!is_dir(WP_CONTENT_DIR.DIRECTORY_SEPARATOR.$backup_path))
         {
-            @mkdir(WP_CONTENT_DIR.DIRECTORY_SEPARATOR.$backup_path,0777,true);
+            wp_mkdir_p(WP_CONTENT_DIR.DIRECTORY_SEPARATOR.$backup_path);
             @fopen(WP_CONTENT_DIR.DIRECTORY_SEPARATOR.$backup_path.DIRECTORY_SEPARATOR.'index.html', 'x');
             $tempfile=@fopen(WP_CONTENT_DIR.DIRECTORY_SEPARATOR.$backup_path.DIRECTORY_SEPARATOR.'.htaccess', 'x');
             if($tempfile)
@@ -625,4 +612,5 @@ class CompressX_System_Info
         @wp_delete_file($path);
         return $ret;
     }
+    */
 }

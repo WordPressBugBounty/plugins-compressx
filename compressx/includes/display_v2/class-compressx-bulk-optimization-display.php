@@ -162,7 +162,7 @@ class CompressX_Bulk_Optimization_Display
 
         $ret=$log->get_log_content($offset);
 
-        echo json_encode($ret);
+        echo wp_json_encode($ret);
         die();
     }
 
@@ -213,7 +213,7 @@ class CompressX_Bulk_Optimization_Display
             readfile($path);
         } catch (Exception $error) {
             $message = 'An exception has occurred. class: ' . get_class($error) . ';msg: ' . $error->getMessage() . ';code: ' . $error->getCode() . ';line: ' . $error->getLine() . ';in_file: ' . $error->getFile() . ';';
-            error_log($message);
+            //error_log($message);
         }
         exit;
     }
@@ -610,7 +610,7 @@ class CompressX_Bulk_Optimization_Display
             }
 
             $formatted_logs[] = array(
-                'date' => isset($log['date']) ? $log['date'] : date('M-d-y H:i'),
+                'date' => isset($log['date']) ? $log['date'] : gmdate('M-d-y H:i'),
                 'filename' => isset($log['name']) ? $log['name'] : (isset($log['file_name']) ? $log['file_name'] : 'unknown.txt'),
                 'size' => $size_formatted,
                 'detail_url' => '#',
@@ -623,6 +623,7 @@ class CompressX_Bulk_Optimization_Display
         return $formatted_logs;
     }
 
+    /* old
     private function get_log_list()
     {
         $log_list = array();
@@ -690,6 +691,117 @@ class CompressX_Bulk_Optimization_Display
                 return 1;
             }
         });
+
+        return $log_list;
+    }
+    */
+
+    private function get_log_list()
+    {
+
+        $log_list = array();
+
+        $log = new CompressX_Log();
+        $dir = trailingslashit( $log->GetSaveLogFolder() );
+
+        // Init WP_Filesystem.
+        global $wp_filesystem;
+        if ( empty( $wp_filesystem ) ) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+            WP_Filesystem();
+        }
+
+        if ( empty( $wp_filesystem ) ) {
+            return $log_list;
+        }
+
+        if ( ! $wp_filesystem->is_dir( $dir ) ) {
+            return $log_list;
+        }
+
+        $regex = '#^compressx.*_log\.txt$#';
+
+        // List directory files.
+        $dir_list = $wp_filesystem->dirlist( $dir, false, false );
+
+        if ( empty( $dir_list ) || ! is_array( $dir_list ) ) {
+            return $log_list;
+        }
+
+        foreach ( $dir_list as $filename => $info ) {
+
+            if ( empty( $filename ) ) {
+                continue;
+            }
+
+            // Skip folders.
+            if ( isset( $info['type'] ) && 'd' === $info['type'] ) {
+                continue;
+            }
+
+            // Match log files.
+            if ( ! preg_match( $regex, $filename ) ) {
+                continue;
+            }
+
+            $file = $dir . $filename;
+
+            $log_file = array();
+            $log_file['file_name'] = $filename;
+            $log_file['path']      = $file;
+            $log_file['name']      = $filename;
+
+            // Size.
+            $size = $wp_filesystem->size( $file );
+            $log_file['size'] = ( false === $size ) ? 0 : (int) $size;
+
+            // Time.
+            $mtime = $wp_filesystem->mtime( $file );
+            $mtime = ( false === $mtime ) ? 0 : (int) $mtime;
+            $log_file['time'] = $mtime;
+
+            // ID extraction (keep your original logic).
+            if ( preg_match( '/compressx-(.*?)_/', $filename, $matches ) ) {
+                $id = $matches[0];
+                $id = substr( $id, 0, strlen( $id ) - 1 );
+                $log_file['id'] = $id;
+            }
+
+            // Local time format.
+            $offset    = (float) get_option( 'gmt_offset' );
+            $localtime = $mtime + (int) ( $offset * 3600 );
+            $log_file['date'] = gmdate( 'M-d-y H:i', $localtime );
+
+            // Read first line from log file (simulate fgets).
+            $content = $wp_filesystem->get_contents( $file );
+
+            if ( ! empty( $content ) ) {
+                $lines = preg_split( "/\r\n|\n|\r/", $content );
+                $line  = isset( $lines[0] ) ? $lines[0] : '';
+
+                if ( ! empty( $line ) ) {
+                    $pos = strpos( $line, 'Log created: ' );
+                    if ( false !== $pos ) {
+                        $log_file['time'] = substr( $line, $pos + strlen( 'Log created: ' ) );
+                    }
+                }
+            }
+
+            $log_list[ $filename ] = $log_file;
+        }
+
+        uasort(
+            $log_list,
+            function ( $a, $b ) {
+                if ( $a['time'] > $b['time'] ) {
+                    return -1;
+                } elseif ( $a['time'] === $b['time'] ) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            }
+        );
 
         return $log_list;
     }
@@ -843,7 +955,7 @@ class CompressX_Bulk_Optimization_Display
 
         $ret['result']='success';
         $ret['current_image']=$current_image;
-        echo json_encode($ret);
+        echo wp_json_encode($ret);
         die();
     }
 

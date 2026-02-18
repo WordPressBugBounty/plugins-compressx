@@ -18,6 +18,8 @@ class CompressX_Display
 
     public function __construct()
     {
+        $this->load_v2();
+        /*
         $interface_version = CompressX_Options::get_interface_version();
         if($interface_version === 'v2')
         {
@@ -26,9 +28,10 @@ class CompressX_Display
         else
         {
             $this->load();
-        }
+        }*/
     }
 
+    /*
     public function load()
     {
         include_once COMPRESSX_DIR . '/includes/display/class-compressx-dashboard.php';
@@ -63,6 +66,7 @@ class CompressX_Display
             add_action('admin_menu',array( $this,'add_plugin_admin_menu'));
         }
     }
+    */
 
     public function load_v2()
     {
@@ -741,7 +745,7 @@ class CompressX_Display
             <div class="compressx-container compressx-menu">
                 <h2>Compress<span style="color:#175cff;">X</span><span style="font-size:1.2rem;">.io</span>
                 <span class="compressx-pro-version" style="font-size:0.7rem;">
-                    <span><?php echo COMPRESSX_VERSION;?></span><span> FREE</span>
+                    <span><?php echo esc_html(COMPRESSX_VERSION);?></span><span> FREE</span>
                     <?php
                     if($this->check_update())
                     {
@@ -815,7 +819,7 @@ class CompressX_Display
         ?>
         <footer>
             <div class="compressx-container compressx-menu">
-                <div style="margin: auto;"><strong><span>If you like our plugin, a <a href="https://wordpress.org/support/plugin/compressx/reviews/?filter=5#new-post"><span class="dashicons dashicons-star-filled" style="color:#ffb900;"></span>
+                <div style="margin: auto;"><strong><span>If you like our plugin, a <a href="https://wordpress.org/support/plugin/compressx/reviews"><span class="dashicons dashicons-star-filled" style="color:#ffb900;"></span>
                     <span class="dashicons dashicons-star-filled" style="color:#ffb900;"></span>
                     <span class="dashicons dashicons-star-filled" style="color:#ffb900;"></span>
                     <span class="dashicons dashicons-star-filled" style="color:#ffb900;"></span>
@@ -831,7 +835,7 @@ class CompressX_Display
     {
         $defaults = array(
             'show_review_link' => true,
-            'review_url' => 'https://wordpress.org/support/plugin/compressx/reviews/?filter=5',
+            'review_url' => 'https://wordpress.org/support/plugin/compressx/reviews',
             'review_text' => __('Enjoying CompressX? Please', 'compressx') .
                 '<a href="%s" target="_blank">' .
                 __('leave us a', 'compressx') . ' ' .
