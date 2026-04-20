@@ -72,7 +72,10 @@ class CompressX_System_Info_Display
                                 <span class="compressx-v2-ml-2 compressx-v2-text-xs compressx-v2-bg-green-100 compressx-v2-text-green-700 compressx-v2-rounded compressx-v2-px-2"><?php esc_html_e('OK', 'compressx'); ?></span>
                             <?php endif; ?>
                         </li>
-                        <li><span class="compressx-v2-font-medium"><?php esc_html_e('Home Url:', 'compressx'); ?></span> <span><?php echo esc_html($debug_info['home'] ?? ''); ?></span></li>
+                        <li style="overflow-wrap: anywhere;">
+                            <span class="compressx-v2-font-medium"><?php esc_html_e('Home URL:', 'compressx'); ?></span>
+                            <span><?php echo esc_html($debug_info['home'] ?? ''); ?></span>
+                        </li>
                     </ul>
                 </div>
 
@@ -267,7 +270,7 @@ class CompressX_System_Info_Display
                         </div>
                         <div>
                             <label class="compressx-v2-text-xs compressx-v2-text-gray-500"><?php esc_html_e('Your Email', 'compressx'); ?></label>
-                            <input type="email" id="compressx_user_mail" placeholder="you@example.com"
+                            <input type="email" id="compressx_user_mail" placeholder="<?php echo esc_attr__( 'you@example.com', 'compressx' ); ?>"
                                    class="compressx-v2-w-full compressx-v2-border compressx-v2-rounded compressx-v2-px-3 compressx-v2-py-2 compressx-v2-text-sm focus:compressx-v2-border-blue-500">
                         </div>
                     </div>

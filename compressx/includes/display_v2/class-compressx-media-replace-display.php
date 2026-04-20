@@ -29,7 +29,9 @@ class CompressX_Media_Replace_Display
             'page' => 'media-replace-compressx',
             'attachment_id' => $post_id,
         ), $url);
-        $actions['compressx_media_replace']="<a href='$url' aria-label='Replace Media' rel='permalink'>Replace Media</a>";
+        $actions['compressx_media_replace']='<a href="' . esc_url( $url ) . '" aria-label="' . esc_attr__( 'Replace Media', 'compressx' ) . '" rel="permalink">' .
+            esc_html__( 'Replace Media', 'compressx' ) .
+            '</a>';
 
         return $actions;
     }
@@ -218,10 +220,10 @@ class CompressX_Media_Replace_Display
                     <!-- Save button -->
                     <div class="compressx-v2-flex compressx-v2-items-center compressx-v2-gap-2">
                         <button id="cx_replace_media" class="compressx-v2-inline-flex compressx-v2-items-center compressx-v2-gap-1 compressx-v2-bg-blue-600 hover:compressx-v2-bg-blue-700 compressx-v2-text-white compressx-v2-text-sm compressx-v2-font-medium compressx-v2-px-4 compressx-v2-py-2 compressx-v2-rounded">
-                            Replace Media
+                            <?php esc_html_e( 'Replace Media', 'compressx' ); ?>
                         </button>
                         <span id="cx_replace_media_progress" class="compressx-v2-flex compressx-v2-items-center compressx-v2-hidden">
-                        <img src="<?php echo esc_url(is_network_admin() ? network_admin_url('images/loading.gif') : admin_url('images/loading.gif')); ?>" alt="Loading..." style="width: 16px; height: 16px;">
+                        <img src="<?php echo esc_url(is_network_admin() ? network_admin_url('images/loading.gif') : admin_url('images/loading.gif')); ?>" alt="<?php echo esc_attr__( 'Loading...', 'compressx' ); ?>" style="width: 16px; height: 16px;">
                     </span>
                         <span id="cx_replace_media_text" class="success compressx-v2-hidden compressx-v2-text-sm compressx-v2-font-medium" style="color:#007017"><?php esc_html_e('Success!', 'compressx') ?></span>
                     </div>
@@ -253,26 +255,26 @@ class CompressX_Media_Replace_Display
         <div class="md:compressx-v2-col-span-3">
             <div class="compressx-v2-bg-[#F2FBFA] compressx-v2-border compressx-v2-p-4 compressx-v2-mb-4 compressx-v2-rounded">
                 <h4 class="compressx-v2-text-xs compressx-v2-font-medium compressx-v2-text-gray-700 compressx-v2-mb-3">
-                    Current Compression Settings
+                    <?php esc_html_e( 'Current Compression Settings', 'compressx' ); ?>
                 </h4>
                 <ul class="compressx-v2-text-xs compressx-v2-text-gray-600 compressx-v2-space-y-1.5">
                     <li>
                         <div class="compressx-v2-flex compressx-v2-items-center compressx-v2-gap-4 compressx-v2-text-gray-700">
                             <div class="compressx-v2-flex compressx-v2-items-center compressx-v2-gap-1.5">
                                 <span class="dashicons dashicons-yes compressx-v2-text-green-600"></span>
-                                <span class="compressx-v2-font-medium">General</span>
+                                <span class="compressx-v2-font-medium"><?php esc_html_e( 'General', 'compressx' ); ?></span>
                             </div>
                             <span class="compressx-v2-text-gray-300">|</span>
 
                             <div class="compressx-v2-flex compressx-v2-items-center compressx-v2-gap-1.5 compressx-v2-text-gray-400">
                                 <span class="dashicons dashicons-star-filled"></span>
-                                <span class="compressx-v2-font-medium">Smart</span>
-                                <span class="compressx-v2-text-[11px]"><a href="https://compressx.io/pricing/plans/">(Pro)</a></span>
+                                <span class="compressx-v2-font-medium"><?php esc_html_e( 'Smart', 'compressx' ); ?></span>
+                                <span class="compressx-v2-text-[11px]"><a href="https://compressx.io/pricing/plans/"><?php esc_html_e( '(Pro)', 'compressx' ); ?></a></span>
                             </div>
                         </div>
                     </li>
-                    <li>• Formats: <span class="compressx-v2-font-medium">WebP, AVIF</span></li>
-                    <li>• Thumbnails: <span class="compressx-v2-font-medium">All Selected Thumbnail sizes</span></li>
+                    <li>• <?php esc_html_e( 'Formats:', 'compressx' ); ?> <span class="compressx-v2-font-medium"><?php esc_html_e( 'WebP, AVIF', 'compressx' ); ?></span></li>
+                    <li>• <?php esc_html_e( 'Thumbnails:', 'compressx' ); ?>: <span class="compressx-v2-font-medium"><?php esc_html_e( 'All Selected Thumbnail sizes', 'compressx' ); ?></span></li>
                 </ul>
             </div>
             <div class="compressx-v2-border compressx-v2-p-4">
@@ -286,15 +288,15 @@ class CompressX_Media_Replace_Display
                         <!-- Title + Description -->
                         <div>
                             <h3 class="compressx-v2-text-sm compressx-v2-font-medium compressx-v2-text-gray-800">
-                                Auto re-optimize after replacement<br>
-                                <span id="auto_re_optimize-saved-indicator"  class="compressx-v2-ml-2 compressx-v2-text-xs compressx-v2-text-green-600 hidden">✓ Saved</span>
+                                <?php esc_html_e( 'Auto re-optimize after replacement', 'compressx' ); ?><br>
+                                <span id="auto_re_optimize-saved-indicator"  class="compressx-v2-ml-2 compressx-v2-text-xs compressx-v2-text-green-600 hidden"><?php esc_html_e( '✓ Saved', 'compressx' ); ?></span>
                             </h3>
                             <p class="compressx-v2-text-xs compressx-v2-text-gray-500 compressx-v2-mt-1">
-                                Replace all WordPress-generated thumbnails with new ones created from the replaced file, then re-optimize them automatically.
+                                <?php esc_html_e( 'Replace all WordPress-generated thumbnails with new ones created from the replaced file, then re-optimize them automatically.', 'compressx' ); ?>
                             </p>
                             <div class="compressx-v2-mt-4 compressx-v2-mb-4">
                                 <h3 class="compressx-v2-text-sm compressx-v2-font-medium compressx-v2-text-gray-900 compressx-v2-mb-3">
-                                    Thumbnail Generation Strategy
+                                    <?php esc_html_e( 'Thumbnail Generation Strategy', 'compressx' ); ?>
                                 </h3>
                                 <div class="compressx-v2-space-y-3">
                                     <!-- Option 1 -->
@@ -302,11 +304,11 @@ class CompressX_Media_Replace_Display
                                         <input type="radio" name="thumbnail_strategy" value="default_fill" <?php echo esc_attr(checked($default_fill));?>/>
                                         <div>
                                             <div class="compressx-v2-text-sm compressx-v2-text-gray-900">
-                                                Use current default sizes and fill missing ones (Recommended)<br>
-                                                <span id="default_fill-saved-indicator" class="compressx-v2-ml-2 compressx-v2-text-xs compressx-v2-text-green-600 hidden">✓ Saved</span>
+                                                <?php esc_html_e( 'Use current default sizes and fill missing ones (Recommended)', 'compressx' ); ?><br>
+                                                <span id="default_fill-saved-indicator" class="compressx-v2-ml-2 compressx-v2-text-xs compressx-v2-text-green-600 hidden"><?php esc_html_e( '✓ Saved', 'compressx' ); ?></span>
                                             </div>
                                             <div class="compressx-v2-text-xs compressx-v2-text-gray-500">
-                                                Generate thumbnails using the current default sizes and automatically create any missing sizes.
+                                                <?php esc_html_e( 'Generate thumbnails using the current default sizes and automatically create any missing sizes.', 'compressx' ); ?>
                                             </div>
                                         </div>
                                     </label>
@@ -315,11 +317,11 @@ class CompressX_Media_Replace_Display
                                         <input type="radio" name="thumbnail_strategy" value="match_original" class="compressx-v2-mt-1" <?php echo esc_attr(checked($match_original));?>/>
                                         <div>
                                             <div class="compressx-v2-text-sm compressx-v2-text-gray-900">
-                                                Match original thumbnail sizes<br>
-                                                <span id="match_original-saved-indicator" class="compressx-v2-ml-2 compressx-v2-text-xs compressx-v2-text-green-600 hidden">✓ Saved</span>
+                                                <?php esc_html_e( 'Match original thumbnail sizes', 'compressx' ); ?><br>
+                                                <span id="match_original-saved-indicator" class="compressx-v2-ml-2 compressx-v2-text-xs compressx-v2-text-green-600 hidden"><?php esc_html_e( '✓ Saved', 'compressx' ); ?></span>
                                             </div>
                                             <div class="compressx-v2-text-xs compressx-v2-text-gray-500">
-                                                Generate new thumbnails strictly based on the original image’s existing thumbnail sizes.
+                                                <?php esc_html_e( 'Generate new thumbnails strictly based on the original image\'s existing thumbnail sizes.', 'compressx' ); ?>
                                             </div>
                                         </div>
                                     </label>
@@ -335,7 +337,7 @@ class CompressX_Media_Replace_Display
                         <!-- Title + Description -->
                         <div>
                             <h3 class="compressx-v2-text-sm compressx-v2-font-medium compressx-v2-text-gray-800">
-                                Keep temporary versions after replacement <span class="compressx-v2-text-gray-400"><a href="https://compressx.io/pricing/plans/">(Pro)</a></span>
+                                <?php esc_html_e( 'Keep temporary versions after replacement', 'compressx' ); ?> <span class="compressx-v2-text-gray-400"><a href="https://compressx.io/pricing/plans/"><?php esc_html_e( '(Pro)', 'compressx' ); ?></a></span>
                             </h3>
 
                             <!-- Temporary Versions Retention -->
@@ -343,7 +345,7 @@ class CompressX_Media_Replace_Display
                                 <!-- Versions count -->
                                 <div class="compressx-v2-space-y-1">
                                     <label class="compressx-v2-text-xs compressx-v2-text-gray-600">
-                                        Keep up to
+                                        <?php esc_html_e( 'Keep up to', 'compressx' ); ?>
                                     </label>
                                     <select class="compressx-v2-w-full
                                                         compressx-v2-border
@@ -357,27 +359,27 @@ class CompressX_Media_Replace_Display
                                         <option>3</option>
                                     </select>
                                     <div class="compressx-v2-text-[11px] compressx-v2-text-gray-500">
-                                        versions
+                                        <?php esc_html_e( 'versions', 'compressx' ); ?>
                                     </div>
                                 </div>
                                 <!-- Retention time -->
                                 <div class="compressx-v2-space-y-1">
                                     <label class="compressx-v2-text-xs compressx-v2-text-gray-600">
-                                        Retention period
+                                        <?php esc_html_e( 'Retention period', 'compressx' ); ?>
                                     </label>
                                     <select class="compressx-v2-w-full compressx-v2-border compressx-v2-border-gray-300 compressx-v2-rounded compressx-v2-h-8 compressx-v2-px-2 compressx-v2-text-sm">
-                                        <option value="1">1 day</option>
-                                        <option value="3">3 days</option>
-                                        <option value="7">7 days</option>
+                                        <option value="1"><?php esc_html_e( '1 day', 'compressx' ); ?></option>
+                                        <option value="3"><?php esc_html_e( '3 days', 'compressx' ); ?></option>
+                                        <option value="7"><?php esc_html_e( '7 days', 'compressx' ); ?></option>
                                     </select>
                                 </div>
                                 <!-- Helper text -->
                                 <div class="compressx-v2-text-[11px] compressx-v2-text-gray-500">
-                                    Versions are removed automatically after expiration.
+                                    <?php esc_html_e( 'Versions are removed automatically after expiration.', 'compressx' ); ?>
                                 </div>
                             </div>
                             <p class="compressx-v2-text-[11px] compressx-v2-text-gray-400 compressx-v2-mt-1">
-                                This is a short-term safety buffer, not a backup system.
+                                <?php esc_html_e( 'This is a short-term safety buffer, not a backup system.', 'compressx' ); ?>
                             </p>
                         </div>
                     </div>
@@ -396,15 +398,22 @@ class CompressX_Media_Replace_Display
             <!-- Replace Impact -->
             <div class="compressx-v2-mb-4">
                 <h3 class="compressx-v2-text-sm compressx-v2-font-medium compressx-v2-mb-2">
-                    After Replacement
+                    <?php esc_html_e( 'After Replacement', 'compressx' ); ?>
                 </h3>
 
                 <ul class="compressx-v2-text-sm compressx-v2-text-gray-700 compressx-v2-space-y-1">
-                    <li>✓ URL unchanged</li>
-                    <li>✓ Attachment ID unchanged</li>
-                    <li>✓ Thumbnails regenerated (PNG/JPG/WEBP/AVIF)</li>
-                    <li>✓ Formats re-optimized</li>
-                    <li>✓ The previous version will be kept for <span>1</span> day.</li>
+                    <li><?php esc_html_e( '✓ URL unchanged', 'compressx' ); ?></li>
+                    <li><?php esc_html_e( '✓ Attachment ID unchanged', 'compressx' ); ?></li>
+                    <li><?php esc_html_e( '✓ Thumbnails regenerated (PNG/JPG/WEBP/AVIF)', 'compressx' ); ?></li>
+                    <li><?php esc_html_e( '✓ Formats re-optimized', 'compressx' ); ?></li>
+                    <li><?php
+                        printf(
+                            /* translators: %d: number of days the previous version is retained. */
+                            esc_html__( '✓ The previous version will be kept for %d day.', 'compressx' ),
+                            1
+                        );
+                        ?>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -509,9 +518,15 @@ class CompressX_Media_Replace_Display
         }
 
         if(!empty($meta['sizes']))
-            $thumbnail_counts="Thumbnails: ".count($meta['sizes']);
+            $thumbnail_counts = sprintf(
+                /* translators: %d: number of generated thumbnails. */
+                __( 'Thumbnails: %d', 'compressx' ),
+                count( $meta['sizes'] )
+            );
         else
-            $thumbnail_counts="Thumbnails: 0";
+            $thumbnail_counts = sprintf(
+                __( 'Thumbnails: 0', 'compressx' )
+            );
 
         $mime_type=get_post_mime_type($this->attachment_id);
         $ft = wp_check_filetype($file);
@@ -521,16 +536,16 @@ class CompressX_Media_Replace_Display
         <div class="compressx-v2-mb-4">
             <div class="compressx-v2-border-b compressx-v2-pb-4 compressx-v2-mb-4">
                 <h3 class="compressx-v2-text-sm compressx-v2-font-medium">
-                    <span>Current Media</span>
+                    <span><?php esc_html_e( 'Current Media', 'compressx' ); ?></span>
                 </h3>
             </div>
             <div class="compressx-v2-grid compressx-v2-grid-cols-2 compressx-v2-gap-4 compressx-v2-items-start">
                 <div class="compressx-v2-bg-gray-100 compressx-v2-rounded compressx-v2-flex compressx-v2-items-center compressx-v2-justify-center">
-                    <img src="<?php echo esc_url( $url ); ?>" alt="Replace preview"/>
+                    <img src="<?php echo esc_url( $url ); ?>" alt="<?php echo esc_attr__( 'Replace preview', 'compressx' ); ?>"/>
                 </div>
                 <div class="compressx-v2-text-sm compressx-v2-text-gray-700">
                     <div id="og_image_dimensions" data-mime="<?php echo esc_attr( $mime_type ); ?>" data-width="<?php echo esc_attr( $width ); ?>" data-height="<?php echo esc_attr( $height ); ?>" ><?php echo esc_html( $dimensions ); ?></div>
-                    <div>Format: <span><?php echo esc_html( $type ); ?></span></div>
+                    <div><?php esc_html_e( 'Format:', 'compressx' ); ?> <span><?php echo esc_html( $type ); ?></span></div>
                     <div><?php echo esc_html( $size ); ?></div>
                     <div><?php echo esc_html( $status ); ?></div>
                     <div><?php echo esc_html( $thumbnail_counts ); ?></div>
@@ -538,8 +553,16 @@ class CompressX_Media_Replace_Display
                                                 compressx-v2-flex compressx-v2-items-start compressx-v2-gap-1.5
                                                 compressx-v2-text-[11px] compressx-v2-text-gray-400">
                         <p class="compressx-v2-leading-snug">
-                            <span class="compressx-v2-font-medium compressx-v2-text-gray-500">Note:</span>
-                            The image preview may still show a cached version due to browser or CDN caching. <a href="https://compressx.io/docs/media-replace/">Learn more...</a>
+                            <span class="compressx-v2-font-medium compressx-v2-text-gray-500"><?php esc_html_e( 'Note:', 'compressx' ); ?></span>
+                            <?php
+                            printf(
+                                wp_kses_post(
+                                    /* translators: %s: documentation URL. */
+                                    __( 'The image preview may still show a cached version due to browser or CDN caching. <a href="%s">Learn more...</a>', 'compressx' )
+                                ),
+                                esc_url( 'https://compressx.io/docs/media-replace/' )
+                            );
+                            ?>
                         </p>
                     </div>
                 </div>
@@ -554,11 +577,11 @@ class CompressX_Media_Replace_Display
         <div class="compressx-v2-mb-4">
             <div class="compressx-v2-bg-gray-50 compressx-v2-border compressx-v2-border-dashed compressx-v2-border-gray-300 compressx-v2-rounded compressx-v2-p-4 compressx-v2-mb-4">
                 <h3 class="compressx-v2-text-sm compressx-v2-font-semibold compressx-v2-text-gray-900 compressx-v2-mb-1">
-                    New Media
+                    <?php esc_html_e( 'New Media', 'compressx' ); ?>
                 </h3>
                 <div class="compressx-v2-text-xs compressx-v2-text-gray-500 compressx-v2-leading-relaxed">
-                    For best visual consistency, upload an image with a similar width (or slightly wider) than the original.
-                    <a href="https://compressx.io/docs/media-replace/" class="compressx-v2-text-blue-600 hover:compressx-v2-underline">Learn more...</a>
+                    <?php esc_html_e( 'For best visual consistency, upload an image with a similar width (or slightly wider) than the original.', 'compressx' ); ?>
+                    <a href="https://compressx.io/docs/media-replace/" class="compressx-v2-text-blue-600 hover:compressx-v2-underline"><?php esc_html_e( 'Learn more...', 'compressx' ); ?></a>
                 </div>
             </div>
             <div id="cx-upload-notice" style="display: none" class="compressx-v2-bg-yellow-50 compressx-v2-border-l-4 compressx-v2-border-yellow-400 compressx-v2-rounded compressx-v2-p-4 compressx-v2-mb-4 compressx-v2-relative">
@@ -566,13 +589,13 @@ class CompressX_Media_Replace_Display
                 <button id="cx-hide-upload-notice"
                         class="compressx-v2-absolute compressx-v2-top-2 compressx-v2-right-2 compressx-v2-text-yellow-700 hover:compressx-v2-text-yellow-900
                                compressx-v2-text-xs compressx-v2-font-medium compressx-v2-bg-transparent compressx-v2-border compressx-v2-border-yellow-300
-                               hover:compressx-v2-bg-yellow-100 compressx-v2-rounded compressx-v2-px-2 compressx-v2-py-0.5 compressx-v2-transition">Dismiss</button>
+                               hover:compressx-v2-bg-yellow-100 compressx-v2-rounded compressx-v2-px-2 compressx-v2-py-0.5 compressx-v2-transition"><?php esc_html_e( 'Dismiss', 'compressx' ); ?></button>
                 <div class="compressx-v2-flex compressx-v2-items-start compressx-v2-gap-3">
                     <!-- Warning Icon -->
                     <span class="dashicons dashicons-warning compressx-v2-text-yellow-500 compressx-v2-text-xl compressx-v2-mt-0.5"></span>
                     <div class="compressx-v2-flex-1">
                         <p class="compressx-v2-font-medium compressx-v2-text-yellow-800">
-                            Warning: <span id="cx_notice_title" class="compressx-v2-font-semibold"></span>
+                            <?php esc_html_e( 'Warning:', 'compressx' ); ?> <span id="cx_notice_title" class="compressx-v2-font-semibold"></span>
                         </p>
                         <p id="cx_notice_content" class="compressx-v2-text-sm compressx-v2-text-yellow-700 compressx-v2-mt-0.5">
                         </p>
@@ -581,28 +604,28 @@ class CompressX_Media_Replace_Display
             </div>
 
             <!-- Upload Area -->
-            <div id="compressx-new-media-dropzone" role="button" tabindex="0" aria-label="Upload new media"
+            <div id="compressx-new-media-dropzone" role="button" tabindex="0" aria-label="<?php echo esc_attr__( 'Upload new media', 'compressx' ); ?>"
                  class="compressx-v2-border compressx-v2-border-dashed compressx-v2-border-gray-300 compressx-v2-rounded compressx-v2-bg-white compressx-v2-p-12 compressx-v2-text-center compressx-v2-transition hover:compressx-v2-border-gray-400">
                 <p class="compressx-v2-text-sm compressx-v2-text-gray-700 compressx-v2-mb-1">
-                    Click to upload or drag and drop a file here
+                    <?php esc_html_e( 'Click to upload or drag and drop a file here', 'compressx' ); ?>
                 </p>
                 <p class="compressx-v2-text-xs compressx-v2-text-gray-400">
-                    The file will replace the current media without changing the URL.
+                    <?php esc_html_e( 'The file will replace the current media without changing the URL.', 'compressx' ); ?>
                 </p>
             </div>
             <div id="compressx-new-media-preview-layout" style="display:none;" class="compressx-v2-grid compressx-v2-grid-cols-2 compressx-v2-gap-4 compressx-v2-items-start">
                 <div class="compressx-v2-bg-gray-100 compressx-v2-rounded compressx-v2-flex compressx-v2-items-center compressx-v2-justify-center">
-                    <img id="compressx-new-media-preview" alt="Replace preview"/>
+                    <img id="compressx-new-media-preview" alt="<?php echo esc_attr__( 'Replace preview', 'compressx' ); ?>"/>
                 </div>
                 <div class="compressx-v2-text-sm compressx-v2-text-gray-700">
-                    <div>Dimensions: <span id="compressx-new-media-dim">-</span></div>
-                    <div>Format: <span id="compressx-new-media-format">-</span></div>
-                    <div>File size: <span id="compressx-new-media-size">-</span></div>
+                    <div><?php esc_html_e( 'Dimensions:', 'compressx' ); ?> <span id="compressx-new-media-dim">-</span></div>
+                    <div><?php esc_html_e( 'Format:', 'compressx' ); ?> <span id="compressx-new-media-format">-</span></div>
+                    <div><?php esc_html_e( 'File size:', 'compressx' ); ?> <span id="compressx-new-media-size">-</span></div>
                     <div>
                         <button id="compressx-remove-new-media-preview" type="button" class="compressx-v2-mt-2 compressx-v2-text-xs compressx-v2-font-medium compressx-v2-text-gray-600
                         hover:compressx-v2-text-gray-800 compressx-v2-border compressx-v2-border-gray-300 hover:compressx-v2-border-gray-400
                         compressx-v2-bg-white hover:compressx-v2-bg-gray-50 compressx-v2-rounded compressx-v2-px-2 compressx-v2-py-1 compressx-v2-transition">
-                            Remove the uploaded file
+                            <?php esc_html_e( 'Remove the uploaded file', 'compressx' ); ?>
                         </button>
                     </div>
                 </div>
@@ -673,12 +696,18 @@ class CompressX_Media_Replace_Display
 
         if (empty($_FILES['image']) || !is_array($_FILES['image']))
         {
-            wp_send_json(['result' => 'failed', 'error' => 'No file uploaded.']);
+            wp_send_json( array(
+                'result' => 'failed',
+                'error'  => __( 'No file uploaded.', 'compressx' ),
+            ) );
         }
 
         if (empty($_POST['attachment_id']))
         {
-            wp_send_json(['result' => 'failed', 'error' => 'No attachment_id.']);
+            wp_send_json( array(
+                'result' => 'failed',
+                'error'  => __( 'No attachment_id.', 'compressx' ),
+            ) );
         }
 
         $file = $_FILES['image'];

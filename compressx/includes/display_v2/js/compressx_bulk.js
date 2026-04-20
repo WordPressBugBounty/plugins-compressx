@@ -11,7 +11,7 @@ jQuery('#cx-v2-cancel-bulk').on('click', function ()
 {
     if(cx_bulk_task_running)
     {
-        var descript = 'Are you sure to cancel this progressing?';
+        var descript = compressx_bulk_i18n.cancel_confirm;
 
         var ret = confirm(descript);
         if(ret === true)
@@ -30,7 +30,7 @@ jQuery('#cx-v2-cancel-bulk').on('click', function ()
 
 jQuery('#cx-v2-pause-bulk').on('click', function ()
 {
-    var descript = 'Are you sure to pause this progressing?';
+    var descript = compressx_bulk_i18n.pause_confirm;
 
     var ret = confirm(descript);
     if(ret === true)
@@ -144,7 +144,7 @@ jQuery('.cx-log-delete').on('click', function(e)
 
     var logFilename = jQuery(this).data('log');
     var $element= jQuery(this);
-    if (!confirm('Are you sure you want to delete this log file?'))
+    if (!confirm(compressx_bulk_i18n.delete_log_confirm))
     {
         return;
     }
@@ -636,7 +636,7 @@ function compressx_update_bulk_progress(progress_text,progress_percent,sub_progr
     jQuery('#cx-v2-stat-remaining').html(remaining);
 }
 
-function compressx_progress_finish(message,title="Optimization Success")
+function compressx_progress_finish(message,title=compressx_bulk_i18n.optimization_success)
 {
     //jQuery('#cx-v2-bulk-ready').show();
     //jQuery('#cx-v2-bulk-progress').hide();
@@ -674,7 +674,7 @@ function compressx_show_review_box(jsonarray)
 window.addEventListener('click', function(e)
 {
     if(cx_bulk_task_running && e.target.matches('a')){
-        if(!confirm("Are you sure you want to leave this page?"))
+        if(!confirm(compressx_bulk_i18n.leave_page_confirm))
         {
             e.preventDefault();
         }

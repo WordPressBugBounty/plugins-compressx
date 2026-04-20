@@ -354,9 +354,35 @@ class CompressX_Display
             wp_enqueue_script('compressx-twentytwenty', COMPRESSX_URL . '/includes/display/js/twentytwenty/jquery.twentytwenty.js', array('jquery', 'compressx-jquery-event-move'), COMPRESSX_VERSION, $arg);
 
             wp_enqueue_script(COMPRESSX_SLUG.'_image_optimization', COMPRESSX_URL . '/includes/display_v2/js/compressx_image_optimization.js', array('jquery'), COMPRESSX_VERSION, $arg);
+            wp_localize_script(
+                COMPRESSX_SLUG . '_image_optimization',
+                'compressx_image_optimization_i18n',
+                array(
+                    'enable_webp_confirm' => __( 'Are you sure to enable WebP as output format? This will convert your images to WebP format.', 'compressx' ),
+                    'disable_webp_confirm' => __( 'Are you sure to disable WebP as output format?', 'compressx' ),
+                    'imagick6_avif_warning' => __( 'We detect that you use ImageMagick 6.x, this version has a known bug that can cause AVIF conversion timeout. Enabling AVIF conversion with this version is not recommended. Are you sure you wish to proceed?', 'compressx' ),
+                    'enable_avif_confirm' => __( 'Are you sure to enable AVIF as output format? This will convert your images to AVIF format.', 'compressx' ),
+                    'disable_avif_confirm' => __( 'Are you sure to disable AVIF as output format?', 'compressx' ),
+                    'supported' => __( 'Supported', 'compressx' ),
+                    'unsupported' => __( 'Unsupported', 'compressx' ),
+                    'failed_save' => __( 'Failed to save settings.', 'compressx' ),
+                    'save_error' => __( 'An error occurred while saving settings.', 'compressx' ),
+                )
+            );
             wp_enqueue_script(COMPRESSX_SLUG.'_comparison', COMPRESSX_URL . '/includes/display_v2/js/compressx_image_comparison.js', array('jquery'), COMPRESSX_VERSION, $arg);
 
             wp_enqueue_script(COMPRESSX_SLUG.'_bulk', COMPRESSX_URL . '/includes/display_v2/js/compressx_bulk.js', array('jquery'), COMPRESSX_VERSION, $arg);
+            wp_localize_script(
+                COMPRESSX_SLUG . '_bulk',
+                'compressx_bulk_i18n',
+                array(
+                    'cancel_confirm' => __( 'Are you sure to cancel this progressing?', 'compressx' ),
+                    'pause_confirm' => __( 'Are you sure to pause this progressing?', 'compressx' ),
+                    'delete_log_confirm' => __( 'Are you sure you want to delete this log file?', 'compressx' ),
+                    'leave_page_confirm' => __( 'Are you sure you want to leave this page?', 'compressx' ),
+                    'optimization_success' => __( 'Optimization Success', 'compressx' ),
+                )
+            );
             wp_enqueue_script('compressx-chart', COMPRESSX_URL . '/includes/display_v2/js/chart.umd.min.js', array('jquery'), COMPRESSX_VERSION, $arg);
 
 

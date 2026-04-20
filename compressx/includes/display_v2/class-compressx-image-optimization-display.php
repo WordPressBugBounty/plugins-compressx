@@ -58,16 +58,16 @@ class CompressX_Image_Optimization_Display
             <!-- Left: Title & description -->
             <div>
                 <h1 class="compressx-v2-text-2xl compressx-v2-font-semibold compressx-v2-text-gray-900">
-                    Image Optimization Settings
+                    <?php esc_html_e('Image Optimization Settings', 'compressx'); ?>
                 </h1>
                 <p class="compressx-v2-text-sm compressx-v2-text-gray-600 compressx-v2-mt-2">
-                    Apply best-practice optimization to new uploads and historical images. The defaults balance quality and size for most sites.
+                    <?php esc_html_e('Apply best-practice optimization to new uploads and historical images. The defaults balance quality and size for most sites.', 'compressx'); ?>
                 </p>
             </div>
 
             <div>
                 <button id="cx_start_bulk_optimization" class="compressx-v2-inline-flex compressx-v2-items-center compressx-v2-gap-1 compressx-v2-bg-blue-600 hover:compressx-v2-bg-blue-700 compressx-v2-text-white compressx-v2-text-sm compressx-v2-font-medium compressx-v2-px-4 compressx-v2-py-2 compressx-v2-rounded">
-                    Bulk Optimization
+                    <?php esc_html_e('Bulk Optimization', 'compressx'); ?>
                     <?php if ($bulk_progress > 0 && $bulk_progress < 100): ?>
                         <span>(<?php echo esc_html($bulk_progress) ?>%)</span>
                     <?php endif; ?>
@@ -123,26 +123,42 @@ class CompressX_Image_Optimization_Display
             <!-- Content -->
             <div class="compressx-v2-flex-1">
                 <h3 class="compressx-v2-font-semibold compressx-v2-text-gray-900 compressx-v2-text-base">
-                    🎉 CompressX.io has optimized <span id="cx_size_of_opt_images" class="compressx-v2-text-blue-600"><?php echo esc_html($opt_size)?></span> of images for you!
+                    <?php
+                    printf(
+                        wp_kses_post(
+                            /* translators: %s: optimized image size wrapped in a span element. */
+                            __( '🎉 CompressX.io has optimized %s of images for you!', 'compressx' )
+                        ),
+                        '<span id="cx_size_of_opt_images" class="compressx-v2-text-blue-600">' . esc_html( $opt_size ) . '</span>'
+                    );
+                    ?>
                 </h3>
                 <p class="compressx-v2-text-sm compressx-v2-text-gray-600 compressx-v2-mt-1">
-                    If CompressX has helped you, could you leave us a <span class="compressx-v2-font-medium">5-star review</span>?
-                    Your feedback motivates us to keep improving 🚀
+                    <?php
+                    printf(
+                        wp_kses_post(
+                            /* translators: %s: highlighted text for "5-star review". */
+                            __( 'If CompressX has helped you, could you leave us a %s?', 'compressx' )
+                        ),
+                        '<span class="compressx-v2-font-medium">' . esc_html__( '5-star review', 'compressx' ) . '</span>'
+                    );
+                    ?>
+                    <?php esc_html_e( 'Your feedback motivates us to keep improving 🚀', 'compressx' ); ?>
                 </p>
 
                 <!-- Actions -->
                 <div class="compressx-v2-flex compressx-v2-flex-col sm:compressx-v2-flex-row compressx-v2-flex-wrap compressx-v2-gap-4 compressx-v2-mt-5">
                     <button id="cx_rating_btn" class="compressx-v2-bg-blue-600 hover:compressx-v2-bg-blue-700 compressx-v2-text-white compressx-v2-text-sm compressx-v2-font-medium compressx-v2-px-5 compressx-v2-py-2.5 compressx-v2-rounded compressx-v2-shadow">
-                        ⭐ Yes, I’ll leave a review
+                        ⭐ <?php esc_html_e( 'Yes, I\'ll leave a review', 'compressx' ); ?>
                     </button>
                     <button id="cx_rating_ask_me_later" class="compressx-v2-text-sm compressx-v2-text-gray-500 hover:compressx-v2-text-blue-600">
-                        Ask me later
+                        <?php esc_html_e( 'Ask me later', 'compressx' ); ?>
                     </button>
                     <button id="cx_rating_already" class="compressx-v2-text-sm compressx-v2-text-gray-500 hover:compressx-v2-text-green-600">
-                        I already did 🙂
+                        <?php esc_html_e( 'I already did 🙂', 'compressx' ); ?>
                     </button>
                     <button id="cx_rating_dismiss" class="compressx-v2-text-sm compressx-v2-text-gray-500 hover:compressx-v2-text-red-500">
-                        Dismiss
+                        <?php esc_html_e( 'Dismiss', 'compressx' ); ?>
                     </button>
                 </div>
             </div>
@@ -210,32 +226,40 @@ class CompressX_Image_Optimization_Display
 
                 <!-- Title -->
                 <h2 class="compressx-v2-text-lg compressx-v2-font-semibold compressx-v2-text-gray-800">
-                    🚀 Big Update – Same Features, Better Experience
+                    🚀 <?php esc_html_e( 'Big Update – Same Features, Better Experience', 'compressx' ); ?>
                 </h2>
 
                 <!-- Description -->
                 <p class="compressx-v2-text-sm compressx-v2-text-gray-600">
-                    We’ve redesigned the interface to make it cleaner and easier to use.
-                    Every feature from the old version is still here — just better organized.
+                    <?php esc_html_e( 'We\'ve redesigned the interface to make it cleaner and easier to use.', 'compressx' ); ?>
+                    <?php esc_html_e( 'Every feature from the old version is still here — just better organized.', 'compressx' ); ?>
                 </p>
 
                 <!-- Highlights -->
                 <ul class="compressx-v2-list-disc compressx-v2-ml-5 compressx-v2-space-y-1 compressx-v2-text-sm compressx-v2-text-gray-700">
-                    <li>🎨 Refreshed UI – simpler navigation and setup</li>
+                    <li>🎨 <?php esc_html_e( 'Refreshed UI – simpler navigation and setup', 'compressx' ); ?></li>
 
-                    <li>🔄 Switch Back Option – if you feel something is missing, you can return to the old UI anytime</li>
+                    <li>🔄 <?php esc_html_e( 'Switch Back Option – if you feel something is missing, you can return to the old UI anytime', 'compressx' ); ?></li>
                 </ul>
 
                 <!-- Reassurance -->
                 <p class="compressx-v2-text-sm compressx-v2-text-gray-600">
-                    If you notice a feature missing, <strong><a href="https://wordpress.org/support/plugin/compressx/">let us know</a></strong> — we’ll fix it quickly.
-                    Don’t worry: the old UI will stay available and maintained until the new interface is fully stable.
+                    <?php
+                    printf(
+                        wp_kses_post(
+                            /* translators: %s: support forum URL. */
+                            __( 'If you notice a feature missing, <strong><a href="%s">let us know</a></strong> — we\'ll fix it quickly.', 'compressx' )
+                        ),
+                        esc_url( 'https://wordpress.org/support/plugin/compressx/' )
+                    );
+                    ?>
+                    <?php esc_html_e( 'Don\'t worry: the old UI will stay available and maintained until the new interface is fully stable.', 'compressx' ); ?>
                 </p>
 
                 <!-- Footer Button -->
                 <div class="compressx-v2-pt-2">
                     <button id="cx_hide_big_update" class="compressx-v2-px-4 compressx-v2-py-2 compressx-v2-bg-blue-600 compressx-v2-text-white compressx-v2-text-sm compressx-v2-rounded hover:compressx-v2-bg-blue-700">
-                        Got it
+                        <?php esc_html_e( 'Got it', 'compressx' ); ?>
                     </button>
                 </div>
             </section>
@@ -607,17 +631,18 @@ class CompressX_Image_Optimization_Display
                         <div>
                             <h3 class="compressx-v2-text-sm compressx-v2-font-medium compressx-v2-flex compressx-v2-items-center compressx-v2-gap-1">
                                 <span class="dashicons dashicons-admin-site-alt3 compressx-v2-text-blue-600"></span>
-                                Global Compression Mode <span class="compressx-v2-text-blue-600">
+                                <?php esc_html_e( 'Global Compression Mode', 'compressx' ); ?>
+                                <span class="compressx-v2-text-blue-600">
                             </h3>
                             <p class="compressx-v2-text-sm compressx-v2-text-gray-500">
-                                Choose how compression quality is applied across your images.
+                                <?php esc_html_e( 'Choose how compression quality is applied across your images.', 'compressx' ); ?>
                             </p>
                         </div>
                         <!-- Right Column (beautified text) -->
                         <div class="compressx-v2-space-x-2">
                             <span class="compressx-v2-bg-slate-50 compressx-v2-border compressx-v2-border-slate-200 compressx-v2-rounded compressx-v2-px-3 compressx-v2-py-1 compressx-v2-text-xs compressx-v2-text-slate-600 compressx-v2-font-medium compressx-v2-whitespace-nowrap">
-                                <span class="compressx-v2-text-gray-500">Lossless:</span> WebP <span class="compressx-v2-font-semibold compressx-v2-text-gray-700">99</span>,AVIF <span class="compressx-v2-font-semibold compressx-v2-text-gray-700">99</span>.
-                                <span class="compressx-v2-text-gray-500">Default:</span> WebP <span class="compressx-v2-font-semibold compressx-v2-text-gray-700">80</span>,
+                                <span class="compressx-v2-text-gray-500"><?php esc_html_e( 'Lossless:', 'compressx' ); ?></span> WebP <span class="compressx-v2-font-semibold compressx-v2-text-gray-700">99</span>,AVIF <span class="compressx-v2-font-semibold compressx-v2-text-gray-700">99</span>.
+                                <span class="compressx-v2-text-gray-500"><?php esc_html_e( 'Default:', 'compressx' ); ?></span> WebP <span class="compressx-v2-font-semibold compressx-v2-text-gray-700">80</span>,
                                 AVIF <span class="compressx-v2-font-semibold compressx-v2-text-gray-700">60</span>.
                             </span>
                         </div>
@@ -631,13 +656,13 @@ class CompressX_Image_Optimization_Display
                                     <input id="cx_compression_mode_general" type="radio" name="compression_mode" value="general" class="compressx-v2-mt-1" <?php echo checked(!$enable_smart_mode)?>/>
                                     <div>
                                         <div class="compressx-v2-text-sm compressx-v2-font-medium">
-                                            General
+                                            <?php esc_html_e( 'General', 'compressx' ); ?>
                                         </div>
                                         <div class="compressx-v2-text-xs compressx-v2-text-gray-500">
-                                            Use a single fixed compression quality for all images.
+                                            <?php esc_html_e( 'Use a single fixed compression quality for all images.', 'compressx' ); ?>
                                         </div>
                                         <div class="compressx-v2-text-xs compressx-v2-text-gray-400">
-                                            The simplest settings for common websites.
+                                            <?php esc_html_e( 'The simplest settings for common websites.', 'compressx' ); ?>
                                         </div>
                                     </div>
                                 </div>
@@ -649,17 +674,17 @@ class CompressX_Image_Optimization_Display
                                     <input id="cx_compression_mode_smart" type="radio" name="compression_mode" value="smart" class="compressx-v2-mt-1" <?php echo checked($enable_smart_mode)?> />
                                     <div>
                                         <div class="compressx-v2-flex compressx-v2-items-center compressx-v2-gap-2">
-                                            <span class="compressx-v2-text-sm compressx-v2-font-medium">Smart</span>
-                                            <span class="compressx-v2-text-xs compressx-v2-text-green-600">Pro</span>
+                                            <span class="compressx-v2-text-sm compressx-v2-font-medium"><?php esc_html_e( 'Smart', 'compressx' ); ?></span>
+                                            <span class="compressx-v2-text-xs compressx-v2-text-green-600"><?php esc_html_e( 'Pro', 'compressx' ); ?></span>
                                             <span class="compressx-v2-text-xs compressx-v2-text-green-600">
-                                                <a href="https://compressx.io/docs/smart-image-optimization/">Learn more</a>
+                                                <a href="https://compressx.io/docs/smart-image-optimization/"><?php esc_html_e( 'Learn more', 'compressx' ); ?></a>
                                             </span>
                                         </div>
                                         <div class="compressx-v2-text-xs compressx-v2-text-gray-500">
-                                            Automatically adjust quality based on image size.
+                                            <?php esc_html_e( 'Automatically adjust quality based on image size.', 'compressx' ); ?>
                                         </div>
                                         <div class="compressx-v2-text-xs compressx-v2-text-gray-400">
-                                            Higher quality for small images, stronger compression for large images.
+                                            <?php esc_html_e( 'Higher quality for small images, stronger compression for large images.', 'compressx' ); ?>
                                         </div>
                                     </div>
                                 </div>
@@ -719,11 +744,11 @@ class CompressX_Image_Optimization_Display
                         <div class="compressx-v2-flex compressx-v2-gap-4 compressx-v2-items-center">
                             <div class="compressx-v2-flex compressx-v2-flex-col compressx-v2-items-center">
                                 <input type="number" value="90" class="compressx-v2-w-16 compressx-v2-border compressx-v2-rounded compressx-v2-text-center compressx-v2-px-1 compressx-v2-py-1" disabled>
-                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500">WebP</label>
+                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500"><?php esc_html_e( 'WebP', 'compressx' ); ?></label>
                             </div>
                             <div class="compressx-v2-flex compressx-v2-flex-col compressx-v2-items-center">
                                 <input type="number" value="90" class="compressx-v2-w-16 compressx-v2-border compressx-v2-rounded compressx-v2-text-center compressx-v2-px-1 compressx-v2-py-1" disabled>
-                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500">AVIF</label>
+                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500"><?php esc_html_e( 'AVIF', 'compressx' ); ?></label>
                             </div>
                         </div>
                     </div>
@@ -741,11 +766,11 @@ class CompressX_Image_Optimization_Display
                         <div class="compressx-v2-flex compressx-v2-gap-4 compressx-v2-items-center">
                             <div class="compressx-v2-flex compressx-v2-flex-col compressx-v2-items-center">
                                 <input type="number" value="80" class="compressx-v2-w-16 compressx-v2-border compressx-v2-rounded compressx-v2-text-center compressx-v2-px-1 compressx-v2-py-1" disabled>
-                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500">WebP</label>
+                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500"><?php esc_html_e( 'WebP', 'compressx' ); ?></label>
                             </div>
                             <div class="compressx-v2-flex compressx-v2-flex-col compressx-v2-items-center">
                                 <input type="number" value="80" class="compressx-v2-w-16 compressx-v2-border compressx-v2-rounded compressx-v2-text-center compressx-v2-px-1 compressx-v2-py-1" disabled>
-                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500">AVIF</label>
+                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500"><?php esc_html_e( 'AVIF', 'compressx' ); ?></label>
                             </div>
                         </div>
                     </div>
@@ -763,11 +788,11 @@ class CompressX_Image_Optimization_Display
                         <div class="compressx-v2-flex compressx-v2-gap-4 compressx-v2-items-center">
                             <div class="compressx-v2-flex compressx-v2-flex-col compressx-v2-items-center">
                                 <input type="number" value="80" class="compressx-v2-w-16 compressx-v2-border compressx-v2-rounded compressx-v2-text-center compressx-v2-px-1 compressx-v2-py-1" disabled>
-                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500">WebP</label>
+                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500"><?php esc_html_e( 'WebP', 'compressx' ); ?></label>
                             </div>
                             <div class="compressx-v2-flex compressx-v2-flex-col compressx-v2-items-center">
                                 <input type="number" value="80" class="compressx-v2-w-16 compressx-v2-border compressx-v2-rounded compressx-v2-text-center compressx-v2-px-1 compressx-v2-py-1" disabled>
-                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500">AVIF</label>
+                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500"><?php esc_html_e( 'AVIF', 'compressx' ); ?></label>
                             </div>
                         </div>
                     </div>
@@ -785,11 +810,11 @@ class CompressX_Image_Optimization_Display
                         <div class="compressx-v2-flex compressx-v2-gap-4 compressx-v2-items-center">
                             <div class="compressx-v2-flex compressx-v2-flex-col compressx-v2-items-center">
                                 <input type="number" value="75" class="compressx-v2-w-16 compressx-v2-border compressx-v2-rounded compressx-v2-text-center compressx-v2-px-1 compressx-v2-py-1" disabled>
-                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500">WebP</label>
+                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500"><?php esc_html_e( 'WebP', 'compressx' ); ?></label>
                             </div>
                             <div class="compressx-v2-flex compressx-v2-flex-col compressx-v2-items-center">
                                 <input type="number" value="75" class="compressx-v2-w-16 compressx-v2-border compressx-v2-rounded compressx-v2-text-center compressx-v2-px-1 compressx-v2-py-1" disabled>
-                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500">AVIF</label>
+                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500"><?php esc_html_e( 'AVIF', 'compressx' ); ?></label>
                             </div>
                         </div>
                     </div>
@@ -837,11 +862,11 @@ class CompressX_Image_Optimization_Display
                         <div class="compressx-v2-flex compressx-v2-gap-4 compressx-v2-items-center">
                             <div class="compressx-v2-flex compressx-v2-flex-col compressx-v2-items-center">
                                 <input type="number" value="90" class="compressx-v2-w-16 compressx-v2-border compressx-v2-rounded compressx-v2-text-center compressx-v2-px-1 compressx-v2-py-1" disabled>
-                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500">WebP</label>
+                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500"><?php esc_html_e( 'WebP', 'compressx' ); ?></label>
                             </div>
                             <div class="compressx-v2-flex compressx-v2-flex-col compressx-v2-items-center">
                                 <input type="number" value="90" class="compressx-v2-w-16 compressx-v2-border compressx-v2-rounded compressx-v2-text-center compressx-v2-px-1 compressx-v2-py-1" disabled>
-                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500">AVIF</label>
+                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500"><?php esc_html_e( 'AVIF', 'compressx' ); ?></label>
                             </div>
                         </div>
                     </div>
@@ -859,11 +884,11 @@ class CompressX_Image_Optimization_Display
                         <div class="compressx-v2-flex compressx-v2-gap-4 compressx-v2-items-center">
                             <div class="compressx-v2-flex compressx-v2-flex-col compressx-v2-items-center">
                                 <input type="number" value="90" class="compressx-v2-w-16 compressx-v2-border compressx-v2-rounded compressx-v2-text-center compressx-v2-px-1 compressx-v2-py-1" disabled>
-                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500">WebP</label>
+                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500"><?php esc_html_e( 'WebP', 'compressx' ); ?></label>
                             </div>
                             <div class="compressx-v2-flex compressx-v2-flex-col compressx-v2-items-center">
                                 <input type="number" value="90" class="compressx-v2-w-16 compressx-v2-border compressx-v2-rounded compressx-v2-text-center compressx-v2-px-1 compressx-v2-py-1" disabled>
-                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500">AVIF</label>
+                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500"><?php esc_html_e( 'AVIF', 'compressx' ); ?></label>
                             </div>
                         </div>
                     </div>
@@ -881,11 +906,11 @@ class CompressX_Image_Optimization_Display
                         <div class="compressx-v2-flex compressx-v2-gap-4 compressx-v2-items-center">
                             <div class="compressx-v2-flex compressx-v2-flex-col compressx-v2-items-center">
                                 <input type="number" value="90" class="compressx-v2-w-16 compressx-v2-border compressx-v2-rounded compressx-v2-text-center compressx-v2-px-1 compressx-v2-py-1" disabled>
-                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500">WebP</label>
+                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500"><?php esc_html_e( 'WebP', 'compressx' ); ?></label>
                             </div>
                             <div class="compressx-v2-flex compressx-v2-flex-col compressx-v2-items-center">
                                 <input type="number" value="90" class="compressx-v2-w-16 compressx-v2-border compressx-v2-rounded compressx-v2-text-center compressx-v2-px-1 compressx-v2-py-1" disabled>
-                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500">AVIF</label>
+                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500"><?php esc_html_e( 'AVIF', 'compressx' ); ?></label>
                             </div>
                         </div>
                     </div>
@@ -903,11 +928,11 @@ class CompressX_Image_Optimization_Display
                         <div class="compressx-v2-flex compressx-v2-gap-4 compressx-v2-items-center">
                             <div class="compressx-v2-flex compressx-v2-flex-col compressx-v2-items-center">
                                 <input type="number" value="88" class="compressx-v2-w-16 compressx-v2-border compressx-v2-rounded compressx-v2-text-center compressx-v2-px-1 compressx-v2-py-1" disabled>
-                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500">WebP</label>
+                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500"><?php esc_html_e( 'WebP', 'compressx' ); ?></label>
                             </div>
                             <div class="compressx-v2-flex compressx-v2-flex-col compressx-v2-items-center">
                                 <input type="number" value="86" class="compressx-v2-w-16 compressx-v2-border compressx-v2-rounded compressx-v2-text-center compressx-v2-px-1 compressx-v2-py-1" disabled>
-                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500">AVIF</label>
+                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500"><?php esc_html_e( 'AVIF', 'compressx' ); ?></label>
                             </div>
                         </div>
                     </div>
@@ -925,11 +950,11 @@ class CompressX_Image_Optimization_Display
                         <div class="compressx-v2-flex compressx-v2-gap-4 compressx-v2-items-center">
                             <div class="compressx-v2-flex compressx-v2-flex-col compressx-v2-items-center">
                                 <input type="number" value="68" class="compressx-v2-w-16 compressx-v2-border compressx-v2-rounded compressx-v2-text-center compressx-v2-px-1 compressx-v2-py-1" disabled>
-                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500">WebP</label>
+                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500"><?php esc_html_e( 'WebP', 'compressx' ); ?></label>
                             </div>
                             <div class="compressx-v2-flex compressx-v2-flex-col compressx-v2-items-center">
                                 <input type="number" value="65" class="compressx-v2-w-16 compressx-v2-border compressx-v2-rounded compressx-v2-text-center compressx-v2-px-1 compressx-v2-py-1" disabled>
-                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500">AVIF</label>
+                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500"><?php esc_html_e( 'AVIF', 'compressx' ); ?></label>
                             </div>
                         </div>
                     </div>
@@ -947,11 +972,11 @@ class CompressX_Image_Optimization_Display
                         <div class="compressx-v2-flex compressx-v2-gap-4 compressx-v2-items-center">
                             <div class="compressx-v2-flex compressx-v2-flex-col compressx-v2-items-center">
                                 <input type="number" value="75" class="compressx-v2-w-16 compressx-v2-border compressx-v2-rounded compressx-v2-text-center compressx-v2-px-1 compressx-v2-py-1" disabled>
-                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500">WebP</label>
+                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500"><?php esc_html_e( 'WebP', 'compressx' ); ?></label>
                             </div>
                             <div class="compressx-v2-flex compressx-v2-flex-col compressx-v2-items-center">
                                 <input type="number" value="72" class="compressx-v2-w-16 compressx-v2-border compressx-v2-rounded compressx-v2-text-center compressx-v2-px-1 compressx-v2-py-1" disabled>
-                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500">AVIF</label>
+                                <label class="compressx-v2-text-[10px] compressx-v2-text-gray-500"><?php esc_html_e( 'AVIF', 'compressx' ); ?></label>
                             </div>
                         </div>
                     </div>
@@ -975,7 +1000,7 @@ class CompressX_Image_Optimization_Display
             </h4>
             <div>
                 <label class="compressx-v2-text-sm compressx-v2-font-medium">
-                    Compression Quality (1–99)
+                    <?php esc_html_e('Compression Quality (1–99)', 'compressx'); ?>
                     <span class="compressx-v2-relative compressx-v2-inline-flex compressx-v2-items-center compressx-v2-group">
                         <button type="button"
                                 class="compressx-v2-inline-flex compressx-v2-items-center compressx-v2-justify-center compressx-v2-h-6 compressx-v2-w-6 compressx-v2-rounded compressx-v2-border compressx-v2-border-slate-300 compressx-v2-bg-white hover:compressx-v2-bg-slate-50 compressx-v2-text-slate-600 hover:compressx-v2-text-slate-800 compressx-v2-shadow-sm focus:compressx-v2-outline-none focus:compressx-v2-ring-2 focus:compressx-v2-ring-sky-400"
@@ -1033,7 +1058,7 @@ class CompressX_Image_Optimization_Display
             </h4>
             <div>
                 <label class="compressx-v2-text-sm compressx-v2-font-medium">
-                    Compression Quality (1–99)
+                    <?php esc_html_e('Compression Quality (1–99)', 'compressx'); ?>
                     <span class="compressx-v2-relative compressx-v2-inline-flex compressx-v2-items-center compressx-v2-group">
                         <button type="button"
                                 class="compressx-v2-inline-flex compressx-v2-items-center compressx-v2-justify-center compressx-v2-h-6 compressx-v2-w-6 compressx-v2-rounded compressx-v2-border compressx-v2-border-slate-300 compressx-v2-bg-white hover:compressx-v2-bg-slate-50 compressx-v2-text-slate-600 hover:compressx-v2-text-slate-800 compressx-v2-shadow-sm focus:compressx-v2-outline-none focus:compressx-v2-ring-2 focus:compressx-v2-ring-sky-400"
@@ -1111,18 +1136,18 @@ class CompressX_Image_Optimization_Display
                 <!-- Left: Title & Description -->
                 <div>
                     <h4 class="compressx-v2-text-sm compressx-v2-font-medium">
-                        Smart Quality Rules
+                        <?php esc_html_e( 'Smart Quality Rules', 'compressx' ); ?>
                     </h4>
                     <p class="compressx-v2-text-xs compressx-v2-text-gray-500">
-                        Define how compression quality changes based on image size.
+                        <?php esc_html_e( 'Define how compression quality changes based on image size.', 'compressx' ); ?>
                     </p>
                 </div>
                 <!-- Right: Tip -->
                 <div class="compressx-v2-bg-gray-50 compressx-v2-rounded compressx-v2-p-3">
                     <p class="compressx-v2-text-xs compressx-v2-text-gray-600">
-                        <span class="compressx-v2-font-medium">Tip:</span>
-                        In most cases, you do not need to change any settings below.
-                        Smart mode works well with the default values for most sites.
+                        <span class="compressx-v2-font-medium"><?php esc_html_e( 'Tip:', 'compressx' ); ?></span>
+                        <?php esc_html_e( 'In most cases, you do not need to change any settings below.', 'compressx' ); ?>
+                        <?php esc_html_e( 'Smart mode works well with the default values for most sites.', 'compressx' ); ?>
                     </p>
                 </div>
             </div>
@@ -1132,33 +1157,33 @@ class CompressX_Image_Optimization_Display
                     <!-- Left: Size Threshold Rule -->
                     <div>
                         <h5 class="compressx-v2-text-sm compressx-v2-font-medium">
-                            Size Threshold
+                            <?php esc_html_e( 'Size Threshold', 'compressx' ); ?>
                         </h5>
                         <div class="compressx-v2-text-xs compressx-v2-text-gray-500 compressx-v2-mb-3">
-                            Define the split point between fixed and adaptive compression.
-                            <a id="cx_show_size_threshold_tip" style="cursor: pointer" class="compressx-v2-text-xs compressx-v2-text-blue-600 hover:compressx-v2-text-blue-700">Why?</a>
+                            <?php esc_html_e( 'Define the split point between fixed and adaptive compression.', 'compressx' ); ?>
+                            <a id="cx_show_size_threshold_tip" style="cursor: pointer" class="compressx-v2-text-xs compressx-v2-text-blue-600 hover:compressx-v2-text-blue-700"><?php esc_html_e( 'Why?', 'compressx' ); ?></a>
                         </div>
                         <div class="compressx-v2-flex compressx-v2-items-center compressx-v2-gap-2">
                             <span class="compressx-v2-text-sm">
-                                Images ≤
+                                <?php esc_html_e( 'Images ≤', 'compressx' ); ?>
                             </span>
                             <input id="compressx_size_threshold" type="number" value="<?php echo esc_attr($size_threshold)?>" min="10" max="500" class="compressx-v2-w-20 compressx-v2-border compressx-v2-rounded compressx-v2-text-center" readonly/>
                             <span class="compressx-v2-text-sm">
-                                KB use fixed quality
+                                <?php esc_html_e( 'KB use fixed quality', 'compressx' ); ?>
                             </span>
                         </div>
                         <div class="compressx-v2-text-xs compressx-v2-text-gray-400 compressx-v2-mt-2">
-                            Recommended value: 30KB – 100KB.
+                            <?php esc_html_e( 'Recommended value: 30KB – 100KB.', 'compressx' ); ?>
                         </div>
                     </div>
                     <!-- Right: Design Rationale Tip -->
                     <div id="cx_size_threshold_tip" style="display: none"  class="compressx-v2-text-xs compressx-v2-text-gray-500">
                         <div class="compressx-v2-font-medium compressx-v2-text-gray-600 compressx-v2-mb-1">
-                            Why a size threshold?
+                            <?php esc_html_e( 'Why a size threshold?', 'compressx' ); ?>
                         </div>
                         <div>
-                            Very small images are more sensitive to quality changes.
-                            Using a fixed quality helps preserve visual clarity.
+                            <?php esc_html_e( 'Very small images are more sensitive to quality changes.', 'compressx' ); ?>
+                            <?php esc_html_e( 'Using a fixed quality helps preserve visual clarity.', 'compressx' ); ?>
                         </div>
                     </div>
                 </div>
@@ -1168,14 +1193,14 @@ class CompressX_Image_Optimization_Display
                 <!-- Small Images -->
                 <div class="compressx-v2-col-span-1 compressx-v2-border compressx-v2-rounded compressx-v2-p-4">
                     <h5 class="compressx-v2-text-sm compressx-v2-font-medium">
-                        Small Images (≤ Threshold)
+                        <?php esc_html_e( 'Small Images (≤ Threshold)', 'compressx' ); ?>
                     </h5>
                     <p class="compressx-v2-text-xs compressx-v2-text-gray-500 compressx-v2-mb-4">
-                        Fixed compression quality is applied.
+                        <?php esc_html_e( 'Fixed compression quality is applied.', 'compressx' ); ?>
                     </p>
                     <div class="compressx-v2-mb-4">
                         <div class="compressx-v2-text-xs compressx-v2-text-gray-500">
-                            WebP Fixed Quality
+                            <?php esc_html_e( 'WebP Fixed Quality', 'compressx' ); ?>
                         </div>
                         <div class="compressx-v2-text-lg compressx-v2-font-semibold">
                             <div class="compressx-v2-flex compressx-v2-items-center compressx-v2-gap-3 compressx-v2-mt-1">
@@ -1189,7 +1214,7 @@ class CompressX_Image_Optimization_Display
                     </div>
                     <div>
                         <div class="compressx-v2-text-xs compressx-v2-text-gray-500">
-                            AVIF Fixed Quality
+                            <?php esc_html_e( 'AVIF Fixed Quality', 'compressx' ); ?>
                         </div>
                         <div class="compressx-v2-text-lg compressx-v2-font-semibold">
                             <div class="compressx-v2-flex compressx-v2-items-center compressx-v2-gap-3 compressx-v2-mt-1">
@@ -1205,36 +1230,36 @@ class CompressX_Image_Optimization_Display
                 <!-- Large Images -->
                 <div class="compressx-v2-col-span-2 compressx-v2-border compressx-v2-rounded compressx-v2-p-4">
                     <h5 class="compressx-v2-text-sm compressx-v2-font-medium">
-                        Large Images (> Threshold)
+                        <?php esc_html_e( 'Large Images (> Threshold)', 'compressx' ); ?>
                     </h5>
                     <p class="compressx-v2-text-xs compressx-v2-text-gray-500 compressx-v2-mb-4">
-                        Compression quality decreases automatically as image size increases.
+                        <?php esc_html_e( 'Compression quality decreases automatically as image size increases.', 'compressx' ); ?>
                     </p>
                     <div class="compressx-v2-grid compressx-v2-grid-cols-2 compressx-v2-gap-4">
                         <!-- WebP -->
                         <div class="compressx-v2-border compressx-v2-rounded compressx-v2-p-3">
                             <div class="compressx-v2-text-xs compressx-v2-text-gray-500">
-                                WebP Quality Range
+                                <?php esc_html_e( 'WebP Quality Range', 'compressx' ); ?>
                             </div>
                             <div class="compressx-v2-mt-2">
                                 <div class="compressx-v2-text-xs compressx-v2-text-gray-400">
-                                    Quality at Threshold
+                                    <?php esc_html_e( 'Quality at Threshold', 'compressx' ); ?>
                                 </div>
                                 <div class="compressx-v2-text-lg compressx-v2-font-semibold">
-                                    <span id="cx_webp_max"><?php echo esc_html($webp_max)?></span> <span class="compressx-v2-text-xs compressx-v2-text-gray-400">(Inherited)</span>
+                                    <span id="cx_webp_max"><?php echo esc_html($webp_max)?></span> <span class="compressx-v2-text-xs compressx-v2-text-gray-400"><?php esc_html_e( '(Inherited)', 'compressx' ); ?></span>
                                 </div>
                                 <div class="compressx-v2-mt-2">
                                     <div class="compressx-v2-text-xs compressx-v2-text-gray-400">
-                                        Threshold → 4MB
+                                        <?php esc_html_e( 'Threshold → 4MB', 'compressx' ); ?>
                                     </div>
                                     <div class="compressx-v2-text-lg compressx-v2-font-semibold">
-                                        <span><span id="cx_webp_max_2"><?php echo esc_html($webp_max)?></span><span> to </span><span id="cx_webp_min_2"><?php echo esc_html($webp_min)?></span></span><span class="compressx-v2-text-xs compressx-v2-text-gray-400"> Lower quality, smaller file size. <a href="https://compressx.io/docs/smart-image-optimization/#compressx-size-threshold" >Why?</a></span>
+                                        <span><span id="cx_webp_max_2"><?php echo esc_html($webp_max)?></span><span><?php esc_html_e( ' to ', 'compressx' ); ?></span><span id="cx_webp_min_2"><?php echo esc_html($webp_min)?></span></span><span class="compressx-v2-text-xs compressx-v2-text-gray-400"> <?php esc_html_e( 'Lower quality, smaller file size.', 'compressx' ); ?> <a href="https://compressx.io/docs/smart-image-optimization/#compressx-size-threshold" ><?php esc_html_e( 'Why?', 'compressx' ); ?></a></span>
                                     </div>
                                 </div>
                             </div>
                             <div class="compressx-v2-mt-2">
                                 <div class="compressx-v2-text-xs compressx-v2-text-gray-400">
-                                    Quality ≥ 4MB
+                                    <?php esc_html_e( 'Quality ≥ 4MB', 'compressx' ); ?>
                                 </div>
                                 <div class="compressx-v2-text-lg compressx-v2-font-semibold">
                                     <div class="compressx-v2-flex compressx-v2-items-center compressx-v2-gap-3 compressx-v2-mt-1">
@@ -1250,27 +1275,27 @@ class CompressX_Image_Optimization_Display
                         <!-- AVIF -->
                         <div class="compressx-v2-border compressx-v2-rounded compressx-v2-p-3">
                             <div class="compressx-v2-text-xs compressx-v2-text-gray-500">
-                                AVIF Quality Range
+                                <?php esc_html_e( 'AVIF Quality Range', 'compressx' ); ?>
                             </div>
                             <div class="compressx-v2-mt-2">
                                 <div class="compressx-v2-text-xs compressx-v2-text-gray-400">
-                                    Quality at Threshold
+                                    <?php esc_html_e( 'Quality at Threshold', 'compressx' ); ?>
                                 </div>
                                 <div class="compressx-v2-text-lg compressx-v2-font-semibold">
-                                    <span id="cx_avif_max"><?php echo esc_html($avif_max)?> </span> <span class="compressx-v2-text-xs compressx-v2-text-gray-400">(Inherited)</span>
+                                    <span id="cx_avif_max"><?php echo esc_html($avif_max)?> </span> <span class="compressx-v2-text-xs compressx-v2-text-gray-400"><?php esc_html_e( '(Inherited)', 'compressx' ); ?></span>
                                 </div>
                                 <div class="compressx-v2-mt-2">
                                     <div class="compressx-v2-text-xs compressx-v2-text-gray-400">
-                                        Threshold → 4MB
+                                        <?php esc_html_e( 'Threshold → 4MB', 'compressx' ); ?>
                                     </div>
                                     <div class="compressx-v2-text-lg compressx-v2-font-semibold">
-                                        <span><span id="cx_avif_max_2"><?php echo esc_html($avif_max)?></span><span> to </span><span id="cx_avif_min_2"><?php echo esc_html($avif_min)?></span></span><span class="compressx-v2-text-xs compressx-v2-text-gray-400"> Lower quality, smaller file size. <a href="https://compressx.io/docs/smart-image-optimization/#compressx-size-threshold">Why?</a></span>
+                                        <span><span id="cx_avif_max_2"><?php echo esc_html($avif_max)?></span><span><?php esc_html_e( ' to ', 'compressx' ); ?></span><span id="cx_avif_min_2"><?php echo esc_html($avif_min)?></span></span><span class="compressx-v2-text-xs compressx-v2-text-gray-400"> <?php esc_html_e( 'Lower quality, smaller file size.', 'compressx' ); ?> <a href="https://compressx.io/docs/smart-image-optimization/#compressx-size-threshold"><?php esc_html_e( 'Why?', 'compressx' ); ?></a></span>
                                     </div>
                                 </div>
                             </div>
                             <div class="compressx-v2-mt-2">
                                 <div class="compressx-v2-text-xs compressx-v2-text-gray-400">
-                                    Quality ≥ 4MB
+                                    <?php esc_html_e( 'Quality ≥ 4MB', 'compressx' ); ?>
                                 </div>
                                 <div class="compressx-v2-text-lg compressx-v2-font-semibold">
                                     <div class="compressx-v2-flex compressx-v2-items-center compressx-v2-gap-3 compressx-v2-mt-1">
@@ -1836,7 +1861,7 @@ class CompressX_Image_Optimization_Display
                     </button>
 
                     <span id="cx-v2-save-settings-progress" class="compressx-v2-flex compressx-v2-items-center compressx-v2-hidden">
-                        <img src="<?php echo esc_url(is_network_admin() ? network_admin_url('images/loading.gif') : admin_url('images/loading.gif')); ?>" alt="Loading..." style="width: 16px; height: 16px;">
+                        <img src="<?php echo esc_url(is_network_admin() ? network_admin_url('images/loading.gif') : admin_url('images/loading.gif')); ?>" alt="<?php echo esc_attr__( 'Loading...', 'compressx' ); ?>" style="width: 16px; height: 16px;">
                     </span>
 
                     <span id="cx-v2-save-settings-text" class="success compressx-v2-hidden compressx-v2-text-sm compressx-v2-font-medium" style="color:#007017"><?php esc_html_e('Saved!', 'compressx') ?></span>

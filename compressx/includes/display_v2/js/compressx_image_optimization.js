@@ -51,11 +51,11 @@ jQuery('#cx_convert_to_webp').click(function()
     if(jQuery('#cx_convert_to_webp').prop('checked'))
     {
         value = '1';
-        var descript = 'Are you sure to enable WebP as output format? This will convert your images to WebP format.';
+        var descript = compressx_image_optimization_i18n.enable_webp_confirm;
     }
     else {
         value = '0';
-        var descript = 'Are you sure to disable WebP as output format?';
+        var descript = compressx_image_optimization_i18n.disable_webp_confirm;
     }
 
     var ret = confirm(descript);
@@ -92,23 +92,23 @@ jQuery('#cx_convert_to_avif').click(function()
         {
             if(compressx_alert.imagick_avif)
             {
-                var descript = 'We detect that you use ImageMagick 6.x, this version has a known bug that can cause AVIF conversion timeout. Enabling AVIF conversion with this version is not recommended. Are you sure you wish to proceed?';
+                var descript = compressx_image_optimization_i18n.imagick6_avif_warning;
             }
             else
             {
-                var descript = 'Are you sure to enable AVIF as output format? This will convert your images to AVIF format.';
+                var descript = compressx_image_optimization_i18n.enable_avif_confirm;
             }
         }
         else
         {
-            var descript = 'Are you sure to enable AVIF as output format? This will convert your images to AVIF format.';
+            var descript = compressx_image_optimization_i18n.enable_avif_confirm;
         }
 
         value = '1';
     }
     else {
         value = '0';
-        var descript = 'Are you sure to disable AVIF as output format?';
+        var descript = compressx_image_optimization_i18n.disable_avif_confirm;
     }
 
     var ret = confirm(descript);
@@ -152,14 +152,14 @@ jQuery('#cx_converter_method_gd').click(function()
         jQuery('#cx_convert_to_webp').prop('disabled', false);
         jQuery('#cx_webp_status').removeClass("compressx-v2-text-red-600");
         jQuery('#cx_webp_status').addClass("compressx-v2-text-green-600");
-        jQuery('#cx_webp_status').html("Supported");
+        jQuery('#cx_webp_status').html(compressx_image_optimization_i18n.supported);
     }
     else
     {
         jQuery('#cx_convert_to_webp').prop('disabled', true);
         jQuery('#cx_webp_status').addClass("compressx-v2-text-red-600");
         jQuery('#cx_webp_status').removeClass("compressx-v2-text-green-600");
-        jQuery('#cx_webp_status').html("Unsupported");
+        jQuery('#cx_webp_status').html(compressx_image_optimization_i18n.unsupported);
     }
 
     if(compressx_alert.support_gd_avif)
@@ -167,14 +167,14 @@ jQuery('#cx_converter_method_gd').click(function()
         jQuery('#cx_convert_to_avif').prop('disabled', false);
         jQuery('#cx_avif_status').removeClass("compressx-v2-text-red-600");
         jQuery('#cx_avif_status').addClass("compressx-v2-text-green-600");
-        jQuery('#cx_avif_status').html("Supported");
+        jQuery('#cx_avif_status').html(compressx_image_optimization_i18n.supported);
     }
     else
     {
         jQuery('#cx_convert_to_avif').prop('disabled', true);
         jQuery('#cx_avif_status').addClass("compressx-v2-text-red-600");
         jQuery('#cx_avif_status').removeClass("compressx-v2-text-green-600");
-        jQuery('#cx_avif_status').html("Unsupported");
+        jQuery('#cx_avif_status').html(compressx_image_optimization_i18n.unsupported);
     }
 });
 
@@ -194,14 +194,14 @@ jQuery('#cx_converter_method_imagick').click(function()
         jQuery('#cx_convert_to_webp').prop('disabled', false);
         jQuery('#cx_webp_status').removeClass("compressx-v2-text-red-600");
         jQuery('#cx_webp_status').addClass("compressx-v2-text-green-600");
-        jQuery('#cx_webp_status').html("Supported");
+        jQuery('#cx_webp_status').html(compressx_image_optimization_i18n.supported);
     }
     else
     {
         jQuery('#cx_convert_to_webp').prop('disabled', true);
         jQuery('#cx_webp_status').addClass("compressx-v2-text-red-600");
         jQuery('#cx_webp_status').removeClass("compressx-v2-text-green-600");
-        jQuery('#cx_webp_status').html("Unsupported");
+        jQuery('#cx_webp_status').html(compressx_image_optimization_i18n.unsupported);
     }
 
     if(compressx_alert.support_imagick_avif)
@@ -209,7 +209,7 @@ jQuery('#cx_converter_method_imagick').click(function()
         jQuery('#cx_convert_to_avif').prop('disabled', false);
         jQuery('#cx_avif_status').removeClass("compressx-v2-text-red-600");
         jQuery('#cx_avif_status').addClass("compressx-v2-text-green-600");
-        jQuery('#cx_avif_status').html("Supported");
+        jQuery('#cx_avif_status').html(compressx_image_optimization_i18n.supported);
     }
     else
     {

@@ -187,7 +187,7 @@ class CompressX_Custom_Bulk_Action_V2
         <div class="cx-mediafolder-rules">
             <div class="cx-mediafolders">
                 <span>
-                    <span class="dashicons dashicons-open-folder cx-icon-color-techblue"></span><span>wp-content:</span>
+                    <span class="dashicons dashicons-open-folder cx-icon-color-techblue"></span><span><?php esc_html_e( 'wp-content:', 'compressx' ); ?></span>
                 </span>
                 <div class="cx-upload-treeviewer" id="compressx_custom_include_js_tree">
                 </div>
@@ -195,7 +195,7 @@ class CompressX_Custom_Bulk_Action_V2
             <div class="cx-mediafolder-included">
                 <span>
                     <span class="dashicons dashicons-open-folder cx-icon-color-techblue"></span>
-                    <span><strong><?php esc_html_e('Included Folders: ','compressx')?></strong><?php esc_html_e('Media files inside these folders will be processed','compressx')?></span>
+                    <span><strong><?php esc_html_e('Included Folders:','compressx')?></strong> <?php esc_html_e('Media files inside these folders will be processed','compressx')?></span>
                 </span>
                 <div class="cx-mediafolder-list" id="compressx_include_dir_node">
                     <ul>

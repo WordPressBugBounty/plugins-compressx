@@ -355,7 +355,7 @@ class CompressX_Settings_Display
                     </button>
 
                     <span id="cx-v2-delete-file-progress" style="display: none;" class="compressx-v2-flex compressx-v2-items-center">
-                        <img src="<?php echo esc_url(is_network_admin() ? network_admin_url('images/loading.gif') : admin_url('images/loading.gif')); ?>" alt="Loading..." style="width: 16px; height: 16px;">
+                        <img src="<?php echo esc_url(is_network_admin() ? network_admin_url('images/loading.gif') : admin_url('images/loading.gif')); ?>" alt="<?php echo esc_attr__( 'Loading...', 'compressx' ); ?>" style="width: 16px; height: 16px;">
                     </span>
 
                     <span id="cx-v2-delete-file-success" class="success hidden compressx-v2-text-sm compressx-v2-font-medium" aria-hidden="true" style="color:#007017"><?php esc_html_e('Deleted!', 'compressx') ?></span>
@@ -408,7 +408,7 @@ class CompressX_Settings_Display
                     </button>
 
                     <span id="cx-v2-save-settings-progress" style="display: none;" class="compressx-v2-flex compressx-v2-items-center">
-                        <img src="<?php echo esc_url(is_network_admin() ? network_admin_url('images/loading.gif') : admin_url('images/loading.gif')); ?>" alt="Loading..." style="width: 16px; height: 16px;">
+                        <img src="<?php echo esc_url(is_network_admin() ? network_admin_url('images/loading.gif') : admin_url('images/loading.gif')); ?>" alt="<?php echo esc_attr__( 'Loading...', 'compressx' ); ?>" style="width: 16px; height: 16px;">
                     </span>
 
                     <span id="cx-v2-save-settings-text" class="success hidden compressx-v2-text-sm compressx-v2-font-medium" aria-hidden="true" style="color:#007017"><?php esc_html_e('Saved!', 'compressx') ?></span>

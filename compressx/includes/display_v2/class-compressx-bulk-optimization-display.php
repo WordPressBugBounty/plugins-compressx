@@ -361,7 +361,7 @@ class CompressX_Bulk_Optimization_Display
                 <!-- Close Button -->
                 <button id="cx_bulk_success_hide"
                         class="compressx-v2-absolute compressx-v2-top-2 compressx-v2-right-2 compressx-v2-text-green-600 hover:compressx-v2-text-green-800 compressx-v2-text-sm compressx-v2-font-medium compressx-v2-bg-transparent compressx-v2-border compressx-v2-border-green-300 hover:compressx-v2-bg-green-100 compressx-v2-rounded-md compressx-v2-px-2 compressx-v2-py-0.5 compressx-v2-transition-all">
-                    Got it
+                    <?php esc_html_e( 'Got it', 'compressx' ); ?>
                 </button>
 
                 <div class="compressx-v2-flex compressx-v2-items-center compressx-v2-gap-3">
@@ -376,7 +376,7 @@ class CompressX_Bulk_Optimization_Display
             <div id="cx_bulk_error" style="display: none" class="compressx-v2-bg-red-50 compressx-v2-border-l-4 compressx-v2-border-red-400 compressx-v2-rounded compressx-v2-p-4 compressx-v2-mb-4 compressx-v2-relative">
                 <button id="cx_bulk_error_hide"
                         class="compressx-v2-absolute compressx-v2-top-2 compressx-v2-right-2 compressx-v2-text-green-600 hover:compressx-v2-text-green-800 compressx-v2-text-sm compressx-v2-font-medium compressx-v2-bg-transparent compressx-v2-border compressx-v2-border-green-300 hover:compressx-v2-bg-green-100 compressx-v2-rounded-md compressx-v2-px-2 compressx-v2-py-0.5 compressx-v2-transition-all">
-                    Got it
+                    <?php esc_html_e( 'Got it', 'compressx' ); ?>
                 </button>
 
                 <div class="compressx-v2-flex compressx-v2-items-center compressx-v2-gap-3">

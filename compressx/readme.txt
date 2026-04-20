@@ -1,14 +1,14 @@
-=== AVIF & WebP Converter, Media Replacement - CompressX ===
+=== CompressX — AVIF & WebP Converter, Media Replacement ===
 Contributors: compressxio
 Tags: convert WebP, convert AVIF, WebP, AVIF, optimization
 Requires at least: 5.8
-Tested up to: 6.9
+Tested up to: 6.9.4
 Requires PHP: 7.0
-Stable tag: 0.9.36
+Stable tag: 0.9.37
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
-AVIF & WebP converter with built-in media replace for local image optimization.
+AVIF & WebP converter with built-in media replacement for local image optimization.
 
 == Description ==
 CompressX is a free, lightweight WebP & AVIF conversion and media replacement plugin for WordPress. It allows you to easily convert JPG and PNG images to WebP and AVIF formats, compress WebP and AVIF images, and replace media files without changing their URLs or attachment IDs. All AVIF and WebP conversions are performed locally on your web server.
@@ -21,7 +21,7 @@ If the original image is already in AVIF format which is supported since WordPre
 = 2. Convert WebP & Compress WebP =
 Convert jpg, png images on your WordPress website to WebP format, and compress WebP images according to the compression level you set.
 If the original image is already in WebP format which is supported since WordPress 5.8, the original WebP image will only be compressed.
-= 3. Media Replace & Auto Re-Optimization =
+= 3. Media Replacement & Auto Re-Optimization =
 Safely replace an existing media file without changing its URL or attachment ID. When a new image is uploaded as a replacement, the system automatically regenerates thumbnails, applies your configured format conversion and compression rules, resizes where needed, and re-optimizes the file.
 = 4. Exclude Folders =
 Select specific folders in your media library and prevent images inside them from being processed.
@@ -70,6 +70,8 @@ Yes, absolutely. Whenever you need help, start a thread on the support forum or 
 Yes, we do. Here is a [tutorial](https://compressx.io/docs/compressx-overview/) for you to quickly get started with CompressX.
 
 == Changelog ==
+= 0.9.37 =
+- Improved localization support to align with the updated plugin interface.
 = 0.9.36 =
 - Fixed some bugs in the plugin code.
 - Optimized the plugin code.
@@ -205,8 +207,6 @@ Yes, we do. Here is a [tutorial](https://compressx.io/docs/compressx-overview/) 
 - Initial release. Hello world!
 
 == Upgrade Notice ==
-Latest version 0.9.36:
-= 0.9.36 =
-- Fixed some bugs in the plugin code.
-- Optimized the plugin code.
-- Refined the plugin readme file.
+Latest version 0.9.37:
+= 0.9.37 =
+- Improved localization support to align with the updated plugin interface.
