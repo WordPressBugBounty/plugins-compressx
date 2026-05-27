@@ -2,9 +2,9 @@
 Contributors: compressxio
 Tags: convert WebP, convert AVIF, WebP, AVIF, optimization
 Requires at least: 5.8
-Tested up to: 6.9.4
+Tested up to: 7.0
 Requires PHP: 7.0
-Stable tag: 0.9.37
+Stable tag: 0.9.38
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
@@ -70,6 +70,8 @@ Yes, absolutely. Whenever you need help, start a thread on the support forum or 
 Yes, we do. Here is a [tutorial](https://compressx.io/docs/compressx-overview/) for you to quickly get started with CompressX.
 
 == Changelog ==
+= 0.9.38 =
+- Successfully tested with WordPress 7.0.
 = 0.9.37 =
 - Improved localization support to align with the updated plugin interface.
 = 0.9.36 =
@@ -207,6 +209,6 @@ Yes, we do. Here is a [tutorial](https://compressx.io/docs/compressx-overview/) 
 - Initial release. Hello world!
 
 == Upgrade Notice ==
-Latest version 0.9.37:
-= 0.9.37 =
-- Improved localization support to align with the updated plugin interface.
+Latest version 0.9.38:
+= 0.9.38 =
+- Successfully tested with WordPress 7.0.

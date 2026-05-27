@@ -890,6 +890,164 @@ class CompressX_Log_List_V2 extends WP_List_Table
         }
     }
 
+    public function pagination( $which )
+    {
+        if ( empty( $this->_pagination_args ) ) {
+            return;
+        }
+
+        $total_items     = isset( $this->_pagination_args['total_items'] ) ? (int) $this->_pagination_args['total_items'] : 0;
+        $total_pages     = isset( $this->_pagination_args['total_pages'] ) ? (int) $this->_pagination_args['total_pages'] : 0;
+        $infinite_scroll = false;
+
+        if ( isset( $this->_pagination_args['infinite_scroll'] ) ) {
+            $infinite_scroll = $this->_pagination_args['infinite_scroll'];
+        }
+
+        if ( 'top' === $which && $total_pages > 1 ) {
+            $this->screen->render_screen_reader_content( 'heading_pagination' );
+        }
+
+        $output = '<span class="displaying-num">' . sprintf(
+                _n( '%s item', '%s items', $total_items ),
+                number_format_i18n( $total_items )
+            ) . '</span>';
+
+        $current = (int) $this->get_pagenum();
+
+        if ( $current < 1 ) {
+            $current = 1;
+        }
+
+        if ( $total_pages > 0 && $current > $total_pages ) {
+            $current = $total_pages;
+        }
+
+        $page_links = array();
+
+        $total_pages_before = '<span class="paging-input">';
+        $total_pages_after  = '</span></span>';
+
+        $disable_first = false;
+        $disable_last  = false;
+        $disable_prev  = false;
+        $disable_next  = false;
+
+        if ( 1 === $current ) {
+            $disable_first = true;
+            $disable_prev  = true;
+        }
+
+        if ( $total_pages === $current ) {
+            $disable_last = true;
+            $disable_next = true;
+        }
+
+        /*
+         * First page.
+         * Existing JS does not read value from .first-page.
+         * It directly sends page = 'first'.
+         */
+        if ( $disable_first ) {
+            $page_links[] = '<span class="tablenav-pages-navspan button disabled" aria-hidden="true">&laquo;</span>';
+        } else {
+            $page_links[] = sprintf(
+                "<a class='first-page button' href='javascript:void(0);' value='1'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
+                esc_html__( 'First page' ),
+                '&laquo;'
+            );
+        }
+
+        /*
+         * Previous page.
+         * Existing JS reads value and then uses page - 1.
+         * Therefore value must be the current page, not the target page.
+         */
+        if ( $disable_prev ) {
+            $page_links[] = '<span class="tablenav-pages-navspan button disabled" aria-hidden="true">&lsaquo;</span>';
+        } else {
+            $page_links[] = sprintf(
+                "<a class='prev-page button' href='javascript:void(0);' value='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
+                esc_attr( $current ),
+                esc_html__( 'Previous page' ),
+                '&lsaquo;'
+            );
+        }
+
+        if ( 'bottom' === $which ) {
+            $html_current_page  = $current;
+            $total_pages_before = '<span class="screen-reader-text">' . esc_html__( 'Current Page' ) . '</span><span id="table-paging" class="paging-input"><span class="tablenav-paging-text">';
+        } else {
+            $html_current_page = sprintf(
+                "%s<input class='current-page' id='current-page-selector' type='text' name='paged' value='%s' size='%d' aria-describedby='table-paging' /><span class='tablenav-paging-text'>",
+                '<label for="current-page-selector" class="screen-reader-text">' . esc_html__( 'Current Page' ) . '</label>',
+                esc_attr( $current ),
+                strlen( (string) $total_pages )
+            );
+        }
+
+        $html_total_pages = sprintf(
+            "<span class='total-pages'>%s</span>",
+            number_format_i18n( $total_pages )
+        );
+
+        $page_links[] = $total_pages_before . sprintf(
+                _x( '%1$s of %2$s', 'paging' ),
+                $html_current_page,
+                $html_total_pages
+            ) . $total_pages_after;
+
+        /*
+         * Next page.
+         * Existing JS reads value and then uses page + 1.
+         * Therefore value must be the current page, not the target page.
+         */
+        if ( $disable_next ) {
+            $page_links[] = '<span class="tablenav-pages-navspan button disabled" aria-hidden="true">&rsaquo;</span>';
+        } else {
+            $page_links[] = sprintf(
+                "<a class='next-page button' href='javascript:void(0);' value='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
+                esc_attr( $current ),
+                esc_html__( 'Next page' ),
+                '&rsaquo;'
+            );
+        }
+
+        /*
+         * Last page.
+         * Existing JS does not read value from .last-page.
+         * It directly sends page = 'last'.
+         */
+        if ( $disable_last ) {
+            $page_links[] = '<span class="tablenav-pages-navspan button disabled" aria-hidden="true">&raquo;</span>';
+        } else {
+            $page_links[] = sprintf(
+                "<a class='last-page button' href='javascript:void(0);' value='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
+                esc_attr( $total_pages ),
+                esc_html__( 'Last page' ),
+                '&raquo;'
+            );
+        }
+
+        $pagination_links_class = 'pagination-links';
+
+        if ( ! empty( $infinite_scroll ) ) {
+            $pagination_links_class .= ' hide-if-js';
+        }
+
+        $output .= "\n<span class='" . esc_attr( $pagination_links_class ) . "'>" . implode( "\n", $page_links ) . '</span>';
+
+        if ( $total_pages ) {
+            $page_class = $total_pages < 2 ? ' one-page' : '';
+        } else {
+            $page_class = ' no-pages';
+        }
+
+        $this->_pagination = "<div class='tablenav-pages" . esc_attr( $page_class ) . "'>" . $output . '</div>';
+
+        echo $this->_pagination;
+    }
+
     public function display()
     {
         $this->display_tablenav( 'top' );

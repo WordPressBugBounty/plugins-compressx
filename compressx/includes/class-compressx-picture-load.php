@@ -5,6 +5,11 @@ class CompressX_Picture_Load
 {
     public function __construct()
     {
+        if ( is_multisite() )
+        {
+            return;
+        }
+
         $options=CompressX_Options::get_option('compressx_general_settings',array());
         $image_load=isset($options['image_load'])?$options['image_load']:'htaccess';
         if ($image_load == "htaccess"||$image_load == "compat_htaccess")
