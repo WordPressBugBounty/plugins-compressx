@@ -500,7 +500,7 @@ class CompressX_Display
         $submenu['parent_slug']=COMPRESSX_SLUG;
         $submenu['page_title']="Settings";
         $submenu['menu_title']="Settings";
-        $submenu['capability']="administrator";
+        $submenu['capability']="manage_options";
         $submenu['index']=1;
         $submenu['menu_slug']=COMPRESSX_SLUG;
         $submenu['function']=array($this->dashboard, 'display');
@@ -512,7 +512,7 @@ class CompressX_Display
             $submenu['parent_slug']=COMPRESSX_SLUG;
             $submenu['page_title']="CDN Integration";
             $submenu['menu_title']="CDN Integration";
-            $submenu['capability']="administrator";
+            $submenu['capability']="manage_options";
             $submenu['menu_slug']="cdn-compressx";
             $submenu['index']=3;
             $submenu['function']=array($this->cdn, 'display');
@@ -531,7 +531,7 @@ class CompressX_Display
             }
             else
             {
-                $submenu['capability']="administrator";
+                $submenu['capability']="manage_options";
             }
             $submenu['menu_slug']="logs-compressx";
             $submenu['index']=19;
@@ -551,7 +551,7 @@ class CompressX_Display
             }
             else
             {
-                $submenu['capability']="administrator";
+                $submenu['capability']="manage_options";
             }
             $submenu['menu_slug']="info-compressx";
             $submenu['index']=20;
@@ -563,7 +563,7 @@ class CompressX_Display
         $submenu['parent_slug']=COMPRESSX_SLUG;
         $submenu['page_title']="Addons";
         $submenu['menu_title']="Addons";
-        $submenu['capability']="administrator";
+        $submenu['capability']="manage_options";
         $submenu['menu_slug']="addons-compressx";
         $submenu['index']=21;
         $submenu['function']=array($this->addons, 'display');
@@ -616,7 +616,7 @@ class CompressX_Display
             {
                 $submenu['capability'] = "compressx-can-convert";
             } else {
-                $submenu['capability'] = "administrator";
+                $submenu['capability'] = "manage_options";
             }
             $submenu['index'] = 1;
             $submenu['menu_slug'] = COMPRESSX_SLUG;
@@ -628,7 +628,7 @@ class CompressX_Display
             $submenu['parent_slug'] = COMPRESSX_SLUG;
             $submenu['page_title'] = "Global Settings";
             $submenu['menu_title'] = "Settings";
-            $submenu['capability'] = "administrator";
+            $submenu['capability'] = "manage_options";
             $submenu['menu_slug'] = "settings-compressx";
             $submenu['index'] = 2;
             $submenu['function'] = array($this->settings, 'display');
@@ -643,7 +643,7 @@ class CompressX_Display
             if (apply_filters('compressx_current_user_has', false, 'compressx-can-use-cdn')) {
                 $submenu['capability'] = "compressx-can-use-cdn";
             } else {
-                $submenu['capability'] = "administrator";
+                $submenu['capability'] = "manage_options";
             }
             $submenu['menu_slug'] = "cdn-compressx";
             $submenu['index'] = 3;
@@ -660,7 +660,7 @@ class CompressX_Display
             if (apply_filters('compressx_current_user_has', false, 'compressx-can-use-system-info')) {
                 $submenu['capability'] = "compressx-can-use-system-info";
             } else {
-                $submenu['capability'] = "administrator";
+                $submenu['capability'] = "manage_options";
             }
             $submenu['menu_slug'] = "info-compressx";
             $submenu['index'] = 19;
@@ -672,7 +672,7 @@ class CompressX_Display
         $submenu['parent_slug']=COMPRESSX_SLUG;
         $submenu['page_title']="Addons";
         $submenu['menu_title']="Addons";
-        $submenu['capability']="administrator";
+        $submenu['capability']="manage_options";
         $submenu['menu_slug']="addons-compressx";
         $submenu['index']=21;
         $submenu['function']=array($this->addons, 'display');

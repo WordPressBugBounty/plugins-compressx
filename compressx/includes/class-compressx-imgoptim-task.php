@@ -315,6 +315,7 @@ class CompressX_ImgOptim_Task
 
             if(CompressX_Image_Method::exclude_path($image_id,$this->task['options']['exclude']))
             {
+                CompressX_Image_Meta_V2::update_image_meta_status($image_id,'skip');
                 $this->WriteLog('Exclude images: id:'.$image_id,'notice');
                 $this->task['images'][$image_id]['finished']=1;
                 $this->task['last_update_time']=time();

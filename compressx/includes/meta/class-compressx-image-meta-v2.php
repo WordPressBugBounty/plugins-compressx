@@ -1028,4 +1028,27 @@ class CompressX_Image_Meta_V2
         delete_post_meta($image_id,'compressx_image_progressing');
     }
 
+    public static function clear_image_meta_status()
+    {
+        self::ensure_table();
+
+        global $wpdb;
+
+        $table = self::table_name();
+        $blog_id = self::get_blog_id();
+
+        return $wpdb->query(
+            $wpdb->prepare(
+                "UPDATE {$table}
+             SET status = %s,
+                 updated_at = %s
+             WHERE blog_id = %d
+               AND status = %s",
+                'unoptimized',
+                current_time('mysql'),
+                $blog_id,
+                'skip'
+            )
+        );
+    }
 }

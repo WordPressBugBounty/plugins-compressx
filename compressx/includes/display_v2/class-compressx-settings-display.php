@@ -74,6 +74,7 @@ class CompressX_Settings_Display
                 <?php $this->output_exclude_folders(); ?>
                 <?php $this->output_custom_folders(); ?>
                 <?php $this->output_cache_control_settings(); ?>
+                <?php $this->output_scan_page_settings(); ?>
                 <?php $this->output_delete_images(); ?>
 
             </div>
@@ -392,6 +393,60 @@ class CompressX_Settings_Display
                     <input type="checkbox" option="cache_control_setting" name="disable_cache_control" <?php echo $disable_cache_control ? 'checked' : ''; ?>>
                     <span class="compressx-v2-text-sm"><?php esc_html_e('Remove \'Header always set Cache-Control "private"\' from .htaccess file', 'compressx'); ?></span>
                 </label>
+            </div>
+        </div>
+        <?php
+    }
+
+    private function output_scan_page_settings()
+    {
+        $options = CompressX_Options::get_option('compressx_general_settings', array());
+        $scan_images_page = isset($options['scan_images_page']) ? intval($options['scan_images_page']) : 500;
+
+        if ($scan_images_page <= 0)
+        {
+            $scan_images_page = 500;
+        }
+        ?>
+        <div class="compressx-v2-border compressx-v2-rounded compressx-v2-bg-white compressx-v2-p-6 compressx-v2-mb-4 compressx-v2-space-y-4">
+
+            <div>
+                <h3 class="compressx-v2-text-sm compressx-v2-font-medium compressx-v2-text-gray-800">
+                    <?php esc_html_e('Images per scan batch', 'compressx'); ?>
+                    <span>
+                    <?php
+                    $this->output_tooltip(
+                        '',
+                        esc_html__('Set the number of images processed per scan batch. A higher value may speed up scanning but requires more server resources.', 'compressx'),
+                        'large'
+                    );
+                    ?>
+                </span>
+                </h3>
+                <p class="compressx-v2-text-xs compressx-v2-text-gray-500">
+                    <?php esc_html_e('Set the number of images processed in each scan batch. The default and recommended value is 500.', 'compressx'); ?>
+                </p>
+            </div>
+
+            <div>
+                <label class="compressx-v2-flex compressx-v2-items-center compressx-v2-gap-2">
+                <span class="compressx-v2-text-sm compressx-v2-text-gray-700">
+                    <?php esc_html_e('Images per scan batch', 'compressx'); ?>
+                </span>
+                    <input
+                            type="number"
+                            option="scan_page_setting"
+                            name="scan_images_page"
+                            value="<?php echo esc_attr($scan_images_page); ?>"
+                            min="50"
+                            max="5000"
+                            step="50"
+                            class="compressx-v2-border compressx-v2-rounded compressx-v2-px-3 compressx-v2-py-2 compressx-v2-text-sm compressx-v2-w-32"
+                    >
+                </label>
+                <!--<p class="compressx-v2-text-xs compressx-v2-text-gray-500 compressx-v2-mt-2">
+                    <?php esc_html_e('Recommended value: 500. Increase this value only if your server has enough resources.', 'compressx'); ?>
+                </p>-->
             </div>
         </div>
         <?php
@@ -865,6 +920,32 @@ class CompressX_Settings_Display
             }
         }
 
+        // Handle scan_page_setting
+        if (isset($settings['scan_page_setting']))
+        {
+            if (isset($settings['scan_page_setting']['scan_images_page']))
+            {
+                $scan_images_page = intval($settings['scan_page_setting']['scan_images_page']);
+
+                if ($scan_images_page <= 0)
+                {
+                    $scan_images_page = 500;
+                }
+
+                if ($scan_images_page < 50)
+                {
+                    $scan_images_page = 50;
+                }
+
+                if ($scan_images_page > 5000)
+                {
+                    $scan_images_page = 5000;
+                }
+
+                $options['scan_images_page'] = $scan_images_page;
+            }
+        }
+
         CompressX_Options::update_option('compressx_general_settings', $options);
 
         if ($reset_rewrite)
@@ -897,13 +978,62 @@ class CompressX_Settings_Display
                 die();
             }
 
+            $old_excludes = CompressX_Options::get_option('compressx_media_excludes', array());
+            $excludes_changed = $this->is_excludes_changed($old_excludes, $excludes);
+
             CompressX_Options::update_option('compressx_media_excludes', $excludes);
+
+            if ($excludes_changed)
+            {
+                CompressX_Image_Meta_V2::clear_image_meta_status();
+            }
 
         }
 
         $ret['result'] = 'success';
         echo wp_json_encode($ret);
         die();
+    }
+
+    private function is_excludes_changed($old_excludes, $new_excludes)
+    {
+        if (!is_array($old_excludes)) {
+            $old_excludes = array();
+        }
+
+        if (!is_array($new_excludes)) {
+            $new_excludes = array();
+        }
+
+        $old_excludes = $this->normalize_excludes_for_compare($old_excludes);
+        $new_excludes = $this->normalize_excludes_for_compare($new_excludes);
+
+        return md5(wp_json_encode($old_excludes)) !== md5(wp_json_encode($new_excludes));
+    }
+
+    private function normalize_excludes_for_compare($excludes)
+    {
+        if (!is_array($excludes)) {
+            return array();
+        }
+
+        ksort($excludes);
+
+        foreach ($excludes as $key => $value) {
+            if (is_array($value)) {
+                $excludes[$key] = $this->normalize_excludes_for_compare($value);
+            } else {
+                if ($value === '1' || $value === 1 || $value === true) {
+                    $excludes[$key] = true;
+                } else if ($value === '0' || $value === 0 || $value === false) {
+                    $excludes[$key] = false;
+                } else {
+                    $excludes[$key] = $value;
+                }
+            }
+        }
+
+        return $excludes;
     }
 
     public function delete_files()

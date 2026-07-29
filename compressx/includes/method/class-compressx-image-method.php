@@ -583,4 +583,23 @@ class CompressX_Image_Method
 
         return $real_path.'/'.basename($og_path);
     }
+
+    //exclude_path_ex
+    public static function exclude_path_ex($file_path,$exclude_regex_folder)
+    {
+        if(empty($exclude_regex_folder))
+        {
+            return false;
+        }
+
+        $file_path = CompressX_Image_Method::transfer_path($file_path);
+        if (CompressX_Image_Method::regex_match($exclude_regex_folder, $file_path))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
