@@ -75,6 +75,7 @@ class CompressX_Settings_Display
                 <?php $this->output_custom_folders(); ?>
                 <?php $this->output_cache_control_settings(); ?>
                 <?php $this->output_scan_page_settings(); ?>
+                <?php $this->output_scan_max_count_settings(); ?>
                 <?php $this->output_delete_images(); ?>
 
             </div>
@@ -447,6 +448,57 @@ class CompressX_Settings_Display
                 <!--<p class="compressx-v2-text-xs compressx-v2-text-gray-500 compressx-v2-mt-2">
                     <?php esc_html_e('Recommended value: 500. Increase this value only if your server has enough resources.', 'compressx'); ?>
                 </p>-->
+            </div>
+        </div>
+        <?php
+    }
+
+    private function output_scan_max_count_settings()
+    {
+        $options = CompressX_Options::get_option('compressx_general_settings', array());
+        $scan_images_max_count = isset($options['scan_images_max_count']) ? intval($options['scan_images_max_count']) : 10000;
+
+        if ($scan_images_max_count <= 0)
+        {
+            $scan_images_max_count = 10000;
+        }
+        ?>
+        <div class="compressx-v2-border compressx-v2-rounded compressx-v2-bg-white compressx-v2-p-6 compressx-v2-mb-4 compressx-v2-space-y-4">
+
+            <div>
+                <h3 class="compressx-v2-text-sm compressx-v2-font-medium compressx-v2-text-gray-800">
+                    <?php esc_html_e('Maximum images per scan request', 'compressx'); ?>
+                    <span>
+                    <?php
+                    $this->output_tooltip(
+                        '',
+                        esc_html__('Set the maximum number of images that can be processed in one AJAX request. A higher value may speed up scanning but requires more server resources.', 'compressx'),
+                        'large'
+                    );
+                    ?>
+                </span>
+                </h3>
+                <p class="compressx-v2-text-xs compressx-v2-text-gray-500">
+                    <?php esc_html_e('Set the maximum number of images processed in a single AJAX request. The default and recommended value is 10000.', 'compressx'); ?>
+                </p>
+            </div>
+
+            <div>
+                <label class="compressx-v2-flex compressx-v2-items-center compressx-v2-gap-2">
+                    <span class="compressx-v2-text-sm compressx-v2-text-gray-700">
+                        <?php esc_html_e('Maximum images per scan request', 'compressx'); ?>
+                    </span>
+                    <input
+                            type="number"
+                            option="scan_page_setting"
+                            name="scan_images_max_count"
+                            value="<?php echo esc_attr($scan_images_max_count); ?>"
+                            min="500"
+                            max="100000"
+                            step="500"
+                            class="compressx-v2-border compressx-v2-rounded compressx-v2-px-3 compressx-v2-py-2 compressx-v2-text-sm compressx-v2-w-32"
+                    >
+                </label>
             </div>
         </div>
         <?php
@@ -943,6 +995,28 @@ class CompressX_Settings_Display
                 }
 
                 $options['scan_images_page'] = $scan_images_page;
+            }
+
+            if (isset($settings['scan_page_setting']['scan_images_max_count']))
+            {
+                $scan_images_max_count = intval($settings['scan_page_setting']['scan_images_max_count']);
+
+                if ($scan_images_max_count <= 0)
+                {
+                    $scan_images_max_count = 10000;
+                }
+
+                if ($scan_images_max_count < 500)
+                {
+                    $scan_images_max_count = 500;
+                }
+
+                if ($scan_images_max_count > 100000)
+                {
+                    $scan_images_max_count = 100000;
+                }
+
+                $options['scan_images_max_count'] = $scan_images_max_count;
             }
         }
 

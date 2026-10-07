@@ -50,7 +50,14 @@ class CompressX_Image_Scanner
             ? $options['scan_images_page']
             : 500;
 
-        $max_count=10000;
+        $max_count = isset($options['scan_images_max_count'])
+            ? intval($options['scan_images_max_count'])
+            : 10000;
+
+        if ($max_count <= 0)
+        {
+            $max_count = 10000;
+        }
 
         $count = 0;
         $last_id = (int) $start_row;
@@ -111,7 +118,14 @@ class CompressX_Image_Scanner
             ? $options['scan_images_page']
             : 500;
 
-        $max_count=10000;
+        $max_count = isset($options['scan_images_max_count'])
+            ? intval($options['scan_images_max_count'])
+            : 10000;
+
+        if ($max_count <= 0)
+        {
+            $max_count = 10000;
+        }
 
         $count = 0;
         $last_id = (int) $start_row;
